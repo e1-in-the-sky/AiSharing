@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>タクシー予約投稿一覧</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar placeholder="Search"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <!--
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+      <ion-card-title>Card Title</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Keep close to Nature's heart... and break clear aaway, once in awhile,
+      and climb a mountain or spen a week in the woods. Whash your spirit clean.
+    </ion-card-content>
+  </ion-card>
+  -->
+  <!-- 
+  <ion-item>
+      <ion-avatar slot="start">
+        <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+      </ion-avatar>
+      <ion-label>Item Avatar</ion-label>
+  </ion-item>
+  -->
+  <!--
+  <ion-item>
+    <ion-avatar slot="start">
+      <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+    </ion-avatar>
+    <ion-label>
+      <h3>Lorem ipsum</h3>
+      <p>dolor sit amet</p>
+      <p>consectetur adispiscing elit. Duis ut urna neque.</p>
+    </ion-label>
+  </ion-item>
+  -->
+  <ion-card>
+    <ion-card-content>
+      <ion-chip>
+        <ion-avatar item-left>
+          <img src="../../../assets/img/speakers/bear.jpg">
+        </ion-avatar>
+         <ion-label>user name</ion-label>
+      </ion-chip>
+      <p>出発地: 会津大学    目的地: 会津若松駅</p>
+      <p>出発時刻: 18:00    現在予約人数: 1人</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngFor="let reservation of reservations" (click)="goToDetail(reservation)">
+    <ion-card-content>
+      <ion-chip>
+        <ion-avatar item-left>
+          <img src="{{reservation.owner.icon}}">
+        </ion-avatar>
+        <ion-label>{{reservation.owner.name}}</ion-label>
+      </ion-chip>
+      <p>出発地: {{reservation.departure}}    目的地: {{reservation.destination}}</p>
+      <p>出発時刻: {{reservation.departure_time}}    現在予約人数: {{reservation.reservation_num}}人</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- <ion-list ion-no-margin *ngFor="let reservation of reservations">
+    <reservation [reservation]="reservation"></reservation>
+  </ion-list>     -->
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
