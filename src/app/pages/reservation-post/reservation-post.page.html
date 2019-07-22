@@ -7,17 +7,28 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-<ion-list>
-  <ion-item>
-    <ion-label>出発地: </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-label>目的地: </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-label>出発時刻: </ion-label>
-  </ion-item>
-</ion-list>
-
+<ion-content padding>
+  <form>
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">出発地</ion-label>
+        <ion-input type="text" [(ngModel)]="data.departure" name="departure" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">目的地</ion-label>
+        <ion-input type="text" [(ngModel)]="data.destination" name="destination" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">出発時刻</ion-label>
+        <ion-input type="text" [(ngModel)]="data.departure_time" name="departure_time" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">コメント</ion-label>
+        <ion-input type="text" [(ngModel)]="data.comment" name="comment"></ion-input>
+      </ion-item>
+    </ion-list>
+    <p>
+      <ion-button expand="block" color="primary" type="button" (click)="onPost()">投稿</ion-button>
+    </p>
+  </form>
 </ion-content>
