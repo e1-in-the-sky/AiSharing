@@ -63,6 +63,10 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: '../reservation-list/reservation-list.module#ReservationListPageModule'
+          },
+          {
+            path: 'detail/:reservationId',
+            loadChildren: '../reservation-detail/reservation-detail.module#ReservationDetailPageModule'
           }
         ]
       },
