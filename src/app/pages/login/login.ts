@@ -34,7 +34,7 @@ export class LoginPage {
         .signInWithEmailAndPassword(this.data.email, this.data.password)
         .then(user => {
           this.events.publish('user:login');
-          this.router.navigateByUrl('/app/tabs/reservations');    
+          this.router.navigateByUrl('/app/tabs/reservations');
         }, async error => {
           const alert = await this.alertController.create({
             header: '警告',

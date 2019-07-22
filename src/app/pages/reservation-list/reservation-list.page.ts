@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'reservation-list',
@@ -19,7 +20,8 @@ export class ReservationListPage implements OnInit {
   reservations: Reservation[] = [];
 
   constructor(
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    public router: Router
   ) { }
 
   ngOnInit() {
@@ -29,6 +31,10 @@ export class ReservationListPage implements OnInit {
   goToDetail(reservation: any) {
     console.log(reservation);
     console.log(reservation.owner.name);
+  }
+
+  goToPost() {
+    this.router.navigateByUrl('/app/tabs/reservations/post');
   }
 
 }
