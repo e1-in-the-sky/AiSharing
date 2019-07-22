@@ -35,6 +35,7 @@ const routes: Routes = [
   },
   { path: 'mypage',
     loadChildren: './pages/mypage/mypage.module#MypagePageModule' },
+  { path: 'reservation-detail', loadChildren: './pages/reservation-detail/reservation-detail.module#ReservationDetailPageModule' },
 ];
 
 @NgModule({
