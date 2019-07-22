@@ -31,10 +31,18 @@ export class LoginPage {
     try {
       await firebase
         .auth()
-        .signInWithEmailAndPassword(this.data.email, this.data.password);
-
-      this.events.publish('user:login');
-      this.router.navigateByUrl('/app/tabs/reservations');
+        .signInWithEmailAndPassword(this.data.email, this.data.password)
+        .then(user => {
+          this.events.publish('user:login');
+          this.router.navigateByUrl('/app/tabs/reservations');    
+        }, async error => {
+          const alert = await this.alertController.create({
+            header: '警告',
+            message: error.message,
+            buttons: ['OK']
+          });
+          alert.present();
+        });
 
     } catch (error) {
       const alert = await this.alertController.create({
