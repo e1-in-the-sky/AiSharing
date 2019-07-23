@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { AlertController, Events } from '@ionic/angular';
 
@@ -14,52 +14,55 @@ import * as firebase from 'firebase';
   styleUrls: ['./account.scss'],
 })
 export class AccountPage implements AfterViewInit {
+  accountId: string;
   username: string;
 
   constructor(
     public events: Events,
     public alertCtrl: AlertController,
     public router: Router,
-    public userData: UserData
+    public userData: UserData,
+    private route: ActivatedRoute
   ) { }
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.getUsername();
+      this.getAccountId();
+      // this.getUsername();
     });
   }
 
-  updatePicture() {
-    console.log('Clicked to update picture');
-  }
+  // updatePicture() {
+  //   console.log('Clicked to update picture');
+  // }
 
   // Present an alert with the current username populated
   // clicking OK will update the username and display it
   // clicking Cancel will close the alert and do nothing
-  async changeUsername() {
-    const alert = await this.alertCtrl.create({
-      header: 'Change Username',
-      buttons: [
-        'Cancel',
-        {
-          text: 'Ok',
-          handler: (data: any) => {
-            this.userData.setUsername(data.username);
-            this.getUsername();
-          }
-        }
-      ],
-      inputs: [
-        {
-          type: 'text',
-          name: 'username',
-          value: this.username,
-          placeholder: 'username'
-        }
-      ]
-    });
-    await alert.present();
-  }
+  // async changeUsername() {
+  //   const alert = await this.alertCtrl.create({
+  //     header: 'Change Username',
+  //     buttons: [
+  //       'Cancel',
+  //       {
+  //         text: 'Ok',
+  //         handler: (data: any) => {
+  //           this.userData.setUsername(data.username);
+  //           this.getUsername();
+  //         }
+  //       }
+  //     ],
+  //     inputs: [
+  //       {
+  //         type: 'text',
+  //         name: 'username',
+  //         value: this.username,
+  //         placeholder: 'username'
+  //       }
+  //     ]
+  //   });
+  //   await alert.present();
+  // }
 
   getUsername() {
     // this.userData.getUsername().then((username) => {
@@ -68,18 +71,22 @@ export class AccountPage implements AfterViewInit {
     this.username = firebase.auth().currentUser.displayName;
   }
 
-  changePassword() {
-    console.log('Clicked to change password');
+  getAccountId() {
+    this.accountId = this.route.snapshot.paramMap.get('accountId');
   }
 
-  logout() {
-    // this.userData.logout();
-    firebase.auth().signOut();
-    this.events.publish('user:logout');
-    this.router.navigateByUrl('/login');
-  }
+  // changePassword() {
+  //   console.log('Clicked to change password');
+  // }
 
-  support() {
-    this.router.navigateByUrl('/support');
-  }
+  // logout() {
+  //   // this.userData.logout();
+  //   firebase.auth().signOut();
+  //   this.events.publish('user:logout');
+  //   this.router.navigateByUrl('/login');
+  // }
+
+  // support() {
+  //   this.router.navigateByUrl('/support');
+  // }
 }

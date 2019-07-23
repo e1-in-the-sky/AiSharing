@@ -7,14 +7,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-label>User ID: {{accountId}}</ion-label>
-  </ion-list>
-
-  <!-- <div *ngIf="username" class="ion-padding-top ion-text-center">
+<ion-content class="outer-content">
+  <div *ngIf="username" class="ion-padding-top ion-text-center">
     <img src="https://www.gravatar.com/avatar?d=mm&s=140" alt="avatar">
-    <h2>Display Name: {{username}}</h2>
+    <h2>{{username}}</h2>
 
     <ion-list inset>
       <ion-item (click)="updatePicture()">Update Picture</ion-item>
@@ -23,5 +19,5 @@
       <ion-item (click)="support()">Support</ion-item>
       <ion-item (click)="logout()">Logout</ion-item>
     </ion-list>
-  </div> -->
+  </div>
 </ion-content>

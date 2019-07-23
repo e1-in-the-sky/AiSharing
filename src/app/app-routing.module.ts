@@ -9,7 +9,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'account',
+    path: 'account/:accountId',
     loadChildren: './pages/account/account.module#AccountModule'
   },
   {
