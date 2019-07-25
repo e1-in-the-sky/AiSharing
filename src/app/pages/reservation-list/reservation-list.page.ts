@@ -4,6 +4,8 @@ import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation.service';
 import { Router } from '@angular/router';
 
+import * as firebase from 'firebase';
+
 @Component({
   selector: 'reservation-list',
   templateUrl: './reservation-list.page.html',
@@ -18,14 +20,23 @@ export class ReservationListPage implements OnInit {
   // reservation3 = new Reservation(this.user3, '中央病院', '一箕町', '15:00', 1, '募集中', '病院から帰ります', [], '14:30');
   // reservations: Reservation[] = [this.reservation1, this.reservation2, this.reservation3];
   reservations: Reservation[] = [];
+  isLogin: Boolean = false;
 
   constructor(
     private reservationService: ReservationService,
     public router: Router
-  ) { }
+  ) {  }
 
   ngOnInit() {
     this.reservations = this.reservationService.getReservations();
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.isLogin = true;
+      } else {
+        this.isLogin = false;
+      }
+    });
   }
 
   goToDetail(reservation: any) {

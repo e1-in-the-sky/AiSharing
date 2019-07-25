@@ -73,7 +73,7 @@
     <reservation [reservation]="reservation"></reservation>
   </ion-list>     -->
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab *ngIf='isLogin' vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="goToPost()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
