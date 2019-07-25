@@ -15,6 +15,7 @@ export class MypagePage implements OnInit {
   displayName: string;
   email: string;
   introduction: string = '';
+  imageURL: string = '';
 
   constructor(
     private userService: UserService
@@ -33,6 +34,7 @@ export class MypagePage implements OnInit {
           this.uid = user.uid;
           this.displayName = user.name;
           this.introduction = user.introduction;
+          this.imageURL = user.imageURL;
         });
       }
     });

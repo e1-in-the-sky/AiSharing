@@ -8,6 +8,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { UserData } from '../../providers/user-data';
 
 import { UserOptions } from '../../interfaces/user-options';
+import { UserService } from '../../services/user/user.service';
 
 
 
@@ -24,30 +25,19 @@ export class SignupPage {
     public events: Events,
     public router: Router,
     public alertController: AlertController,
-    private db: AngularFirestore
+    private db: AngularFirestore,
+    public userService: UserService
   ) {}
 
   async onSignup() {
     this.submitted = true;
     try {
-      console.log('Display Name: ' + this.data.displayName + '\nE-mail: ' + this.data.email + '\nPassword' + this.data.password);
-      await firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.data.email, this.data.password)
-        .then((user) => {
-          user.user.updateProfile({
-            displayName: this.data.displayName,
-            photoURL: 'default'
-          });
-          this.db
-            .collection('users').doc(user.user.uid)
-            .set({uid: user.user.uid, introduction: 'よろしくお願いします。', reservations: []});
-          console.log(user.user);
+      this.userService.addUser(this.data.email, this.data.password, this.data.displayName)
+        .then(uid => {
+          console.log('uid:', uid);
+          this.events.publish('user:signup');
+          this.router.navigateByUrl('app/tabs/reservations');
         });
-
-        this.events.publish('user:signup');
-      this.router.navigateByUrl('app/tabs/reservations');
-
     } catch (error) {
       const alert = await this.alertController.create({
         header: '警告',
