@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
-import { ReservationService } from '../../services/reservation.service';
+import { ReservationService } from '../../services/reservation/reservation.service';
 import { Router } from '@angular/router';
 
 import * as firebase from 'firebase';
@@ -28,8 +28,26 @@ export class ReservationListPage implements OnInit {
   ) {  }
 
   ngOnInit() {
-    this.reservations = this.reservationService.getReservations();
+    this.getReservations();
+    // this.reservations = this.reservationService.getReservations();
 
+    this.getLoginStatus();
+  }
+
+  getReservations() {
+    this.reservations = this.reservationService.getReservations();
+  }
+
+  serchReservations(key) {
+    // for serch reservations related to key. use by serchbar.
+  }
+
+  onRideTogether() {
+    // on button action for ノリマス
+  }
+
+  getLoginStatus() {
+    // for modify this login status
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.isLogin = true;
@@ -40,6 +58,7 @@ export class ReservationListPage implements OnInit {
   }
 
   goToDetail(reservation: any) {
+    // for detail page
     console.log(reservation);
     console.log(reservation.owner.name);
   }
