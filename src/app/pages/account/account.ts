@@ -6,6 +6,8 @@ import { AlertController, Events } from '@ionic/angular';
 import { UserData } from '../../providers/user-data';
 
 import * as firebase from 'firebase';
+import { UserService } from '../../services/user/user.service';
+import { ReservationService } from '../../services/reservation/reservation.service';
 
 
 @Component({
@@ -22,13 +24,17 @@ export class AccountPage implements AfterViewInit {
     public alertCtrl: AlertController,
     public router: Router,
     public userData: UserData,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private reservationService: ReservationService
   ) { }
 
   ngAfterViewInit() {
     setTimeout(() => {
       this.getAccountId();
       // this.getUsername();
+      this.getUser();
+      this.getUserReservations();
     });
   }
 
@@ -73,6 +79,18 @@ export class AccountPage implements AfterViewInit {
 
   getAccountId() {
     this.accountId = this.route.snapshot.paramMap.get('accountId');
+  }
+
+  getUser() {
+    // get user from firestore
+    console.log('in getUser(account.ts)\nuser uid:', this.accountId);
+    this.userService.getUser(this.accountId);
+  }
+
+  getUserReservations(){
+    // get reservations posted by this user
+    console.log('in getUserReservations(account.ts)\nuser uid:', this.accountId);
+    this.reservationService.getUserReservations(this.accountId);
   }
 
   // changePassword() {

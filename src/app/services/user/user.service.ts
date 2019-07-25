@@ -16,36 +16,36 @@ export class UserService {
   ) {  }
 
   async addUser(email: string, password: string, name: string) {
-      console.log('Display Name: ' + name + '\nE-mail: ' + email + '\nPassword' + password);
-      var uid = '';
-      await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then((usercredential) => {
-          var user = new User({
-            uid: usercredential.user.uid,
-            name: name,
-            imageURL: 'default',
-            introduction: 'よろしくお願いします。',
-            createdAt: new Date(),
-            updatedAt: new Date()
-          });
-          usercredential.user.updateProfile({
-            displayName: user.name,
-            photoURL: user.imageURL
-          });
-          this.db
-            .collection('users').doc(usercredential.user.uid)
-            .set(user.deserialize());
-          uid = usercredential.user.uid;
-          console.log(usercredential.user);
+    // add user information to authentication and firestore.
+    console.log('Display Name: ' + name + '\nE-mail: ' + email + '\nPassword' + password);
+    var uid = '';
+    await firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((usercredential) => {
+        var user = new User({
+          uid: usercredential.user.uid,
+          name: name,
+          imageURL: 'default',
+          introduction: 'よろしくお願いします。',
+          createdAt: new Date(),
+          updatedAt: new Date()
         });
-        return uid;
-
-
+        usercredential.user.updateProfile({
+          displayName: user.name,
+          photoURL: user.imageURL
+        });
+        this.db
+          .collection('users').doc(usercredential.user.uid)
+          .set(user.deserialize());
+        uid = usercredential.user.uid;
+        console.log(usercredential.user);
+      });
+    return uid;
   }
 
   async getUser(uid) {
+    // get user information from firestore by user uid.
     var userRef = await this.db.collection('users').doc(uid).ref;
     await userRef.get().then(doc => {
       if (!doc.exists) {
@@ -60,5 +60,10 @@ export class UserService {
       console.log('error', err);
     });
     return this.user;
+  }
+
+  updateUser(uid, user) {
+    // update User information
+    // authentication and firestore
   }
 }
