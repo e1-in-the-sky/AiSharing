@@ -26,4 +26,8 @@ export class User {
     ) {
         Object.assign(this, init);
     }
+
+    deserialize() {
+        return Object.assign({},this);
+    }
 }
