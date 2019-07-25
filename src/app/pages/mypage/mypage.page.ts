@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as firebase from 'firebase';
+import { UserService } from '../../services/user/user.service';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'mypage',
@@ -7,17 +9,33 @@ import * as firebase from 'firebase';
   styleUrls: ['./mypage.page.scss'],
 })
 export class MypagePage implements OnInit {
-  user: any;
+  user: User;
+  user_: any;
+  uid: string;
   displayName: string;
   email: string;
+  introduction: string = '';
 
-  constructor() { }
+  constructor(
+    private userService: UserService
+  ) { }
 
   ngOnInit() {
-    this.user = firebase.auth().currentUser;
-    this.displayName = this.user.displayName;
-    this.email = this.user.email;
-    console.log(this.user);
+    this.getCurrentUser();
+  }
+
+  getCurrentUser() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in.
+        this.userService.getUser(user.uid).then(user => {
+          this.user = user;
+          this.uid = user.uid;
+          this.displayName = user.name;
+          this.introduction = user.introduction;
+        });
+      }
+    });
   }
 
 }
