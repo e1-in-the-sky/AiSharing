@@ -9,6 +9,9 @@ export class ReservationPostPage implements OnInit {
   data: { departure: string, destination: string, departure_time: string, comment: string }
     = { departure: '', destination: '', departure_time: '', comment: 'よろしくお願いします。' };
 
+  maxPassengerCount: number = 4;
+  passengerCount: number = 1;
+
   constructor() { }
 
   ngOnInit() {
@@ -16,6 +19,8 @@ export class ReservationPostPage implements OnInit {
 
   onPost() {
     console.log(this.data);
+    console.log('maxPassengerCount:', this.maxPassengerCount);
+    console.log('passengerCount:', this.passengerCount);
   }
 
 }
