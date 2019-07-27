@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
+import { AngularFirestore } from '@angular/fire/firestore';
+import * as firebase from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -18,20 +20,48 @@ export class ReservationService {
   // reservation3 = new Reservation(this.user3, '中央病院', '一箕町', '15:00', 1, '募集中', '病院から帰ります', [], '14:30');
   // reservations: Reservation[] = [this.reservation1, this.reservation2, this.reservation3];
 
-  constructor() { }
+  constructor(
+    private db: AngularFirestore
+  ) { }
 
-  getReservation(uid){
+  async getReservation(uid){
     // get reservation from firestore by reservation uid
+    var reservationRef = await this.db.collection('reservations').doc(uid).ref;
+    var reservation;
+    await reservationRef.get().then(doc => {
+      if (!doc.exists) {
+        console.log('No such doc');
+      } else {
+        reservation = new Reservation(doc.data());
+        console.log('doc.data():', doc.data());
+        console.log('reservation:', reservation);
+      }
+    })
+    .catch(err => {
+      console.log('error', err);
+    });
+    return reservation;
   }
 
-  getReservations(): Reservation[] {
-    var user1 = new User({uid: '1', name: 'aihara', imageURL: '../../../assets/img/speakers/bear.jpg', introduction: 'こんにちは', createdAt: new Date(), updatedAt: new Date()});
-    var reservation1 = new Reservation({owner: user1, departure: '会津大学', destination: '会津若松駅', departure_time: '18:00', passengerCount: 1, condition: '募集中', message: '募集してまーす', chats: [], published_time: '10:00'});
-    var user2 = new User({uid: '2', name: 'user2', imageURL: '../../../assets/img/speakers/cheetah.jpg', introduction: 'I\'m user2.', createdAt: new Date(), updatedAt: new Date()});
-    var reservation2 = new Reservation({owner: user2, departure: '会津若松駅', destination: '鶴ケ城', departure_time: '10:00', passengerCount: 2, condition: '募集中', message: '鶴ヶ城に行きます', chats: [], published_time: '9:00'});
-    var user3 = new User({uid: '3', name: 'user3', imageURL: '../../../assets/img/speakers/duck.jpg', introduction: 'I\'m user3', createdAt: new Date(), updatedAt: new Date()});
-    var reservation3 = new Reservation({owner: user3, departure: '中央病院', destination: '一箕町', departure_time: '15:00', passengerCount: 1, condition: '募集中', message: '病院から帰ります', chats: [], published_time: '14:30'});
-    var reservations: Reservation[] = [reservation1, reservation2, reservation3];
+  async getReservations() {
+    // var user1 = new User({uid: '1', name: 'aihara', imageURL: '../../../assets/img/speakers/bear.jpg', introduction: 'こんにちは', createdAt: new Date(), updatedAt: new Date()});
+    // var reservation1 = new Reservation({owner: user1, departure: '会津大学', destination: '会津若松駅', departure_time: '18:00', passengerCount: 1, condition: '募集中', message: '募集してまーす', chats: [], published_time: '10:00'});
+    // var user2 = new User({uid: '2', name: 'user2', imageURL: '../../../assets/img/speakers/cheetah.jpg', introduction: 'I\'m user2.', createdAt: new Date(), updatedAt: new Date()});
+    // var reservation2 = new Reservation({owner: user2, departure: '会津若松駅', destination: '鶴ケ城', departure_time: '10:00', passengerCount: 2, condition: '募集中', message: '鶴ヶ城に行きます', chats: [], published_time: '9:00'});
+    // var user3 = new User({uid: '3', name: 'user3', imageURL: '../../../assets/img/speakers/duck.jpg', introduction: 'I\'m user3', createdAt: new Date(), updatedAt: new Date()});
+    // var reservation3 = new Reservation({owner: user3, departure: '中央病院', destination: '一箕町', departure_time: '15:00', passengerCount: 1, condition: '募集中', message: '病院から帰ります', chats: [], published_time: '14:30'});
+    // var reservations: Reservation[] = [reservation1, reservation2, reservation3];
+    var reservations: Reservation[] = [];
+    var reservationsRef = this.db.collection('reservations').ref;
+    await reservationsRef.orderBy('departure_time').get().then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        var reservation = new Reservation(doc.data());
+        console.log('getReservations in reservation.service.ts');
+        console.log('doc.data():', doc.data());
+        console.log('reservation:', reservation);
+        reservations.push(reservation);
+      });
+    });
     return reservations;
   }
 
@@ -44,8 +74,14 @@ export class ReservationService {
     // get reserved reservations by User(user_uid)
   }
 
-  addReservation(reservation){
+  async addReservation(reservation: Reservation){
     // add reservation to firestore
+    if (reservation.uid == '') {
+      const newReservationId = this.db.createId();
+      reservation.uid = newReservationId;
+    }
+    var newReservationRef = this.db.collection('reservations').doc(reservation.uid);
+    await newReservationRef.set(reservation.deserialize());
   }
 
   updateReservation(uid, reservation){

@@ -18,6 +18,7 @@ import { ReservationService } from '../../services/reservation/reservation.servi
 export class AccountPage implements AfterViewInit {
   accountId: string;
   username: string;
+  introduction: string;
 
   constructor(
     public events: Events,
@@ -30,8 +31,8 @@ export class AccountPage implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.getAccountId();
+    setTimeout(async () => {
+      await this.getAccountId();
       // this.getUsername();
       this.getUser();
       this.getUserReservations();
@@ -84,7 +85,12 @@ export class AccountPage implements AfterViewInit {
   getUser() {
     // get user from firestore
     console.log('in getUser(account.ts)\nuser uid:', this.accountId);
-    this.userService.getUser(this.accountId);
+    this.userService
+      .getUser(this.accountId)
+      .then(user => {
+        this.username = user.name;
+        this.introduction = user.introduction;
+      });
   }
 
   getUserReservations(){

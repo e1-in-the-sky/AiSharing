@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from '../../services/message/message.service';
 import { ReservationService } from '../../services/reservation/reservation.service';
+import { Reservation } from '../../models/reservation';
+import { ReservationUsersService } from '../../services/reservation_users/reservation-users.service';
 
 @Component({
   selector: 'reservation-detail',
@@ -9,12 +11,14 @@ import { ReservationService } from '../../services/reservation/reservation.servi
   styleUrls: ['./reservation-detail.page.scss'],
 })
 export class ReservationDetailPage implements OnInit {
-  reservationId = '';
+  reservationId: string = '';
+  departure_name: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private reservationService: ReservationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private reservationUsersService: ReservationUsersService
   ) { }
 
   ngOnInit() {
@@ -25,8 +29,11 @@ export class ReservationDetailPage implements OnInit {
 
   getReservation() {
     // get reservation from firestore
-    console.log('in getReservation(reservation-detail.page.ts)');
-    this.reservationService.getReservation(this.reservationId);
+    console.log('in getReservation(reservation-detail.page.ts)\nreservationId:', this.reservationId);
+    this.reservationService.getReservation(this.reservationId).then(reservation => {
+      console.log('in getReservation(reservation-detail.page.ts)\nreservation:', reservation);
+      this.departure_name = reservation.departure_name;
+    });
   }
 
   getMessages(){
@@ -43,6 +50,18 @@ export class ReservationDetailPage implements OnInit {
   editReservation() {
     // edit reservation or go to edit page this reservation.
     console.log('editReservation in reservation-detail.page.ts)\nthis.reservationId:', this.reservationId);
+  }
+
+  getReservationUsers() {
+    this.reservationUsersService.getReservationUsers(this.reservationId).then(reservationUsers => {
+      console.log('reservation users:', reservationUsers);
+    });
+  }
+
+  getReservationsUsers() {
+    this.reservationUsersService.getReservationsUsers().then(reservationsUsers => {
+      console.log('reservations users:', reservationsUsers);
+    });
   }
 
 }

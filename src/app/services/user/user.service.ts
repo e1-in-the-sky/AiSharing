@@ -47,19 +47,20 @@ export class UserService {
   async getUser(uid) {
     // get user information from firestore by user uid.
     var userRef = await this.db.collection('users').doc(uid).ref;
+    var user: User;
     await userRef.get().then(doc => {
       if (!doc.exists) {
         console.log('No such doc');
       } else {
-        this.user = new User(doc.data());
+        user = new User(doc.data());
         console.log('User:', this.user);
-        return this.user;
+        return user;
       }
     })
     .catch(err => {
       console.log('error', err);
     });
-    return this.user;
+    return user;
   }
 
   updateUser(uid, user) {
