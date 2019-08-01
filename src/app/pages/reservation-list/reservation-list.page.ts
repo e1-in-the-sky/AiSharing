@@ -59,27 +59,6 @@ export class ReservationListPage implements OnInit {
     });
   }
 
-  goToReservationDetail(reservation_uid) {
-    // for reservation detail page
-    // console.log(reservation);
-    // console.log(reservation.owner);
-    this.router.navigateByUrl('/app/tabs/reservations/detail/' + reservation_uid);
-  }
-
-  goToAccountDetail(account_uid) {
-    // for account detail page
-    var path = '/account/' + account_uid;
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        // account_uidが自分だった場合はマイページに移動
-        if (user.uid == account_uid) {
-          path = '/mypage';
-        }
-      }
-    })
-    this.router.navigateByUrl(path);
-  }
-
   goToPost() {
     this.router.navigateByUrl('/app/tabs/reservations/post');
   }

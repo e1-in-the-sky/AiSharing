@@ -56,7 +56,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngFor="let reservation of reservations">
+  <!-- <ion-card *ngFor="let reservation of reservations">
     <ion-card-content>
       <ion-chip (click)="goToAccountDetail(reservation.owner.id)">
         <ion-avatar item-left>
@@ -68,7 +68,9 @@
       <p>出発時刻: {{reservation.departure_time}}    現在予約人数/最大人数: {{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</p>
       <ion-button (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
     </ion-card-content>
-  </ion-card>
+  </ion-card> -->
+
+  <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
 
   <!-- <ion-list ion-no-margin *ngFor="let reservation of reservations">
     <reservation [reservation]="reservation"></reservation>

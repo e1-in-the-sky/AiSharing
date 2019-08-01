@@ -3,6 +3,8 @@ import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
+import { ReservationUsers } from '../../models/reservation-users';
+import { ReservationUsersService } from '../reservation_users/reservation-users.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,8 @@ export class ReservationService {
   // reservations: Reservation[] = [this.reservation1, this.reservation2, this.reservation3];
 
   constructor(
-    private db: AngularFirestore
+    private db: AngularFirestore,
+    private reservationUsersService: ReservationUsersService
   ) { }
 
   async getReservation(uid){
@@ -80,12 +83,27 @@ export class ReservationService {
       const newReservationId = this.db.createId();
       reservation.uid = newReservationId;
     }
-    var newReservationRef = this.db.collection('reservations').doc(reservation.uid);
-    await newReservationRef.set(reservation.deserialize());
+    var newReservationDoc = this.db.collection('reservations').doc(reservation.uid);
+    await newReservationDoc.set(reservation.deserialize());
+
+    // set reservation users relation
+    var reservation_users: ReservationUsers
+      = new ReservationUsers({
+        reservation: newReservationDoc.ref,
+        user: reservation.owner,
+        passenger_count: reservation.passenger_count
+      });
+    await this.reservationUsersService.addReservationUsers(reservation_users);
   }
 
-  updateReservation(uid, reservation){
+  async updateReservation(uid, reservation){
     // update reservation in firestore by uid
+    console.log('update reservation\n', uid, '=>', reservation);
+    await this.db.collection('reservations').doc(uid)
+      .update(reservation.deserialize())
+      .then(() => {
+        console.log("Reservation Document successfully updated!");
+      });
   }
 
   deleteReservation(uid){

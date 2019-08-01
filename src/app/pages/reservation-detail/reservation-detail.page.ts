@@ -4,6 +4,8 @@ import { MessageService } from '../../services/message/message.service';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Reservation } from '../../models/reservation';
 import { ReservationUsersService } from '../../services/reservation_users/reservation-users.service';
+import { User } from '../../models/user';
+import { Message } from '../../models/message';
 
 @Component({
   selector: 'reservation-detail',
@@ -11,8 +13,11 @@ import { ReservationUsersService } from '../../services/reservation_users/reserv
   styleUrls: ['./reservation-detail.page.scss'],
 })
 export class ReservationDetailPage implements OnInit {
+  owner_name: string = '';
   reservationId: string = '';
   departure_name: string = '';
+  reservationUsers: User[] = [];
+  messages: Message[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -25,6 +30,7 @@ export class ReservationDetailPage implements OnInit {
     this.reservationId = this.route.snapshot.paramMap.get('reservationId');
     this.getReservation();
     this.getMessages();
+    this.getThisReservationUsers();
   }
 
   getReservation() {
@@ -32,6 +38,7 @@ export class ReservationDetailPage implements OnInit {
     console.log('in getReservation(reservation-detail.page.ts)\nreservationId:', this.reservationId);
     this.reservationService.getReservation(this.reservationId).then(reservation => {
       console.log('in getReservation(reservation-detail.page.ts)\nreservation:', reservation);
+      reservation.owner.get().then(doc => {this.owner_name = doc.data().name})
       this.departure_name = reservation.departure_name;
     });
   }
@@ -56,6 +63,14 @@ export class ReservationDetailPage implements OnInit {
     this.reservationUsersService.getReservationUsers(this.reservationId).then(reservationUsers => {
       console.log('reservation users:', reservationUsers);
     });
+  }
+
+  async getThisReservationUsers() {
+    await this.reservationUsersService.getReservationUsersByReservationUid(this.reservationId)
+      .then(reservationUsers => {
+        console.log('reservation users:', reservationUsers);
+        this.reservationUsers = reservationUsers;
+      });
   }
 
   getReservationsUsers() {

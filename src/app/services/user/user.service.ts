@@ -9,7 +9,6 @@ import * as firebase from 'firebase';
   providedIn: 'root'
 })
 export class UserService {
-  user: User;
 
   constructor(
     private db: AngularFirestore
@@ -53,7 +52,7 @@ export class UserService {
         console.log('No such doc');
       } else {
         user = new User(doc.data());
-        console.log('User:', this.user);
+        console.log('User:', user);
         return user;
       }
     })

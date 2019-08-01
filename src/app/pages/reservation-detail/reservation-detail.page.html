@@ -13,15 +13,23 @@
     <ion-label>Reservation ID: {{reservationId}}</ion-label>
   </ion-item>
   <ion-item>
-    <ion-label>owner name: user name</ion-label>
+    <ion-label>owner name: {{owner_name}}</ion-label>
   </ion-item>
   <ion-item>
     <ion-label>出発地: {{departure_name}}</ion-label>
   </ion-item>
   <ion-item>
-    <ion-button (click)="getReservationUsers()">reservations users</ion-button>
+    <ion-label>乗車予定者</ion-label>
   </ion-item>
-
+  <ion-item *ngFor="let user of reservationUsers">
+    <ion-label>アカウント名: {{user.name}}</ion-label>  
+  </ion-item>
+  <ion-item>
+    <ion-label>メッセージ</ion-label>
+  </ion-item>
+  <ion-item *ngFor="let message of messages">
+    <ion-label>メッセージ</ion-label>  
+  </ion-item>
 </ion-list>
 
 </ion-content>
