@@ -62,6 +62,11 @@ export class UserService {
     return user;
   }
 
+  async getUserRef(uid) {
+    var userRef = await this.db.collection('users').doc(uid).ref;
+    return userRef;
+  }
+
   updateUser(uid, user) {
     // update User information
     // authentication and firestore

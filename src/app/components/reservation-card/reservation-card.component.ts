@@ -17,7 +17,7 @@ import { ReservationService } from '../../services/reservation/reservation.servi
 export class ReservationCardComponent implements OnInit {
   @Input()
   reservation: Reservation;
-  user: User = new User();
+  user: User = new User();  // reservationのオーナー
   
   constructor(
     private db: AngularFirestore,

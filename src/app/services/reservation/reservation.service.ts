@@ -46,6 +46,11 @@ export class ReservationService {
     return reservation;
   }
 
+  async getReservationRef(uid) {
+    var reservationRef = await this.db.collection('reservations').doc(uid).ref;
+    return reservationRef;
+  }
+
   async getReservations() {
     // var user1 = new User({uid: '1', name: 'aihara', imageURL: '../../../assets/img/speakers/bear.jpg', introduction: 'こんにちは', createdAt: new Date(), updatedAt: new Date()});
     // var reservation1 = new Reservation({owner: user1, departure: '会津大学', destination: '会津若松駅', departure_time: '18:00', passengerCount: 1, condition: '募集中', message: '募集してまーす', chats: [], published_time: '10:00'});
