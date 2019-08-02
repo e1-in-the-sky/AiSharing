@@ -63,6 +63,23 @@ export class ReservationUsersService {
     return users;
   }
 
+  async getReservationUserRefsByReservationUid(reservation_uid) {
+    // Get user list by reservation_uid
+    console.log('getReservationUsersByReservationUid in reservation-users.service.ts\nreservation_uid:', reservation_uid);
+    var reservationUsersRef = await this.db.collection('reservations_users').ref;
+    var reservationRef = await this.db.collection('reservations').doc(reservation_uid).ref;
+    var users: firebase.firestore.DocumentReference[] = [];
+    await reservationUsersRef.where('reservation', '==', reservationRef).get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          // doc.data().user.get().then(user => {users.push(new User(user.data()))});
+          doc.data().user.get().then(user => {users.push(user.ref)});
+          console.log(doc.id, "=>", doc.data());
+        });
+      });
+    return users;
+  }
+
   async addReservationUsers(reservation_users: ReservationUsers) {
     // add new reservation users to firestore
     await this.db.collection('reservations_users')

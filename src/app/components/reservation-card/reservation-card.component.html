@@ -1,12 +1,12 @@
 <ion-card>
   <ion-card-content>
-    <ion-chip (click)="goToAccountDetail(reservation.owner.id)">
+    <!-- <ion-chip (click)="goToAccountDetail(reservation.owner.id)">
       <ion-avatar item-left>
-        <!-- <ion-img [src]="{{reservation.imageURL}}"></ion-img> -->
         <ion-img src="../../../assets/img/speakers/bear.jpg"></ion-img>
       </ion-avatar>
       <ion-label>{{user.name}}</ion-label>
-    </ion-chip>
+    </ion-chip> -->
+    <user-chip [user_ref]="reservation.owner"></user-chip>
     <p>出発地: {{reservation.departure_name}}    目的地: {{reservation.destination_name}}</p>
     <p>出発時刻: {{reservation.departure_time}}    現在予約人数/最大人数: {{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</p>
     <p>コメント: {{reservation.comment}}</p>

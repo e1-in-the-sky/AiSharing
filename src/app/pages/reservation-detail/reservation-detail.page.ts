@@ -19,6 +19,7 @@ export class ReservationDetailPage implements OnInit {
   reservationId: string = '';
   departure_name: string = '';
   reservationUsers: User[] = [];
+  reservationUserRefs: firebase.firestore.DocumentReference[] = [];
   messages: Message[] = [];
   message: string = '';
 
@@ -34,7 +35,8 @@ export class ReservationDetailPage implements OnInit {
     this.reservationId = this.route.snapshot.paramMap.get('reservationId');
     this.getReservation();
     this.getMessages();
-    this.getThisReservationUsers();
+    // this.getThisReservationUsers();
+    this.getThisReservationUserRefs();
   }
 
   getReservation() {
@@ -112,6 +114,15 @@ export class ReservationDetailPage implements OnInit {
       .then(reservationUsers => {
         console.log('reservation users:', reservationUsers);
         this.reservationUsers = reservationUsers;
+      });
+  }
+
+  async getThisReservationUserRefs() {
+    // await this.reservationUsersService.getReservationUsersByReservationUid(this.reservationId)
+    await this.reservationUsersService.getReservationUserRefsByReservationUid(this.reservationId)
+      .then(reservationUserRefs => {
+        console.log('reservation users:', reservationUserRefs);
+        this.reservationUserRefs = reservationUserRefs;
       });
   }
 
