@@ -8,6 +8,7 @@ import { UserData } from '../../providers/user-data';
 import * as firebase from 'firebase';
 import { UserService } from '../../services/user/user.service';
 import { ReservationService } from '../../services/reservation/reservation.service';
+import { Reservation } from '../../models/reservation';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class AccountPage implements AfterViewInit {
   accountId: string;
   username: string;
   introduction: string;
+  reservations: Reservation[] = [];
 
   constructor(
     public events: Events,
@@ -96,7 +98,11 @@ export class AccountPage implements AfterViewInit {
   getUserReservations(){
     // get reservations posted by this user
     console.log('in getUserReservations(account.ts)\nuser uid:', this.accountId);
-    this.reservationService.getUserReservations(this.accountId);
+    this.reservationService
+      .getUserReservations(this.accountId)
+      .then(reservations => {
+        this.reservations = reservations;
+      });
   }
 
   // changePassword() {

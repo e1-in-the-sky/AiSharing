@@ -11,9 +11,12 @@ import { AppCommonModule } from '../../modules/app-common/app-common.module';
 const routes: Routes = [
   {
     path: '',
-    component: ReservationDetailPage
+    component: ReservationDetailPage,
   }
 ];
+
+// { path: 'reservation-edit', loadChildren: './pages/reservation-edit/reservation-edit.module#ReservationEditPageModule' },
+
 
 @NgModule({
   imports: [

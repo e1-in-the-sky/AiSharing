@@ -5,6 +5,7 @@ import * as firebase from 'firebase';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'reservation-post',
@@ -40,6 +41,7 @@ export class ReservationPostPage implements OnInit {
 
   constructor(
     private navCtrl: NavController,
+    private router: Router,
     private db: AngularFirestore,
     private reservationService: ReservationService
   ) { }
@@ -75,8 +77,9 @@ export class ReservationPostPage implements OnInit {
         console.log('reservavtion:', reservation);
         // newReservationRef.set(reservation.deserialize());
         this.reservationService.addReservation(reservation).then(() => {
-          this.navCtrl.back();
-          // this.navCtrl.navigateBack('/app/tabs/reservations');
+          // this.navCtrl.back();
+          this.navCtrl.navigateBack('/app/tabs/reservations');
+          // this.router.navigateByUrl('/app/tabs/reservations');
         });
       } else {
         // case signout

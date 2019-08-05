@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from '../../services/message/message.service';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Reservation } from '../../models/reservation';
@@ -8,6 +8,8 @@ import { User } from '../../models/user';
 import { Message } from '../../models/message';
 import * as firebase from 'firebase';
 import { UserService } from '../../services/user/user.service';
+import { ReservationUsers } from '../../models/reservation-users';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'reservation-detail',
@@ -17,14 +19,19 @@ import { UserService } from '../../services/user/user.service';
 export class ReservationDetailPage implements OnInit {
   owner_name: string = '';
   reservationId: string = '';
+  reservation: Reservation = new Reservation();
+  reservation_owner: User = new User();
   departure_name: string = '';
-  reservationUsers: User[] = [];
-  reservationUserRefs: firebase.firestore.DocumentReference[] = [];
+  departure_time_date: string = '';
+  reservationUsers: ReservationUsers[] = [];
   messages: Message[] = [];
   message: string = '';
+  is_my_reservation: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
+    private navCtrl: NavController,
     private reservationService: ReservationService,
     private messageService: MessageService,
     private userService: UserService,
@@ -35,8 +42,7 @@ export class ReservationDetailPage implements OnInit {
     this.reservationId = this.route.snapshot.paramMap.get('reservationId');
     this.getReservation();
     this.getMessages();
-    // this.getThisReservationUsers();
-    this.getThisReservationUserRefs();
+    this.getThisReservationUsers();
   }
 
   getReservation() {
@@ -44,7 +50,18 @@ export class ReservationDetailPage implements OnInit {
     console.log('in getReservation(reservation-detail.page.ts)\nreservationId:', this.reservationId);
     this.reservationService.getReservation(this.reservationId).then(reservation => {
       console.log('in getReservation(reservation-detail.page.ts)\nreservation:', reservation);
-      reservation.owner.get().then(doc => {this.owner_name = doc.data().name})
+      console.log('reservation departure_time:', reservation.departure_time, '\n',
+                  'reservation departure_time class name:', reservation.departure_time.constructor.name, '\n',
+                  'reservation departure_time.seconds:', reservation.departure_time.seconds, '\n',
+                  'reservation departure_time.toDate():', reservation.departure_time.toDate());
+      this.reservation = reservation;
+      this.departure_time_date = reservation.departure_time.toDate();
+      reservation.owner.get()
+        .then(doc => {
+          this.reservation_owner = new User(doc.data());
+          this.owner_name = doc.data().name
+          this.checkMyReservation();
+        });
       this.departure_name = reservation.departure_name;
     });
   }
@@ -89,13 +106,18 @@ export class ReservationDetailPage implements OnInit {
         // reset message form
         this.message = '';
         // get new messages
+
         this.getMessages();
       });
   }
 
-  checkMyReservation() {
+  async checkMyReservation() {
     // check this reservation is my posted reservation.
-    console.log('checkMyResevation in reservation-detail.page.ts)\nthis.reservationId:', this.reservationId); 
+    console.log('checkMyResevation in reservation-detail.page.ts)\nthis.reservationId:', this.reservationId);
+    await firebase.auth().onAuthStateChanged(user => {
+      this.is_my_reservation = user.uid == this.reservation.owner.id;
+    });
+    return this.is_my_reservation;
   }
 
   editReservation() {
@@ -117,19 +139,16 @@ export class ReservationDetailPage implements OnInit {
       });
   }
 
-  async getThisReservationUserRefs() {
-    // await this.reservationUsersService.getReservationUsersByReservationUid(this.reservationId)
-    await this.reservationUsersService.getReservationUserRefsByReservationUid(this.reservationId)
-      .then(reservationUserRefs => {
-        console.log('reservation users:', reservationUserRefs);
-        this.reservationUserRefs = reservationUserRefs;
-      });
-  }
-
   getReservationsUsers() {
     this.reservationUsersService.getReservationsUsers().then(reservationsUsers => {
       console.log('reservations users:', reservationsUsers);
     });
+  }
+
+  goToEditPage() {
+    console.log('go to edit page');
+    // this.router.navigate
+    this.navCtrl.navigateForward('/app/tabs/reservations/edit/' + this.reservation.uid);
   }
 
 }

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ReservationUsers } from '../../models/reservation-users';
 import { User } from '../../models/user';
+import { Reservation } from '../../models/reservation';
+import { ReservationService } from '../reservation/reservation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,7 @@ import { User } from '../../models/user';
 export class ReservationUsersService {
 
   constructor(
-    private db: AngularFirestore
+    private db: AngularFirestore,
   ) { }
 
   async getReservationsUsers() {
@@ -48,6 +50,23 @@ export class ReservationUsersService {
   }
 
   async getReservationUsersByReservationUid(reservation_uid) {
+    // Get ReservationUser list by reservation_uid
+    console.log('getReservationUsersByReservationUid in reservation-users.service.ts\nreservation_uid:', reservation_uid);
+    var reservationUsersRef = await this.db.collection('reservations_users').ref;
+    var reservationRef = await this.db.collection('reservations').doc(reservation_uid).ref;
+    // var users: User[] = [];
+    var reservationUsers: ReservationUsers[] = [];
+    await reservationUsersRef.where('reservation', '==', reservationRef).get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          reservationUsers.push(new ReservationUsers(doc.data()));
+          console.log(doc.id, "=>", doc.data());
+        });
+      });
+    return reservationUsers;
+  }
+
+  async getUsersByReservationUid(reservation_uid) {
     // Get user list by reservation_uid
     console.log('getReservationUsersByReservationUid in reservation-users.service.ts\nreservation_uid:', reservation_uid);
     var reservationUsersRef = await this.db.collection('reservations_users').ref;
@@ -63,7 +82,7 @@ export class ReservationUsersService {
     return users;
   }
 
-  async getReservationUserRefsByReservationUid(reservation_uid) {
+  async getUserRefsByReservationUid(reservation_uid) {
     // Get user list by reservation_uid
     console.log('getReservationUsersByReservationUid in reservation-users.service.ts\nreservation_uid:', reservation_uid);
     var reservationUsersRef = await this.db.collection('reservations_users').ref;
@@ -82,14 +101,21 @@ export class ReservationUsersService {
 
   async addReservationUsers(reservation_users: ReservationUsers) {
     // add new reservation users to firestore
-    await this.db.collection('reservations_users')
-      .add(reservation_users.deserialize())
-      .then(docRef => {
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch(error => {
-        console.error("Error adding document: ", error);
-      });
+    // await this.db.collection('reservations_users')
+    //   .add(reservation_users.deserialize())
+    //   .then(docRef => {
+    //     console.log("Document written with ID: ", docRef.id);
+    //   })
+    //   .catch(error => {
+    //     console.error("Error adding document: ", error);
+    //   });
+
+    if (reservation_users.uid == '') {
+      const newReservationUserId = this.db.createId();
+      reservation_users.uid = newReservationUserId;
+    }
+    var newReservationUserDoc = this.db.collection('reservations_users').doc(reservation_users.uid);
+    await newReservationUserDoc.set(reservation_users.deserialize());
   }
 
   async updateReservationUsers(reservation_users_uid: string, reservation_users: ReservationUsers) {
@@ -103,6 +129,20 @@ export class ReservationUsersService {
 
   async deleteReservationUsers(reservation_users_uid: string) {
     // delete reservation users in firestore by reservation_users_uid
+    // 投稿の情報を変更
+    await this.getReservationUsers(reservation_users_uid)
+      .then(reservationUsers => {
+        var reservation: Reservation;
+        reservationUsers.reservation.get()
+          .then(doc => {
+            reservation = new Reservation(doc.data())
+            reservation.passenger_count -= reservationUsers.passenger_count;
+            reservation.updated_at = new Date();
+            reservationUsers.reservation.update(reservation.deserialize());
+          });
+      });
+    
+    // 投稿のユーザーを削除
     await this.db.collection('reservations_users').doc(reservation_users_uid)
       .delete()
       .then(() => {

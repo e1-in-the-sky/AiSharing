@@ -73,9 +73,22 @@ export class ReservationService {
     return reservations;
   }
 
-  getUserReservations(user_uid) {
+  async getUserReservations(user_uid) {
     // get reservations of User's(user_uid)
     console.log('in getUserReservations(reservation.service.ts)\nuser_uid:', user_uid);
+    var reservations: Reservation[] = [];
+    var reservationsRef = this.db.collection('reservations').ref;
+    var ownerRef = this.db.collection('users').doc(user_uid).ref;
+    await reservationsRef.where('owner', '==', ownerRef).get().then(querySnapshot => {  // departure_timeとかで並び替えしたい
+      querySnapshot.forEach(doc => {
+        var reservation = new Reservation(doc.data());
+        console.log('getReservations in reservation.service.ts');
+        console.log('doc.data():', doc.data());
+        console.log('reservation:', reservation);
+        reservations.push(reservation);
+      });
+    });
+    return reservations;
   }
 
   getRideReservations(user_uid) {
@@ -101,9 +114,10 @@ export class ReservationService {
     await this.reservationUsersService.addReservationUsers(reservation_users);
   }
 
-  async updateReservation(uid, reservation){
+  async updateReservation(uid: string, reservation: Reservation){
     // update reservation in firestore by uid
     console.log('update reservation\n', uid, '=>', reservation);
+    reservation.updated_at = new Date();
     await this.db.collection('reservations').doc(uid)
       .update(reservation.deserialize())
       .then(() => {
@@ -111,8 +125,44 @@ export class ReservationService {
       });
   }
 
-  deleteReservation(uid){
+  async deleteReservation(uid){
     // delete reservation in firestore by uid
+    console.log('delete reservation\nuid:', uid);
+    var reservation_ref = this.db.collection('reservations').doc(uid).ref
+
+    // reservationUsersを削除
+    await this.db.collection('reservations_users').ref
+      .where('reservation', '==', reservation_ref).get()
+      .then(reservationUsers => {
+        reservationUsers.forEach(reservationUser => {
+          reservationUser.ref
+            .delete()
+            .then(() => {
+              console.log('reservation user successfully deleted');
+            });
+          // this.db.collection('reservations_users')
+        });
+      });
+
+      // messagesを削除
+    await this.db.collection('messages').ref
+      .where('reservation', '==', reservation_ref).get()
+      .then(messages => {
+        messages.forEach(message => {
+          message.ref
+            .delete()
+            .then(() => {
+              console.log('message successfully deleted');
+            });
+        });
+      });
+
+    // reservationを削除
+    await reservation_ref
+      .delete()
+      .then(() => {
+        console.log('reservation successfully deleted');
+      });
   }
 
 }

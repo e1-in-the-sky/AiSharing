@@ -9,6 +9,9 @@
 
 <ion-content>
   <ion-list>
+    <ion-item (click)="goToEditPage()">
+      <ion-label color="primary">アカウント情報を編集する</ion-label>
+    </ion-item>
     <ion-item>
       <ion-label>image URL: {{imageURL}}</ion-label>
     </ion-item>
@@ -19,8 +22,16 @@
       <ion-label>uid: {{uid}}</ion-label>
     </ion-item>
     <ion-item>
-      <ion-label>ひとこと: {{introduction}}</ion-label>
+      <ion-label>自己紹介: {{introduction}}</ion-label>
     </ion-item>
+
+    <ion-item>
+      <ion-list>
+        <ion-list-header>自分の投稿一覧</ion-list-header>
+        <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
+      </ion-list>
+    </ion-item>
+
   </ion-list>
 
 </ion-content>

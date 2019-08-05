@@ -3,9 +3,10 @@ export class ReservationUsers {
     //     passenger_count: number,
     //     user: firebase.firestore.DocumentReference
     // }[];
+    uid: string = '';
     reservation: firebase.firestore.DocumentReference;
     user: firebase.firestore.DocumentReference;
-    passenger_count: number;
+    passenger_count: number = 1;
     constructor(
         init?: Partial<ReservationUsers>
     ) {

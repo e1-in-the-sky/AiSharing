@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>投稿の編集</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form>
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">出発地</ion-label>
+        <ion-input type="text" [(ngModel)]="reservation.departure_name" name="departure_name" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">目的地</ion-label>
+        <ion-input type="text" [(ngModel)]="reservation.destination_name" name="destination_name" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">出発時刻</ion-label>
+        <!-- <ion-input type="text" [(ngModel)]="data.departure_time" name="departure_time" required></ion-input> -->
+        <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="departure_time" name="departure_time"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">最大乗車人数</ion-label>
+        <ion-input type="number" min="1" [(ngModel)]="reservation.max_passenger_count" name="max_passenger_count" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">現在乗車人数</ion-label>
+        <ion-input type="number" min="1" max="{{reservation.max_passenger_count}}" [(ngModel)]="reservation.passenger_count" name="passenger_count" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">コメント</ion-label>
+        <ion-input type="text" [(ngModel)]="reservation.comment" name="comment"></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-button (click)="onUpdate()">更新</ion-button>
+    <ion-button color="danger" (click)="onDelete()">削除</ion-button>
+    <ion-button (click)="onCancel()">キャンセル</ion-button>
+
+    <ion-list>
+      <ion-list-header>
+        乗車予定者：
+      </ion-list-header>
+      <ion-item *ngFor="let reservationUser of reservationUsers">
+        <ion-button fill="clear" (click)="onDeleteReservationUser(reservationUser.uid)">
+          <ion-icon slot="icon-only" name="ios-close-circle"></ion-icon>
+        </ion-button>
+        <user-chip [user_ref]="reservationUser.user"></user-chip>
+        <p>{{reservationUser.passenger_count}}人</p>
+      </ion-item>
+    </ion-list>
+
+    <ion-list>
+      <ion-list-header>
+        メッセージ
+      </ion-list-header>
+      <ion-item *ngFor="let message of messages">
+        <ion-button fill="clear" (click)="onDeleteMessage(message.uid)">
+          <ion-icon slot="icon-only" name="ios-close-circle"></ion-icon>
+        </ion-button>
+        <user-chip [user_ref]="message.user"></user-chip>
+        <ion-label>{{message.message}}</ion-label>  
+      </ion-item>
+    </ion-list>
+
+  </form>
+
+</ion-content>

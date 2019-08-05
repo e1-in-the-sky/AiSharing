@@ -3,6 +3,7 @@ import * as firebase from 'firebase';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation/reservation.service';
+import { Reservation } from '../../models/reservation';
 
 @Component({
   selector: 'mypage',
@@ -16,6 +17,7 @@ export class MypagePage implements OnInit {
   email: string;
   introduction: string = '';
   imageURL: string = '';
+  reservations: Reservation[] = [];
 
   constructor(
     private userService: UserService,
@@ -46,13 +48,17 @@ export class MypagePage implements OnInit {
     });
   }
 
-  getMyReservations() {
+  async getMyReservations() {
     // get current user posted reservations from firestore.
     console.log('getMyReservations in mypage.page.ts');
-    firebase.auth().onAuthStateChanged(user => {
+    await firebase.auth().onAuthStateChanged(user => {
       if (user) {
         // ログインしているとき
-        this.reservationService.getUserReservations(user.uid);
+        this.reservationService
+          .getUserReservations(user.uid)
+          .then(reservations => {
+            this.reservations = reservations;
+          });
       } else {
         // ログインしていないとき
       }
@@ -75,6 +81,10 @@ export class MypagePage implements OnInit {
   editProfile() {
     // edit my profile or go to edit page of my profille.
     console.log('editProfile in mypage.page.ts');
+  }
+
+  goToEditPage() {
+    console.log('go to edit page');
   }
 
 }

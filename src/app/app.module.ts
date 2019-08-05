@@ -14,6 +14,7 @@ import { environment } from '../environments/environment';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   imports: [
@@ -29,7 +30,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
     AngularFirestoreModule
   ],
   declarations: [AppComponent],
-  providers: [InAppBrowser, SplashScreen, StatusBar],
+  providers: [InAppBrowser, SplashScreen, StatusBar, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

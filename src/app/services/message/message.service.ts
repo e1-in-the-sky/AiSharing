@@ -47,8 +47,15 @@ export class MessageService {
     // update message.
   }
 
-  deleteMessage(uid){
+  async deleteMessage(uid){
     // delete message by message uid.
+    await this.db.collection('messages').doc(uid)
+    .delete()
+    .then(() => {
+      console.log("Document successfully deleted!");
+    }).catch(error => {
+      console.error("Error removing document: ", error);
+    });
   }
 
 }

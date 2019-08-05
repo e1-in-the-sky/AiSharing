@@ -9,6 +9,9 @@
 
 <ion-content>
   <ion-list>
+    <ion-item *ngIf="is_my_reservation" (click)="goToEditPage()">
+      <ion-label color="primary">投稿を編集する</ion-label>
+    </ion-item>
     <ion-item>
       <ion-label>Reservation ID: {{reservationId}}</ion-label>
     </ion-item>
@@ -19,15 +22,25 @@
       <ion-label>出発地: {{departure_name}}</ion-label>
     </ion-item>
     <ion-item>
-      <ion-label>乗車予定者:</ion-label>
-      <user-chip [user_ref]="user_ref" *ngFor="let user_ref of reservationUserRefs"></user-chip>
+      <ion-label>目的地: {{reservation.destination_name}}</ion-label>
     </ion-item>
-    <!-- <ion-item *ngFor="let user of reservationUsers">
-      <ion-label>アカウント名: {{user.name}}</ion-label>  
-    </ion-item> -->
-  </ion-list>
+    <ion-item>
+      <ion-label>出発時刻: {{departure_time_date | date:'yyyy-MM-dd HH:mm'}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>乗車予定人数/最大乗車人数: {{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</ion-label>
+    </ion-item>
 
-  <ion-item>
+    <ion-list>
+      <ion-list-header>
+        乗車予定者：
+      </ion-list-header>
+      <ion-item *ngFor="let reservationUser of reservationUsers">
+        <user-chip [user_ref]="reservationUser.user"></user-chip>
+        <p>{{reservationUser.passenger_count}}人</p>
+      </ion-item>
+    </ion-list>
+
     <ion-list>
       <ion-list-header>
         メッセージ
@@ -36,17 +49,18 @@
         <user-chip [user_ref]="message.user"></user-chip>
         <ion-label>{{message.message}}</ion-label>  
       </ion-item>
+
+      <ion-item>
+        <ion-input type="text" placeholder="コメント" [(ngModel)]="message" name="message"></ion-input>
+        <ion-buttons slot="end">
+          <ion-button slot="end" color="primary" (click)="sendMessage()">
+            Send
+            <ion-icon name="send"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+
     </ion-list>
-  </ion-item>
-  
-  <ion-item>
-    <ion-input type="text" placeholder="コメント" [(ngModel)]="message" name="message"></ion-input>
-    <ion-buttons slot="end">
-      <ion-button slot="end" color="primary" (click)="sendMessage()">
-        Send
-        <ion-icon name="send"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-item>
+  </ion-list>
 
 </ion-content>

@@ -70,7 +70,11 @@ const routes: Routes = [
           },
           {
             path: 'detail/:reservationId',
-            loadChildren: '../reservation-detail/reservation-detail.module#ReservationDetailPageModule'
+            loadChildren: '../reservation-detail/reservation-detail.module#ReservationDetailPageModule'        
+          },
+          {
+            path: 'edit/:reservationId',
+            loadChildren: '../reservation-edit/reservation-edit.module#ReservationEditPageModule'
           }
         ]
       },
