@@ -84,8 +84,41 @@ export class ReservationEditPage implements OnInit {
       });
   }
 
-  onUpdate() {
+  async onUpdate() {
     console.log('on update\nreservation:', this.reservation);
+    const alert = await this.alertController.create({
+      header: '確認',
+      message: 'この投稿を更新しますか？',
+      buttons: [
+        {
+          text: '更新',
+          handler: () => {
+            console.log('Confirm update');
+            this.updateReservation();
+          }
+        }, {
+          text: 'キャンセル',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async updateReservation() {
+    this.reservation.updated_at = new Date();
+    this.reservation.departure_time = new Date(this.departure_time);
+    try {
+      await this.reservationService.updateReservation(this.reservation.uid, this.reservation);
+    } catch(err) {
+      console.error('updateReservation in reservation-edit.page.ts:\nerr:', err);
+      throw err;
+    }
+    console.log('投稿の更新に成功しました。');
   }
 
   async onDelete() {
