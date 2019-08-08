@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 
-import { Events, MenuController, Platform, ToastController } from '@ionic/angular';
+import { Events, MenuController, Platform, ToastController, AlertController } from '@ionic/angular';
 
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -61,6 +61,7 @@ export class AppComponent implements OnInit {
     private userData: UserData,
     private swUpdate: SwUpdate,
     private toastCtrl: ToastController,
+    private alertController: AlertController
   ) {
     this.initializeApp();
   }
@@ -128,13 +129,19 @@ export class AppComponent implements OnInit {
     });
   }
 
-  logout() {
+  async logout() {
     // old version
     // this.userData.logout().then(() => {
     //   return this.router.navigateByUrl('/app/tabs/schedule');
     // });
-    firebase.auth().signOut();
-    this.events.publish('user:logout');
+    await firebase.auth().signOut();
+    await this.events.publish('user:logout');
+    const alert = await this.alertController.create({
+      header: '確認',
+      message: 'ログアウトしました。',
+      buttons: ['OK']
+    });
+    await alert.present();
     this.router.navigateByUrl('app/tabs/reservations');
   }
 
