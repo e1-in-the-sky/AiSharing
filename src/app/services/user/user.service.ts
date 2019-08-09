@@ -67,8 +67,17 @@ export class UserService {
     return userRef;
   }
 
-  updateUser(uid, user) {
+  async updateUser(uid, user) {
     // update User information
     // authentication and firestore
+    console.log('update reservation\n', uid, '=>', user);
+    user.updated_at = new Date();
+    try{
+      await this.db.collection('users').doc(uid).update(user.deserialize())
+      console.log("Usesr Document successfully updated!");
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   }
 }
