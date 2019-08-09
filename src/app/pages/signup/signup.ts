@@ -31,6 +31,11 @@ export class SignupPage {
 
   async onSignup() {
     this.submitted = true;
+    if(!this.data.displayName){
+      this.alert_no_information();
+      return;
+    }
+    
     try {
       this.userService.addUser(this.data.email, this.data.password, this.data.displayName)
         .then(uid => {
@@ -47,4 +52,13 @@ export class SignupPage {
       alert.present();
     }
   }
+
+  async alert_no_information(){
+    const alert = await this.alertController.create({
+      message: 'Please fill in the your displayname',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
 }
