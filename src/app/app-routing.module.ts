@@ -35,6 +35,8 @@ const routes: Routes = [
   },
   { path: 'mypage',
     loadChildren: './pages/mypage/mypage.module#MypagePageModule' },
+  { path: 'mypage/edit',
+    loadChildren: './pages/mypage-edit/mypage-edit.module#MypageEditPageModule' },
 ];
 
 @NgModule({

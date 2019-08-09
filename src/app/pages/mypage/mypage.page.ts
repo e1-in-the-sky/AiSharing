@@ -4,6 +4,7 @@ import { UserService } from '../../services/user/user.service';
 import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Reservation } from '../../models/reservation';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'mypage',
@@ -20,6 +21,7 @@ export class MypagePage implements OnInit {
   reservations: Reservation[] = [];
 
   constructor(
+    private navCtrl: NavController,
     private userService: UserService,
     private reservationService: ReservationService
   ) { }
@@ -85,6 +87,7 @@ export class MypagePage implements OnInit {
 
   goToEditPage() {
     console.log('go to edit page');
+    this.navCtrl.navigateForward('/mypage/edit');
   }
 
 }
