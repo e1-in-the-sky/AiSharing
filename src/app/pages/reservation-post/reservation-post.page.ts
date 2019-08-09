@@ -57,6 +57,11 @@ export class ReservationPostPage implements OnInit {
       this.alert_no_information();
       return;
     }
+    else if(!this.data.departure_time){
+      this.alert_no_time();
+      return;
+    }
+    
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         // case signin
@@ -92,8 +97,9 @@ export class ReservationPostPage implements OnInit {
         // case signout
       }
     });
+    this.alert_complete_send();
   }
-
+    
   async alert_no_information(){
     const alert = await this.alertController.create({
       message: 'Please fill departure place and destination',
@@ -101,5 +107,22 @@ export class ReservationPostPage implements OnInit {
     });
     await alert.present();
   }
+
+  async alert_no_time(){
+    const alert = await this.alertController.create({
+      message: 'Please fill in departure time',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  async alert_complete_send(){
+    const alert = await this.alertController.create({
+      message: 'Complete posting',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
 
 }
