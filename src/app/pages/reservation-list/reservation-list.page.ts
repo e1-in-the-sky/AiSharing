@@ -3,6 +3,8 @@ import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular'
+
 
 import * as firebase from 'firebase';
 
@@ -26,6 +28,10 @@ export class ReservationListPage implements OnInit {
     private reservationService: ReservationService,
     public router: Router
   ) {  }
+
+  ionViewWillEnter(){
+    this.getReservations();
+  }
 
   ngOnInit() {
     this.getReservations();
