@@ -157,6 +157,7 @@ export class ReservationCardComponent implements OnInit {
             console.log('add reservation user is successful');
           });
       });
+      location.reload();
   }
 
 }
