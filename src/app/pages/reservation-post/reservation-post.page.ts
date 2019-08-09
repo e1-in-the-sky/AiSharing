@@ -6,6 +6,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'reservation-post',
@@ -43,13 +44,19 @@ export class ReservationPostPage implements OnInit {
     private navCtrl: NavController,
     private router: Router,
     private db: AngularFirestore,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    public alertController: AlertController,
   ) { }
 
   ngOnInit() {
   }
 
   onPost() {
+    //if destination or departure name is empty then don't work
+    if(!this.data.destination_name || !this.data.departure_name){
+      this.alert_no_information();
+      return;
+    }
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         // case signin
@@ -85,6 +92,14 @@ export class ReservationPostPage implements OnInit {
         // case signout
       }
     });
+  }
+
+  async alert_no_information(){
+    const alert = await this.alertController.create({
+      message: 'Please fill all information',
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
 }
