@@ -96,7 +96,7 @@ export class ReservationPostPage implements OnInit {
 
   async alert_no_information(){
     const alert = await this.alertController.create({
-      message: 'Please fill all information',
+      message: 'Please fill departure place and destination',
       buttons: ['OK']
     });
     await alert.present();
