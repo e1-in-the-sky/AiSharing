@@ -86,6 +86,7 @@ export class ReservationCardComponent implements OnInit {
             name: 'passenger_count',
             type: 'number',
             placeholder: '乗車予定人数を入力してください',
+            value: 1,
             min: 1,
             max: this.reservation.max_passenger_count - this.reservation.passenger_count
           },
