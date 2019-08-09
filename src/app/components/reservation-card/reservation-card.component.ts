@@ -155,9 +155,9 @@ export class ReservationCardComponent implements OnInit {
         this.reservationUsersService.addReservationUsers(reservationUsers)
           .then(() => {
             console.log('add reservation user is successful');
-          });
+            this.router.navigateByUrl('/app/tabs/reservations/detail/' + this.reservation.uid);
+          })
       });
-      location.reload();
   }
 
 }
