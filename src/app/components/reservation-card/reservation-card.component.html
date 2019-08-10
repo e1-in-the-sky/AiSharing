@@ -10,7 +10,11 @@
     <p>出発地: {{reservation.departure_name}}    目的地: {{reservation.destination_name}}</p>
     <p>出発時刻: {{reservation.departure_time}}    現在予約人数/最大人数: {{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</p>
     <p>コメント: {{reservation.comment}}</p>
-    <ion-button (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
-    <ion-button (click)="displayNorimasuAlert()">ノリマス</ion-button>
+    
+    <ion-button class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
+    <ion-button class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint">
+      <img src="../../../assets/img/norimasu.png">
+    </ion-button>
+
   </ion-card-content>
 </ion-card>

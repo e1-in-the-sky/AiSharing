@@ -1,16 +1,17 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-    </ion-buttons>
+  <!-- <ion-toolbar> -->
     <ion-title>タクシー予約投稿一覧</ion-title>
-  </ion-toolbar>
-  <ion-toolbar>
+  <!-- </ion-toolbar> -->
+  <!-- <ion-toolbar>
     <ion-searchbar placeholder="Search"></ion-searchbar>
-  </ion-toolbar>
+  </ion-toolbar> -->
 </ion-header>
 
-<ion-content padding>
+<!-- <ion-buttons slot="start">
+    <ion-menu-button></ion-menu-button>
+</ion-buttons> -->
+
+<ion-content >
   <!--
   <ion-card>
     <ion-card-header>
@@ -43,7 +44,7 @@
     </ion-label>
   </ion-item>
   -->
-  <ion-card>
+  <!-- <ion-card>
     <ion-card-content>
       <ion-chip>
         <ion-avatar item-left>
@@ -54,7 +55,7 @@
       <p>出発地: 会津大学    目的地: 会津若松駅</p>
       <p>出発時刻: 18:00    現在予約人数: 1人</p>
     </ion-card-content>
-  </ion-card>
+  </ion-card> -->
 
   <!-- <ion-card *ngFor="let reservation of reservations">
     <ion-card-content>
@@ -69,16 +70,21 @@
       <ion-button (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
     </ion-card-content>
   </ion-card> -->
+  <body>
+    </body>
 
-  <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
+  <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations" ></reservation-card>
 
   <!-- <ion-list ion-no-margin *ngFor="let reservation of reservations">
     <reservation [reservation]="reservation"></reservation>
   </ion-list>     -->
 
-  <ion-fab *ngIf='isLogin' vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="goToPost()">
-      <ion-icon name="add"></ion-icon>
+  <ion-fab *ngIf='isLogin' vertical="bottom" horizontal="end" slot="fixed" >
+    <ion-fab-button (click)="goToPost()" class="sharing_button">
+      <!--<ion-icon name="add"></ion-icon>-->
+      <img src="../../../assets/img/sharing.png">
     </ion-fab-button>
   </ion-fab>
+    
+
 </ion-content>
