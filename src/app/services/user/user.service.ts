@@ -18,6 +18,7 @@ export class UserService {
     // add user information to authentication and firestore.
     console.log('Display Name: ' + name + '\nE-mail: ' + email + '\nPassword' + password);
     var uid = '';
+    const default_img_url: string = await this.getDefaultIconImageURL();
     await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -25,7 +26,7 @@ export class UserService {
         var user = new User({
           uid: usercredential.user.uid,
           name: name,
-          imageURL: 'default',
+          imageURL: default_img_url,
           introduction: 'よろしくお願いします。',
           createdAt: new Date(),
           updatedAt: new Date()
@@ -41,6 +42,16 @@ export class UserService {
         console.log(usercredential.user);
       });
     return uid;
+  }
+
+  async getDefaultIconImageURL() {
+    try {
+      var res = await firebase.storage().ref().child('icon/default.jpg').getDownloadURL();
+      return res;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   }
 
   async getUser(uid) {

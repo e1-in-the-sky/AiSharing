@@ -5,6 +5,7 @@ import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Reservation } from '../../models/reservation';
 import { NavController } from '@ionic/angular';
+import { AccountIconService } from '../../services/account-icon/account-icon.service';
 
 @Component({
   selector: 'mypage',
@@ -12,37 +13,28 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./mypage.page.scss'],
 })
 export class MypagePage implements OnInit {
-  user: User;
-  uid: string;
-  displayName: string;
-  email: string;
-  introduction: string = '';
-  imageURL: string = '';
+  user: User = new User();
   reservations: Reservation[] = [];
 
   constructor(
     private navCtrl: NavController,
     private userService: UserService,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
   ) { }
 
-  ngOnInit() {
-    this.getCurrentUser();
-    this.getMyReservations();
-    this.getRideReservations();
+  async ngOnInit() {
+    await this.getCurrentUser();
+    await this.getMyReservations();
+    await this.getRideReservations();
   }
 
-  getCurrentUser() {
+  async getCurrentUser() {
     // get current user information from firestore.
-    firebase.auth().onAuthStateChanged(user => {
+    await firebase.auth().onAuthStateChanged(user => {
       if (user) {
         // User is signed in.
         this.userService.getUser(user.uid).then(user => {
         this.user = user;
-        this.uid = user.uid;
-        this.displayName = user.name;
-        this.introduction = user.introduction;
-        this.imageURL = user.imageURL;
         });
       } else {
         // ログインしていないとき
