@@ -82,6 +82,20 @@ export class ReservationUsersService {
     return users;
   }
 
+  async getReservationsByUserUid(user_uid) {
+    // user_uidのユーザーが乗る予定の投稿一覧を取得する
+    console.log('getReservationByUserUid in reservation-user.service.ts\nuser_uid:', user_uid);
+    var reservationUsersRef = await this.db.collection('reservations_users').ref;
+    var userRef = await this.db.collection('users').doc(user_uid).ref;
+    var reservations: Reservation[] = [];
+    var querySnapshot = await reservationUsersRef.where('user', '==', userRef).get();
+    await querySnapshot.forEach(async doc => {
+      var reservation = await doc.data().reservation.get();
+      reservations.push(new Reservation(reservation.data()));
+    });
+    return reservations; 
+  }
+
   async getUserRefsByReservationUid(reservation_uid) {
     // Get user list by reservation_uid
     console.log('getReservationUsersByReservationUid in reservation-users.service.ts\nreservation_uid:', reservation_uid);

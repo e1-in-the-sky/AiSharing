@@ -35,6 +35,13 @@
       </ion-list>
     </ion-item>
 
+    <ion-item>
+      <ion-list>
+        <ion-list-header>自分が乗る予定の投稿一覧</ion-list-header>
+        <reservation-card [reservation]='reservation' *ngFor="let reservation of rideReservations"></reservation-card>
+      </ion-list>
+    </ion-item>
+
   </ion-list>
 
 </ion-content>
