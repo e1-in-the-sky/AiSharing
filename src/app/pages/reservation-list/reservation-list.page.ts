@@ -3,7 +3,7 @@ import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Router } from '@angular/router';
-import { NavController, LoadingController } from '@ionic/angular'
+import { NavController, LoadingController, AlertController } from '@ionic/angular'
 
 
 import * as firebase from 'firebase';
@@ -27,7 +27,8 @@ export class ReservationListPage implements OnInit {
   constructor(
     private reservationService: ReservationService,
     public router: Router,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController
   ) {  }
 
   async ionViewWillEnter(){
@@ -36,8 +37,21 @@ export class ReservationListPage implements OnInit {
       message: '読み込み中...'
     });
     loading.present();
-    await this.getReservations();
-    loading.dismiss();
+
+    try {
+      await this.getReservations();
+      loading.dismiss();
+    
+    } catch (err) {
+      loading.dismiss();
+      const alert = await this.alertCtrl.create({
+        header: 'エラー',
+        // subHeader: 'Subtitle',
+        message: err,
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
   }
 
   ngOnInit() {
