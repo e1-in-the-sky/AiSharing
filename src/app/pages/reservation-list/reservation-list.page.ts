@@ -61,6 +61,11 @@ export class ReservationListPage implements OnInit {
     this.getLoginStatus();
   }
 
+  async doRefresh(event) {
+    await this.getReservations();
+    event.target.complete();
+  }
+
   async getReservations() {
     try {
       this.reservations = await this.reservationService.getReservations()
