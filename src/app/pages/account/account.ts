@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { AlertController, Events } from '@ionic/angular';
+import { AlertController, Events, LoadingController } from '@ionic/angular';
 
 import { UserData } from '../../providers/user-data';
 
@@ -25,6 +25,7 @@ export class AccountPage implements AfterViewInit {
   constructor(
     public events: Events,
     public alertCtrl: AlertController,
+    private loadingCtrl: LoadingController,
     public router: Router,
     public userData: UserData,
     private route: ActivatedRoute,
@@ -34,10 +35,27 @@ export class AccountPage implements AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(async () => {
-      await this.getAccountId();
-      // this.getUsername();
-      this.getUser();
-      this.getUserReservations();
+      let loading = await this.loadingCtrl.create({
+        // spinner: 'circles',
+        message: '読み込み中...'
+      });
+      loading.present();
+      try {
+        await this.getAccountId();
+        // this.getUsername();
+        await this.getUser();
+        await this.getUserReservations();
+        loading.dismiss();
+      } catch (err) {
+        loading.dismiss();
+        const alert = await this.alertCtrl.create({
+          header: 'エラー',
+          // subHeader: 'Subtitle',
+          message: err,
+          buttons: ['OK']
+        });
+        await alert.present();
+      }
     });
   }
 
@@ -84,25 +102,29 @@ export class AccountPage implements AfterViewInit {
     this.accountId = this.route.snapshot.paramMap.get('accountId');
   }
 
-  getUser() {
+  async getUser() {
     // get user from firestore
     console.log('in getUser(account.ts)\nuser uid:', this.accountId);
-    this.userService
-      .getUser(this.accountId)
-      .then(user => {
-        this.username = user.name;
-        this.introduction = user.introduction;
-      });
+    // this.userService
+    //   .getUser(this.accountId)
+    //   .then(user => {
+    //     this.username = user.name;
+    //     this.introduction = user.introduction;
+    //   });
+    var user = await this.userService.getUser(this.accountId);
+    this.username = user.name;
+    this.introduction = user.introduction;
   }
 
-  getUserReservations(){
+  async getUserReservations(){
     // get reservations posted by this user
     console.log('in getUserReservations(account.ts)\nuser uid:', this.accountId);
-    this.reservationService
-      .getUserReservations(this.accountId)
-      .then(reservations => {
-        this.reservations = reservations;
-      });
+    // this.reservationService
+    //   .getUserReservations(this.accountId)
+    //   .then(reservations => {
+    //     this.reservations = reservations;
+    //   });
+    this.reservations = await this.reservationService.getUserReservations(this.accountId);
   }
 
   // changePassword() {

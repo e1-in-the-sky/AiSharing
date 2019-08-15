@@ -4,7 +4,7 @@ import { UserService } from '../../services/user/user.service';
 import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Reservation } from '../../models/reservation';
-import { NavController, LoadingController } from '@ionic/angular';
+import { NavController, LoadingController, AlertController } from '@ionic/angular';
 import { AccountIconService } from '../../services/account-icon/account-icon.service';
 import { ReservationUsersService } from '../../services/reservation_users/reservation-users.service';
 
@@ -21,6 +21,7 @@ export class MypagePage implements OnInit {
   constructor(
     private navCtrl: NavController,
     private loadingCtrl: LoadingController,
+    private alertController: AlertController,
     private userService: UserService,
     private reservationService: ReservationService,
     private reservationUsersService: ReservationUsersService
@@ -33,11 +34,22 @@ export class MypagePage implements OnInit {
     });
     loading.present();
     // await this.getCurrentUser();
-    var firebaseUser = await this.getCurrentUser();
-    this.user = await this.userService.getUser(firebaseUser.uid);
-    await this.getMyReservations();
-    await this.getRideReservations();
-    loading.dismiss();
+    try {
+      var firebaseUser = await this.getCurrentUser();
+      this.user = await this.userService.getUser(firebaseUser.uid);
+      await this.getMyReservations();
+      await this.getRideReservations();
+      loading.dismiss();
+    } catch (err) {
+      loading.dismiss();
+      const alert = await this.alertController.create({
+        header: 'エラー',
+        // subHeader: 'Subtitle',
+        message: err,
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
   }
 
   async getCurrentUser_() {
