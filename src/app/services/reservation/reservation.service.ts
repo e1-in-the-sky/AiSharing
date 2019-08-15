@@ -82,9 +82,9 @@ export class ReservationService {
     await reservationsRef.where('owner', '==', ownerRef).get().then(querySnapshot => {  // departure_timeとかで並び替えしたい
       querySnapshot.forEach(doc => {
         var reservation = new Reservation(doc.data());
-        console.log('getReservations in reservation.service.ts');
-        console.log('doc.data():', doc.data());
-        console.log('reservation:', reservation);
+        // console.log('getReservations in reservation.service.ts');
+        // console.log('doc.data():', doc.data());
+        // console.log('reservation:', reservation);
         reservations.push(reservation);
       });
     });

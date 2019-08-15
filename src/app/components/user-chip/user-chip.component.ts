@@ -22,7 +22,7 @@ export class UserChipComponent implements OnInit {
   }
 
   async set_user() {
-    console.log('set_user:', this.user_ref);
+    // console.log('set_user:', this.user_ref);
     await this.user_ref.get().then(doc => {
       this.user = new User(doc.data());
     });

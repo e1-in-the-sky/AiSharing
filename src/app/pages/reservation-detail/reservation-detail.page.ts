@@ -9,7 +9,7 @@ import { Message } from '../../models/message';
 import * as firebase from 'firebase';
 import { UserService } from '../../services/user/user.service';
 import { ReservationUsers } from '../../models/reservation-users';
-import { NavController } from '@ionic/angular';
+import { NavController, LoadingController, AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'reservation-detail',
@@ -17,6 +17,7 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./reservation-detail.page.scss'],
 })
 export class ReservationDetailPage implements OnInit {
+  current_user: User = new User();
   owner_name: string = '';
   reservationId: string = '';
   reservation: Reservation = new Reservation();
@@ -32,17 +33,53 @@ export class ReservationDetailPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private navCtrl: NavController,
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController,
     private reservationService: ReservationService,
     private messageService: MessageService,
     private userService: UserService,
     private reservationUsersService: ReservationUsersService
   ) { }
 
-  ngOnInit() {
-    this.reservationId = this.route.snapshot.paramMap.get('reservationId');
-    this.getReservation();
-    this.getMessages();
-    this.getThisReservationUsers();
+  async ngOnInit() {
+    let loading = await this.loadingCtrl.create({
+      // spinner: 'circles',
+      message: '読み込み中...'
+    });
+    loading.present();
+
+    try {
+      this.reservationId = this.route.snapshot.paramMap.get('reservationId');
+      var current_user = await this.getCurrentUser();
+      this.current_user = await this.userService.getUser(current_user.uid);
+      this.getReservation();
+      this.getMessages();
+      this.getThisReservationUsers();
+      loading.dismiss();    
+    } catch (err) {
+      loading.dismiss();
+      const alert = await this.alertCtrl.create({
+        header: 'エラー',
+        // subHeader: 'Subtitle',
+        message: err,
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
+  }
+
+  getCurrentUser(): firebase.User | Promise<firebase.User> {
+    return new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged((user: firebase.User) => {
+        if (user) {
+          resolve(user);
+        } else {
+          console.log('User is not logged in');
+          // resolve(false);
+          reject();
+        }
+      });
+    });
   }
 
   getReservation() {
