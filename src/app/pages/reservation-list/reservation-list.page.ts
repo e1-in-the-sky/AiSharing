@@ -3,7 +3,7 @@ import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Router } from '@angular/router';
-import { NavController } from '@ionic/angular'
+import { NavController, LoadingController } from '@ionic/angular'
 
 
 import * as firebase from 'firebase';
@@ -26,24 +26,33 @@ export class ReservationListPage implements OnInit {
 
   constructor(
     private reservationService: ReservationService,
-    public router: Router
+    public router: Router,
+    private loadingCtrl: LoadingController
   ) {  }
 
-  ionViewWillEnter(){
-    this.getReservations();
+  async ionViewWillEnter(){
+    let loading = await this.loadingCtrl.create({
+      // spinner: 'circles',
+      message: '読み込み中...'
+    });
+    loading.present();
+    await this.getReservations();
+    loading.dismiss();
   }
 
   ngOnInit() {
-    this.getReservations();
+    // this.getReservations();
     // this.reservations = this.reservationService.getReservations();
 
     this.getLoginStatus();
   }
 
-  getReservations() {
-    this.reservationService.getReservations().then(reservations => {
-      this.reservations = reservations;
-    });
+  async getReservations() {
+    try {
+      this.reservations = await this.reservationService.getReservations()
+    } catch (err) {
+      throw err
+    }
   }
 
   serchReservations(key) {

@@ -13,22 +13,32 @@
       <ion-label color="primary">アカウント情報を編集する</ion-label>
     </ion-item>
     <ion-item>
-      <ion-label>image URL: {{imageURL}}</ion-label>
+      <ion-label>image URL: {{user.imageURL}}</ion-label>
     </ion-item>
     <ion-item>
-      <ion-label>Display Name: {{displayName}}</ion-label>
+      <ion-img [src]="user.imageURL"></ion-img>
     </ion-item>
     <ion-item>
-      <ion-label>uid: {{uid}}</ion-label>
+      <ion-label>Display Name: {{user.name}}</ion-label>
     </ion-item>
     <ion-item>
-      <ion-label>自己紹介: {{introduction}}</ion-label>
+      <ion-label>uid: {{user.uid}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>自己紹介: {{user.introduction}}</ion-label>
     </ion-item>
 
     <ion-item>
       <ion-list>
         <ion-list-header>自分の投稿一覧</ion-list-header>
         <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
+      </ion-list>
+    </ion-item>
+
+    <ion-item>
+      <ion-list>
+        <ion-list-header>自分が乗る予定の投稿一覧</ion-list-header>
+        <reservation-card [reservation]='reservation' *ngFor="let reservation of rideReservations"></reservation-card>
       </ion-list>
     </ion-item>
 
