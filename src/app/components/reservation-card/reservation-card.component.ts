@@ -8,6 +8,8 @@ import { ReservationUsers } from '../../models/reservation-users';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ReservationUsersService } from '../../services/reservation_users/reservation-users.service';
 import { ReservationService } from '../../services/reservation/reservation.service';
+import { AbstractControl } from '@angular/forms'
+import { controlNameBinding } from '@angular/forms/src/directives/reactive_directives/form_control_name';
 
 @Component({
   selector: 'reservation-card',
@@ -79,8 +81,10 @@ export class ReservationCardComponent implements OnInit {
       await alert.present();
     } else {
       // 自分の投稿じゃない場合
-      const alert = await this.alertController.create({
+      let alert = await this.alertController.create({
         header: '相乗り予約',
+        message:'',
+        cssClass: 'alert_norimasu',
         inputs: [
           {
             name: 'passenger_count',
@@ -108,6 +112,19 @@ export class ReservationCardComponent implements OnInit {
           }, {
             text: 'ノリマス！',
             handler: data => {
+              alert.message=""
+              if(!data.passenger_count){
+                if(alert.message)alert.message+="・";
+                alert.message+="乗車人数";
+              }
+              if(!data.comment){
+                if(alert.message)alert.message+="・";
+                alert.message+="コメント";
+              }
+              if(alert.message){
+                alert.message+="<br/>を入力してください";
+                return false;
+              }
               console.log('Confirm Ok');
               console.log('on ノリマス:', data);
               console.log('reservation:', this.reservation);
