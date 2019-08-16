@@ -125,6 +125,10 @@ export class ReservationCardComponent implements OnInit {
                 alert.message+="<br/>を入力してください";
                 return false;
               }
+              if(String(data.passenger_count).match("[^0-9]")){
+                alert.message+="乗車人数は数字のみを入力してください";
+                return false;
+              }
               console.log('Confirm Ok');
               console.log('on ノリマス:', data);
               console.log('reservation:', this.reservation);
