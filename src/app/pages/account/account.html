@@ -7,10 +7,11 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+
+<ion-content >
   <ion-list>
     <ion-item>
-      <ion-label>User ID: {{accountId}}</ion-label>
+      <ion-label >User ID: {{accountId}}</ion-label>
     </ion-item>
     <ion-item>
       <ion-label>User Name: {{username}}</ion-label>
@@ -18,15 +19,19 @@
     <ion-item>
       <ion-label>自己紹介: {{introduction}}</ion-label>
     </ion-item>
+  </ion-list>
 
-    <ion-item>
-      <ion-list>
-        <ion-list-header>{{username}}の投稿一覧</ion-list-header>
+
+    <!-- <ion-item style="background-color:#f0ffff"> -->
+      <ion-list class="reservation_list">
+        <ion-list-header >{{username}}の投稿一覧</ion-list-header>
         <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
       </ion-list>
-    </ion-item>
+    <!-- </ion-item> -->
 
-  </ion-list>
+    
+
+  
 
   <!-- <div *ngIf="username" class="ion-padding-top ion-text-center">
     <img src="https://www.gravatar.com/avatar?d=mm&s=140" alt="avatar">

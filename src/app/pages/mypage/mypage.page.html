@@ -1,14 +1,14 @@
 <ion-header>
-    <ion-toolbar>
+    <!-- <ion-toolbar>
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
-      </ion-buttons>
+      </ion-buttons> -->
       <ion-title>マイページ</ion-title>
-    </ion-toolbar>
+    <!-- </ion-toolbar> -->
   </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list class="user_info">
     <ion-item (click)="goToEditPage()">
       <ion-label color="primary">アカウント情報を編集する</ion-label>
     </ion-item>
@@ -27,14 +27,21 @@
     <ion-item>
       <ion-label>自己紹介: {{user.introduction}}</ion-label>
     </ion-item>
+  </ion-list>
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
-    <ion-item>
-      <ion-list>
-        <ion-list-header>自分の投稿一覧</ion-list-header>
-        <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
-      </ion-list>
-    </ion-item>
+  <ion-item >
+    <ion-list class="post">
+      <ion-list-header>自分の投稿一覧</ion-list-header>
+      <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
+    </ion-list>
+  </ion-item>
 
+  <body>
+    </body>
+
+<<<<<<< Updated upstream
     <ion-item>
       <ion-list>
         <ion-list-header>自分が乗る予定の投稿一覧</ion-list-header>
@@ -43,5 +50,27 @@
     </ion-item>
 
   </ion-list>
+=======
+>>>>>>> Stashed changes
+=======
+
+  <ion-item >
+    <ion-list class="post">
+      <ion-list-header>自分の投稿一覧</ion-list-header>
+      <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
+    </ion-list>
+  </ion-item>
+
+>>>>>>> Stashed changes
+=======
+
+  <ion-item >
+    <ion-list class="post">
+      <ion-list-header>自分の投稿一覧</ion-list-header>
+      <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
+    </ion-list>
+  </ion-item>
+
+>>>>>>> Stashed changes
 
 </ion-content>
