@@ -4,6 +4,7 @@ p.norimasu_button img {
     position: absolute;
     left: 100px;
     bottom: 10px;
+    //top: 5px;
 
 }
 
@@ -11,3 +12,7 @@ ion-card {
     background-color:#fffafa;
 }
 
+ion-button {
+    height: 40px;
+    width: 60px; 
+}
