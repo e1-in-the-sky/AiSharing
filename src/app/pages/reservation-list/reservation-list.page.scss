@@ -3,6 +3,7 @@ body {
 }
 
 ion-title {
+    font-weight:bold;
     height: 50px;
     font-size: 20px;
     text-align: center;
@@ -18,10 +19,11 @@ ion-fab-button.fab_button img {
     width: 150px;  
 }
 
-ion-button.sharing_button img {
+ion-fab img {
     height: 100px;
-    width: 100px;  
+    width: 110px;  
 }
+
 
 
 
