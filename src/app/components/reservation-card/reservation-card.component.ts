@@ -83,7 +83,7 @@ export class ReservationCardComponent implements OnInit {
       // 自分の投稿じゃない場合
       let alert = await this.alertController.create({
         header: '相乗り予約',
-        message:'',
+        message:'1',
         cssClass: 'alert_norimasu',
         inputs: [
           {
@@ -102,6 +102,19 @@ export class ReservationCardComponent implements OnInit {
           }
         ],
         buttons: [
+          {
+            text: "UP",
+            handler: () => {
+              alert.message = (parseInt(alert.message) + 1).toString();
+              return false;
+            }
+          },{
+            text: "Down",
+            handler: () => {
+              alert.message = (parseInt(alert.message) - 1).toString();
+              return false;
+            }
+          },
           {
             text: 'Cancel',
             role: 'cancel',
