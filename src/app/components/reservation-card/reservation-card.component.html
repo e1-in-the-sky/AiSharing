@@ -8,7 +8,7 @@
     </ion-chip> -->
     <user-chip [user_ref]="reservation.owner"></user-chip>
     <p>出発地: {{reservation.departure_name}}    目的地: {{reservation.destination_name}}</p>
-    <p>出発時刻: {{reservation.departure_time}}    現在予約人数/最大人数: {{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</p>
+    <p>出発時刻: {{reservation.departure_time | timestamp2string}}    現在予約人数/最大人数: {{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</p>
     <p>コメント: {{reservation.comment}}</p>
     
     <div class="box">
