@@ -1,11 +1,11 @@
 <ion-header>
-    <!-- <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons> -->
-      <ion-title>マイページ</ion-title>
-    <!-- </ion-toolbar> -->
-  </ion-header>
+  <ion-toolbar color="header" text-center>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>マイページ</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
   <ion-list class="user_info">
@@ -29,6 +29,7 @@
     </ion-item>
   </ion-list>
 
+  <!-- 自分の投稿一覧と自分が乗る予定の投稿一覧はタブとかで変更できるようにしたい -->
 
   <ion-item >
     <ion-list class="post">
@@ -37,35 +38,11 @@
     </ion-list>
   </ion-item>
 
-  <body>
-    </body>
-
-
-    <ion-item>
-      <ion-list>
-        <ion-list-header>自分が乗る予定の投稿一覧</ion-list-header>
-        <reservation-card [reservation]='reservation' *ngFor="let reservation of rideReservations"></reservation-card>
-      </ion-list>
-    </ion-item>
-
-  <!-- </ion-list> -->
-
-  <ion-item >
-    <ion-list class="post">
-      <ion-list-header>自分の投稿一覧</ion-list-header>
-      <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
+  <ion-item>
+    <ion-list>
+      <ion-list-header>自分が乗る予定の投稿一覧</ion-list-header>
+      <reservation-card [reservation]='reservation' *ngFor="let reservation of rideReservations"></reservation-card>
     </ion-list>
   </ion-item>
-
-
-
-  <ion-item >
-    <ion-list class="post">
-      <ion-list-header>自分の投稿一覧</ion-list-header>
-      <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
-    </ion-list>
-  </ion-item>
-
-
 
 </ion-content>

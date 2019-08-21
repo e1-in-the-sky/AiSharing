@@ -135,6 +135,27 @@
   --ion-color-tint: #4f6aa2;
 }
 
+// new theme
+:root {
+  --ion-color-header: #f0ffff;
+  --ion-color-header-rgb: 240,255,255;
+  --ion-color-header-contrast: #000000;
+  --ion-color-header-contrast-rgb: 0,0,0;
+  --ion-color-header-shade: #d3e0e0;
+  --ion-color-header-tint: #f2ffff;
+}
+
+.ion-color-header {
+  --ion-color-base: var(--ion-color-header);
+  --ion-color-base-rgb: var(--ion-color-header-rgb);
+  --ion-color-contrast: var(--ion-color-header-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-header-contrast-rgb);
+  --ion-color-shade: var(--ion-color-header-shade);
+  --ion-color-tint: var(--ion-color-header-tint);
+}
+
+
+
 // Shared Variables
 // --------------------------------------------------
 // To customize the look and feel of this app, you can override
