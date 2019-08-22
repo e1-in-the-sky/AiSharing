@@ -111,6 +111,16 @@ export class ReservationCardComponent implements OnInit {
               return false;
             }
           },
+           {
+            text: 'ノリマス！',
+            handler: data => {
+              console.log('Confirm Ok');
+              console.log('on ノリマス:', data);
+              console.log('reservation:', this.reservation);
+              data.passenger_count = alert.message;
+              this.onNorimasu(myUserRef, data).then(() => {}, error => {console.log(error)});
+            }
+          },
           {
             text: 'Cancel',
             role: 'cancel',
@@ -118,34 +128,7 @@ export class ReservationCardComponent implements OnInit {
             handler: () => {
               console.log('Confirm Cancel');
             }
-          }, {
-            text: 'ノリマス！',
-            handler: data => {
-              /*
-              alert.message=""
-              if(!data.passenger_count){
-                if(alert.message)alert.message+="・";
-                alert.message+="乗車人数";
-              }
-              if(!data.comment){
-                if(alert.message)alert.message+="・";
-                alert.message+="コメント";
-              }
-              if(alert.message){
-                alert.message+="<br/>を入力してください";
-                return false;
-              }
-              if(String(data.passenger_count).match("[^0-9]")){
-                alert.message+="乗車人数は数字のみを入力してください";
-                return false;
-              }*/
-              console.log('Confirm Ok');
-              console.log('on ノリマス:', data);
-              console.log('reservation:', this.reservation);
-              data.passenger_count = alert.message;
-              this.onNorimasu(myUserRef, data).then(() => {}, error => {console.log(error)});
-            }
-          }
+          },
         ]
       });
       await alert.present();

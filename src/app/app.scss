@@ -5,7 +5,7 @@
         position: absolute !important;
         font-size: 15px;
         width: 20%;
-        top: 23%;
+        top: 26%;
         right: 40%;
         text-align: center;
     }
@@ -20,7 +20,7 @@
         font-size: 30px;
         width: 30%;
         position: absolute !important;
-        top: 18%;
+        top: 21%;
         right: 8%;
     }
 
@@ -28,8 +28,18 @@
         font-size: 30px;
         width: 30%;
         position: absolute !important;
-        top: 18%;
+        top: 21%;
         left: 10%;
     }
 
+    .alert-button:nth-child(3){
+        width: 40%;
+    }
+
+    .alert-button:nth-child(4){
+        position: absolute !important;
+        bottom: 4%;
+        width: 40%;
+        left: 7%;
+    }
 }
