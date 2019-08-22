@@ -6,17 +6,41 @@
       </ion-avatar>
       <ion-label>{{user.name}}</ion-label>
     </ion-chip> -->
-    <user-chip [user_ref]="reservation.owner"></user-chip>
-    <p>出発地: {{reservation.departure_name}}    目的地: {{reservation.destination_name}}</p>
-    <p>出発時刻: {{reservation.departure_time | timestamp2string}}    現在予約人数/最大人数: {{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</p>
-    <p>コメント: {{reservation.comment}}</p>
     
-    <div class="box">
-    <ion-button class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
-    <p class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint">
-      <img src="../../../assets/img/norimasu.png">
-    </p>
-  </div>
+    <user-chip [user_ref]="reservation.owner"></user-chip>
+    <!-- <div class="ion-text-right">{{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</div> -->
+    <ion-text color="danger" class="ion-float-right">
+      <h1>{{reservation.max_passenger_count}}</h1>
+    </ion-text>  
+    <ion-text class="ion-float-right">
+      <h3>{{reservation.passenger_count}}/</h3>
+    </ion-text>
+      
+      
+    
+    <ion-grid>
+      <ion-row>
+        <ion-col class="ion-float-right">
+          <div>
+            <p><ion-icon color="danger" name="pin"></ion-icon>{{reservation.departure_name}}-----<ion-icon large name="logo-model-s"></ion-icon>-----
+              <ion-icon color="danger" name="pin"></ion-icon>{{reservation.destination_name}}</p>
+            <p>出発時刻: {{reservation.departure_time | timestamp2string}}</p>
+            <p>コメント: {{reservation.comment}}
+              <ion-button size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
+            </p>
+          </div>
+        </ion-col>
+        <ion-col class="ion-float-left">
+            <p float-right class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint">
+              <img src="../../../assets/img/norimasu.png"></p>
+            
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    
+    
 
+
+    
   </ion-card-content>
 </ion-card>
