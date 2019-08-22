@@ -1,6 +1,5 @@
-
+.md{
 .alert_norimasu{
-
     .alert-message{
         position: absolute !important;
         font-size: 15px;
@@ -42,4 +41,23 @@
         width: 40%;
         left: 7%;
     }
+}
+}
+
+.ios{
+.alert_norimasu{
+    .alert-message{
+        text-align: center;
+    }
+
+    .alert-button-inner{
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+    }
+
+    .alert-button-group{
+        flex-direction:row;
+    }
+}
 }
