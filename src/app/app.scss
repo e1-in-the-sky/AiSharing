@@ -1,6 +1,30 @@
 
 .alert_norimasu{
+
     .alert-message{
-        color: red;
+        text-align: center;
     }
+
+    .alert-button-inner{
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+    }
+
+    .alert-button:nth-child(1){
+        font-size: 30px;
+        width: 30%;
+        position: absolute !important;
+        top: 18%;
+        right: 8%;
+    }
+
+    .alert-button:nth-child(2){
+        font-size: 30px;
+        width: 30%;
+        position: absolute !important;
+        top: 18%;
+        left: 10%;
+    }
+
 }

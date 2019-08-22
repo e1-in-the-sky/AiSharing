@@ -87,14 +87,6 @@ export class ReservationCardComponent implements OnInit {
         cssClass: 'alert_norimasu',
         inputs: [
           {
-            name: 'passenger_count',
-            type: 'number',
-            placeholder: '乗車予定人数を入力してください',
-            value: 1,
-            min: 1,
-            max: this.reservation.max_passenger_count - this.reservation.passenger_count
-          },
-          {
             name: 'comment',
             type: 'text',
             placeholder: 'コメント',
@@ -103,15 +95,19 @@ export class ReservationCardComponent implements OnInit {
         ],
         buttons: [
           {
-            text: "UP",
+            text: "+",
             handler: () => {
-              alert.message = (parseInt(alert.message) + 1).toString();
+              let num = Math.min(parseInt(alert.message) + 1,
+                this.reservation.max_passenger_count - this.reservation.passenger_count);
+              alert.message = num.toString();
               return false;
             }
-          },{
-            text: "Down",
+          },
+          {
+            text: "-",
             handler: () => {
-              alert.message = (parseInt(alert.message) - 1).toString();
+              let num = Math.max(parseInt(alert.message) - 1, 1);
+              alert.message = num.toString();
               return false;
             }
           },
@@ -125,6 +121,7 @@ export class ReservationCardComponent implements OnInit {
           }, {
             text: 'ノリマス！',
             handler: data => {
+              /*
               alert.message=""
               if(!data.passenger_count){
                 if(alert.message)alert.message+="・";
@@ -141,10 +138,11 @@ export class ReservationCardComponent implements OnInit {
               if(String(data.passenger_count).match("[^0-9]")){
                 alert.message+="乗車人数は数字のみを入力してください";
                 return false;
-              }
+              }*/
               console.log('Confirm Ok');
               console.log('on ノリマス:', data);
               console.log('reservation:', this.reservation);
+              data.passenger_count = alert.message;
               this.onNorimasu(myUserRef, data).then(() => {}, error => {console.log(error)});
             }
           }
