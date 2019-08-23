@@ -21,16 +21,21 @@
       <ion-item>
         <ion-label position="floating">出発時刻</ion-label>
         <!-- <ion-input type="text" [(ngModel)]="data.departure_time" name="departure_time" required></ion-input> -->
-        <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="data.departure_time" name="departure_time"></ion-datetime>
+        <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="data.departure_time"
+          name="departure_time"></ion-datetime>
       </ion-item>
-      <ion-item>
-        <ion-label position="floating">最大乗車人数</ion-label>
-        <ion-input type="number" value="4" min="1" [(ngModel)]="data.max_passenger_count" name="max_passenger_count" required></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">現在乗車人数</ion-label>
-        <ion-input type="number" value="1" min="1" max="{{data.max_passenger_count}}" [(ngModel)]="data.passenger_count" name="passenger_count" required></ion-input>
-      </ion-item>
+      <p>最大乗車人数</p>
+      <ion-row>
+        <ion-button (click)="on_click_max_passenger(-1)">ー</ion-button>
+        <h3>{{data.max_passenger_count}}</h3>
+        <ion-button (click)="on_click_max_passenger(1)">＋</ion-button>
+      </ion-row>
+      <p>現在乗車人数</p>
+      <ion-row>
+        <ion-button (click)="on_click_passenger(-1)">ー</ion-button>
+        <h3>{{data.passenger_count}}</h3>
+        <ion-button (click)="on_click_passenger(1)">＋</ion-button>
+      </ion-row>
       <ion-item>
         <ion-label position="floating">コメント</ion-label>
         <ion-input type="text" [(ngModel)]="data.comment" name="comment"></ion-input>

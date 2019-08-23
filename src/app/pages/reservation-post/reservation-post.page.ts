@@ -99,6 +99,21 @@ export class ReservationPostPage implements OnInit {
     });
     this.alert_complete_send();
   }
+
+  clamp(x, min, max){
+    x = Math.max(x, min);
+    x = Math.min(x, max);
+    return x;
+  }
+
+  on_click_max_passenger(amount){
+    this.data.max_passenger_count = this.clamp(this.data.max_passenger_count + amount, 2, 100);
+    this.data.passenger_count = this.clamp(this.data.passenger_count, 1, this.data.max_passenger_count - 1);
+  }
+
+  on_click_passenger(amount){
+    this.data.passenger_count = this.clamp(this.data.passenger_count + amount, 1, this.data.max_passenger_count - 1);
+  }
     
   async alert_no_information(){
     const alert = await this.alertController.create({
@@ -123,6 +138,5 @@ export class ReservationPostPage implements OnInit {
     });
     await alert.present();
   }
-
 
 }

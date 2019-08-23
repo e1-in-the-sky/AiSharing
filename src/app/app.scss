@@ -1,63 +1,63 @@
 .md{
-.alert_norimasu{
-    .alert-message{
-        position: absolute !important;
-        font-size: 15px;
-        width: 20%;
-        top: 26%;
-        right: 40%;
-        text-align: center;
-    }
+    .alert_norimasu{
+        .alert-message{
+            position: absolute !important;
+            font-size: 15px;
+            width: 20%;
+            top: 26%;
+            right: 40%;
+            text-align: center;
+        }
 
-    .alert-button-inner{
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
-        justify-content: center;
-    }
+        .alert-button-inner{
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+        }
 
-    .alert-button:nth-child(1){
-        font-size: 30px;
-        width: 30%;
-        position: absolute !important;
-        top: 21%;
-        right: 8%;
-    }
+        .alert-button:nth-child(1){
+            font-size: 30px;
+            width: 30%;
+            position: absolute !important;
+            top: 21%;
+            right: 8%;
+        }
 
-    .alert-button:nth-child(2){
-        font-size: 30px;
-        width: 30%;
-        position: absolute !important;
-        top: 21%;
-        left: 10%;
-    }
+        .alert-button:nth-child(2){
+            font-size: 30px;
+            width: 30%;
+            position: absolute !important;
+            top: 21%;
+            left: 10%;
+        }
 
-    .alert-button:nth-child(3){
-        width: 40%;
-    }
+        .alert-button:nth-child(3){
+            width: 40%;
+        }
 
-    .alert-button:nth-child(4){
-        position: absolute !important;
-        bottom: 4%;
-        width: 40%;
-        left: 7%;
+        .alert-button:nth-child(4){
+            position: absolute !important;
+            bottom: 4%;
+            width: 40%;
+            left: 7%;
+        }
     }
-}
 }
 
 .ios{
-.alert_norimasu{
-    .alert-message{
-        text-align: center;
-    }
+    .alert_norimasu{
+        .alert-message{
+            text-align: center;
+        }
 
-    .alert-button-inner{
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
-        justify-content: center;
-    }
+        .alert-button-inner{
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+        }
 
-    .alert-button-group{
-        flex-direction:row;
+        .alert-button-group{
+            flex-direction:row;
+        }
     }
-}
 }
