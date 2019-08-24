@@ -3,11 +3,22 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons> 
-    <ion-title>タクシー予約投稿一覧</ion-title>
+    
+    
+    <ion-title style="float: center">
+      タクシー予約投稿一覧
+      <p class="header_logo">
+          <img src="../../../assets/img/car_sharing.png"  height=40px; style="float:right" >
+      </p>
+    </ion-title>
+    
+      
+    
   </ion-toolbar>
   <!-- <ion-toolbar>
     <ion-searchbar placeholder="Search"></ion-searchbar>
   </ion-toolbar> -->
+  
 </ion-header>
 
 <ion-content >
@@ -69,8 +80,8 @@
       <ion-button (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
     </ion-card-content>
   </ion-card> -->
-  <body>
-    </body>
+  <!-- <body>
+    </body> -->
   
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
