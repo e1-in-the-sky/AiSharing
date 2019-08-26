@@ -28,4 +28,10 @@ export class AccountIconService {
       throw err;
     }
   }
+
+  async addIconImage(uid, imageFile) {
+    var storageRef = firebase.storage().ref('icon/' + uid);
+    var snapshot = await storageRef.put(imageFile);
+    return await snapshot.ref.getDownloadURL()
+  }
 }
