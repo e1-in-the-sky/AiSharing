@@ -22,7 +22,7 @@
         <ion-label position="floating">出発時刻</ion-label>
         <!-- <ion-input type="text" [(ngModel)]="data.departure_time" name="departure_time" required></ion-input> -->
         <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="data.departure_time"
-          name="departure_time"></ion-datetime>
+          name="departure_time" (ngModelChange)="on_date_changed()" [min]="min_date" [max]="max_date"></ion-datetime>
       </ion-item>
       <p>最大乗車人数</p>
       <ion-row>
