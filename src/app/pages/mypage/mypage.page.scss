@@ -6,28 +6,28 @@
 // }
 
 
-ion-item{
-    background-color: #ffffe0;
-}
+// ion-item{
+//     background-color: #ffffe0;
+// }
 
-ion-list.user_info {
-    ion-label{
-        width:600px;
-        background-color: #ffffe0;
-    }
+// ion-list.user_info {
+//     ion-label{
+//         width:600px;
+//         background-color: #ffffe0;
+//     }
 
-    ion-img{
-        width:600px;
-        background-color: #ffffe0; 
-    }
+//     ion-img{
+//         width:600px;
+//         background-color: #ffffe0; 
+//     }
 
-    background-color: #ffffe0;
+//     background-color: #ffffe0;
     
-}
+// }
 
-ion-list.post{
-    background-color: #ffffe0;  
-}
+// ion-list.post{
+//     background-color: #ffffe0;  
+// }
 ion-title{
     font-weight: bold;
 }
@@ -39,7 +39,19 @@ p.header_logo{
      right: 0;
      bottom: 0;
      margin: auto;
-   // height: 30px;  
+   
+}
+
+ion-img.user_icon{
+    height: 60px;
+    margin-top: 10px;
+    margin-left: 10px;
+    //width: 80px;
+}
+
+ion-button{
+    position: absolute; 
+    right: 10px;
 }
 
 // body {
