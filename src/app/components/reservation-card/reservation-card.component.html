@@ -9,11 +9,17 @@
     
     <user-chip [user_ref]="reservation.owner"></user-chip>
     <!-- <div class="ion-text-right">{{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</div> -->
+    
+    
     <ion-text color="danger" class="ion-float-right">
       <h1>{{reservation.max_passenger_count}}</h1>
     </ion-text>  
     <ion-text class="ion-float-right">
       <h3>{{reservation.passenger_count}}/</h3>
+    </ion-text>
+
+    <ion-text class="ion-float-right" color="yellow">
+      <h6>乗車予定人数:  </h6>
     </ion-text>
       
        
