@@ -3,10 +3,12 @@ import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Router } from '@angular/router';
-import { NavController, LoadingController, AlertController } from '@ionic/angular'
+import { NavController, LoadingController, AlertController, ModalController } from '@ionic/angular'
 
 
 import * as firebase from 'firebase';
+
+import { ReservationPostPage } from '../reservation-post/reservation-post.page';
 
 @Component({
   selector: 'reservation-list',
@@ -28,15 +30,17 @@ export class ReservationListPage implements OnInit {
     private reservationService: ReservationService,
     public router: Router,
     private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    public modalController: ModalController
   ) {  }
 
-  async ionViewWillEnter(){
-    let loading = await this.loadingCtrl.create({
-      // spinner: 'circles',
-      message: '読み込み中...'
-    });
-    loading.present();
+  async ngOnInit() {
+    // this.getReservations();
+    // this.reservations = this.reservationService.getReservations();
+    let loading = await this.createLoading();
+    await loading.present();
+
+    this.getLoginStatus();
 
     try {
       await this.getReservations();
@@ -44,21 +48,9 @@ export class ReservationListPage implements OnInit {
     
     } catch (err) {
       loading.dismiss();
-      const alert = await this.alertCtrl.create({
-        header: 'エラー',
-        // subHeader: 'Subtitle',
-        message: err,
-        buttons: ['OK']
-      });
+      let alert = await this.createError(err);
       await alert.present();
     }
-  }
-
-  ngOnInit() {
-    // this.getReservations();
-    // this.reservations = this.reservationService.getReservations();
-
-    this.getLoginStatus();
   }
 
   async doRefresh(event) {
@@ -68,9 +60,10 @@ export class ReservationListPage implements OnInit {
 
   async getReservations() {
     try {
-      this.reservations = await this.reservationService.getReservations()
+      this.reservations = await this.reservationService.getReservations();
+    
     } catch (err) {
-      throw err
+      throw err;
     }
   }
 
@@ -93,7 +86,44 @@ export class ReservationListPage implements OnInit {
     });
   }
 
-  goToPost() {
-    this.router.navigateByUrl('/app/tabs/reservations/post');
+  async goToPost() {
+    // this.router.navigateByUrl('/app/tabs/reservations/post');
+    const modal = await this.modalController.create({
+      component: ReservationPostPage
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    if (data.isUpdate) {
+      console.log(data);
+      let loading = await this.createLoading();
+      await loading.present();
+      try {
+        await this.getReservations();
+        loading.dismiss();
+      
+      } catch (err) {
+        loading.dismiss();
+        let alert = await this.createError(err);
+        await alert.present();
+      }
+    }
+  }
+
+  async createLoading() {
+    let loading = await this.loadingCtrl.create({
+      // spinner: 'circles',
+      message: '読み込み中...'
+    });
+    return loading;
+  }
+
+  async createError(err) {
+    let alert = await this.alertCtrl.create({
+      header: 'エラー',
+      // subHeader: 'Subtitle',
+      message: err,
+      buttons: ['OK']
+    });
+    return alert;
   }
 }

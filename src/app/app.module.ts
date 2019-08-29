@@ -27,7 +27,7 @@ import { DatePipe } from '@angular/common';
       enabled: environment.production
     }, ),
     AngularFireModule.initializeApp(environment.config),
-    AngularFirestoreModule
+    AngularFirestoreModule,
   ],
   declarations: [AppComponent],
   providers: [InAppBrowser, SplashScreen, StatusBar, DatePipe],

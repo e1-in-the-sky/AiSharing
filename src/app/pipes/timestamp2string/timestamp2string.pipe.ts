@@ -6,8 +6,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class Timestamp2stringPipe implements PipeTransform {
 
   transform(value: firebase.firestore.Timestamp, args?: any): any {
-    console.log('value:', value);
-    console.log('value.toDate():', value.toDate());
+    // console.log('value:', value);
+    // console.log('value.toDate():', value.toDate());
     var date = value.toDate();
     return toLocaleString(date);
   }

@@ -43,12 +43,13 @@ export class MypagePage implements OnInit {
     } catch (err) {
       loading.dismiss();
       const alert = await this.alertController.create({
-        header: 'エラー',
+        header: 'エラーが発生しました',
         // subHeader: 'Subtitle',
-        message: err,
+        // message: err,
         buttons: ['OK']
       });
       await alert.present();
+      console.error(err);
     }
   }
 

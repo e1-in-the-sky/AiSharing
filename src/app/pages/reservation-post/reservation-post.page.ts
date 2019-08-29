@@ -4,7 +4,7 @@ import { Reservation } from '../../models/reservation';
 import * as firebase from 'firebase';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ReservationService } from '../../services/reservation/reservation.service';
-import { NavController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
@@ -44,6 +44,7 @@ export class ReservationPostPage implements OnInit {
 
   constructor(
     private navCtrl: NavController,
+    private modalCtrl: ModalController,
     private router: Router,
     private db: AngularFirestore,
     private reservationService: ReservationService,
@@ -82,7 +83,8 @@ export class ReservationPostPage implements OnInit {
       this.alert_no_time();
       return;
     }
-    else if(new Date(this.data.departure_time) <= new Date(this.data.departure_time)){
+      // else if(new Date(this.data.departure_time) <= new Date(this.data.departure_time)){
+      else if(new Date(this.data.departure_time) <= new Date()){
       this.alert_invalid_time();
       return;
     }
@@ -115,7 +117,8 @@ export class ReservationPostPage implements OnInit {
         // newReservationRef.set(reservation.deserialize());
         this.reservationService.addReservation(reservation).then(() => {
           // this.navCtrl.back();
-          this.navCtrl.navigateBack('/app/tabs/reservations');
+          // this.navCtrl.navigateBack('/app/tabs/reservations');
+          this.dismissModal(true);
           // this.router.navigateByUrl('/app/tabs/reservations');
         });
       } else {
@@ -170,6 +173,12 @@ export class ReservationPostPage implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  dismissModal(isUpdate: boolean = false) {
+    this.modalCtrl.dismiss({
+      "isUpdate": isUpdate
+    });
   }
 
 }
