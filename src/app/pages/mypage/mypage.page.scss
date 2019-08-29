@@ -60,10 +60,7 @@ ion-button{
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     border: 1px solid #c0c0c0;
-    background-color: #fffacd;
-    margin-left: 1px;
-    margin-right: 1px;
-    padding: 3px 6px;
+    background-color: #afeeee;
     border-bottom: none;
     font-size: 0.9em;
   }
@@ -88,17 +85,14 @@ ion-button{
    
   /* 選択されているタブのコンテンツのみを表示 */
   .tabs #tab-1:checked ~ .tab-1-content,
-  .tabs #tab-2:checked ~ .tab-2-content,
-  .tabs #tab-3:checked ~ .tab-3-content,
-  .tabs #tab-4:checked ~ .tab-4-content,
-  .tabs #tab-5:checked ~ .tab-5-content {
+  .tabs #tab-2:checked ~ .tab-2-content{
     display: block;
   }
    
-  /* 選択されているタブのスタイルを変える */
-  .tabs input[name="tab-radio"]:checked + .tab-label {
-    background-color: #ffa500;
-  }
+//   /* 選択されているタブのスタイルを変える */
+//   .tabs input[name="tab-radio"]:checked  {
+//     background-color: #ffa500;
+//   }
 
 
 
