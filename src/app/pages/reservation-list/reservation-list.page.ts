@@ -126,4 +126,8 @@ export class ReservationListPage implements OnInit {
     });
     return alert;
   }
+
+  trackFn(index: any, reservation: Reservation) {
+    return reservation.uid;
+  }
 }

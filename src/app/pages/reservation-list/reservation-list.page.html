@@ -87,7 +87,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations" ></reservation-card>
+  <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations; trackBy: trackFn"></reservation-card>
 
   <!-- <ion-list ion-no-margin *ngFor="let reservation of reservations">
     <reservation [reservation]="reservation"></reservation>
