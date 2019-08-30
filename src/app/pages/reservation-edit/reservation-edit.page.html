@@ -16,6 +16,32 @@
 <ion-content padding>
   <form>
     <ion-list>
+
+      <!-- 募集状況について ver.select -->
+      <ion-item>
+        <ion-label>募集状況</ion-label>
+        <ion-select [(ngModel)]="reservation.condition" name="condition">
+          <ion-select-option value="募集中" [selected]="reservation.condition === '募集中'">募集中</ion-select-option>
+          <ion-select-option value="募集終了" [selected]="reservation.condition === '募集終了'">募集終了</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- 募集状況について ver.toggle     -->
+      <!-- <ion-item>
+        <ion-label>{{condition}}</ion-label>
+        <ion-toggle [(ngModel)]="condition" name="condition"></ion-toggle>
+      </ion-item> -->
+
+      <!-- 募集状況について ver.segment -->
+      <!-- <ion-segment (ionChange)="conditionChanged($event)">
+        <ion-segment-button value="募集中">
+          <ion-label>募集中</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="募集終了">
+          <ion-label>募集終了</ion-label>
+        </ion-segment-button>
+      </ion-segment> -->
+
       <ion-item>
         <ion-label position="floating">出発地</ion-label>
         <ion-input type="text" [(ngModel)]="reservation.departure_name" name="departure_name" required></ion-input>

@@ -22,6 +22,7 @@ export class ReservationEditPage implements OnInit {
   reservation_owner: User = new User();
   reservationUsers: ReservationUsers[] = [];
   messages: Message[] = [];
+  condition: boolean = true;
 
   departure_time: string = '';
 
@@ -84,6 +85,11 @@ export class ReservationEditPage implements OnInit {
       .then(messages => {
         this.messages = messages;
       });
+  }
+
+  conditionChanged(ev: any) {
+    console.log('ev:', ev);
+    console.log('ev.target:', ev.target);
   }
 
   async onUpdate() {

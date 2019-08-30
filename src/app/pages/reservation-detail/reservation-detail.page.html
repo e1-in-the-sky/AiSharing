@@ -1,14 +1,17 @@
 <ion-header>
-    <ion-toolbar color="header" text-center>
+  <ion-toolbar color="header" text-center>
+
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
+
     <ion-title style="float: center">
-        投稿の詳細
-        <p class="header_logo">
-            <img src="../../../assets/img/car_sharing.png"  height=40px; style="float:right" >
-        </p>
-      </ion-title>
+      投稿の詳細
+      <p class="header_logo">
+        <img src="../../../assets/img/car_sharing.png"  height=40px; style="float:right" >
+      </p>
+    </ion-title>
+
   </ion-toolbar>
 </ion-header>
 
@@ -22,6 +25,9 @@
     </ion-item>
     <ion-item>
       <ion-label>owner name: {{owner_name}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>募集状況: {{reservation.condition}}</ion-label>
     </ion-item>
     <ion-item>
       <ion-label>出発地: {{departure_name}}</ion-label>
