@@ -7,6 +7,7 @@ import { Timestamp2stringPipe } from '../../pipes/timestamp2string/timestamp2str
 import { ReservationPostPage } from '../../pages/reservation-post/reservation-post.page';
 import { FormsModule } from '@angular/forms';
 import { MypageEditPage } from '../../pages/mypage-edit/mypage-edit.page';
+import { ReservationEditPage } from '../../pages/reservation-edit/reservation-edit.page';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { MypageEditPage } from '../../pages/mypage-edit/mypage-edit.page';
     UserChipComponent,
     Timestamp2stringPipe,
     ReservationPostPage,
+    ReservationEditPage,
     MypageEditPage
   ],
   imports: [
@@ -28,6 +30,7 @@ import { MypageEditPage } from '../../pages/mypage-edit/mypage-edit.page';
   ],
   entryComponents: [
     ReservationPostPage,
+    ReservationEditPage,
     MypageEditPage
   ]
 })

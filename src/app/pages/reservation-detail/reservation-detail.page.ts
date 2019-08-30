@@ -9,7 +9,8 @@ import { Message } from '../../models/message';
 import * as firebase from 'firebase';
 import { UserService } from '../../services/user/user.service';
 import { ReservationUsers } from '../../models/reservation-users';
-import { NavController, LoadingController, AlertController } from '@ionic/angular';
+import { NavController, LoadingController, AlertController, ModalController } from '@ionic/angular';
+import { ReservationEditPage } from '../reservation-edit/reservation-edit.page';
 
 @Component({
   selector: 'reservation-detail',
@@ -35,6 +36,7 @@ export class ReservationDetailPage implements OnInit {
     private navCtrl: NavController,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
+    private modalCtrl: ModalController,
     private reservationService: ReservationService,
     private messageService: MessageService,
     private userService: UserService,
@@ -42,10 +44,7 @@ export class ReservationDetailPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    let loading = await this.loadingCtrl.create({
-      // spinner: 'circles',
-      message: '読み込み中...'
-    });
+    let loading = await this.createLoading();
     loading.present();
 
     try {
@@ -55,15 +54,11 @@ export class ReservationDetailPage implements OnInit {
       this.getReservation();
       this.getMessages();
       this.getThisReservationUsers();
-      loading.dismiss();    
+      loading.dismiss();
+
     } catch (err) {
       loading.dismiss();
-      const alert = await this.alertCtrl.create({
-        header: 'エラー',
-        // subHeader: 'Subtitle',
-        message: err,
-        buttons: ['OK']
-      });
+      const alert = await this.createError(err);
       await alert.present();
     }
   }
@@ -182,10 +177,55 @@ export class ReservationDetailPage implements OnInit {
     });
   }
 
-  goToEditPage() {
+  async goToEditPage() {
     console.log('go to edit page');
     // this.router.navigate
-    this.navCtrl.navigateForward('/app/tabs/reservations/edit/' + this.reservation.uid);
+    // this.navCtrl.navigateForward('/app/tabs/reservations/edit/' + this.reservation.uid);
+    const modal = await this.modalCtrl.create({
+      component: ReservationEditPage,
+      componentProps: {
+        'reservationId': this.reservationId,
+      }
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    if (data.isUpdate) {
+      console.log(data);
+      let loading = await this.createLoading();
+      await loading.present();
+      try {
+        var current_user = await this.getCurrentUser();
+        this.current_user = await this.userService.getUser(current_user.uid);
+        this.getReservation();
+        this.getMessages();
+        this.getThisReservationUsers();  
+        loading.dismiss();
+      
+      } catch (err) {
+        loading.dismiss();
+        let alert = await this.createError(err);
+        await alert.present();
+      }
+    }
+  }
+
+  async createLoading() {
+    let loading = await this.loadingCtrl.create({
+      // spinner: 'circles',
+      message: '読み込み中...'
+    });
+    return loading;
+  }
+
+  async createError(err) {
+    const alert = await this.alertCtrl.create({
+      header: 'エラー',
+      // subHeader: 'Subtitle',
+      // message: err,
+      buttons: ['OK']
+    });
+    console.error(err);
+    return alert;
   }
 
 }

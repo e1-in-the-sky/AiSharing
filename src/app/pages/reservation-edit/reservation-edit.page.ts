@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
@@ -8,7 +8,7 @@ import { ReservationService } from '../../services/reservation/reservation.servi
 import { UserService } from '../../services/user/user.service';
 import { MessageService } from '../../services/message/message.service';
 import { ReservationUsersService } from '../../services/reservation_users/reservation-users.service';
-import { NavController, AlertController } from '@ionic/angular';
+import { NavController, AlertController, ModalController } from '@ionic/angular';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -17,7 +17,7 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./reservation-edit.page.scss'],
 })
 export class ReservationEditPage implements OnInit {
-  reservationId: string = '';
+  @Input() reservationId: string;
   reservation: Reservation = new Reservation();
   reservation_owner: User = new User();
   reservationUsers: ReservationUsers[] = [];
@@ -34,12 +34,14 @@ export class ReservationEditPage implements OnInit {
     private messageService: MessageService,
     private reservationUsersService: ReservationUsersService,
     private alertController: AlertController,
+    private modalCtrl: ModalController,
     private datepipe: DatePipe
   ) { }
 
   // 自分の投稿でないときは編集できないようにしないといけない
   ngOnInit() {
-    this.reservationId = this.route.snapshot.paramMap.get('reservationId');
+    // this.reservationId = this.route.snapshot.paramMap.get('reservationId');
+    
     this.getReservation().then(() => {
       this.getReservationOwner();
     });
@@ -118,6 +120,7 @@ export class ReservationEditPage implements OnInit {
       console.error('updateReservation in reservation-edit.page.ts:\nerr:', err);
       throw err;
     }
+    this.dismissModal(true);
     console.log('投稿の更新に成功しました。');
   }
 
@@ -128,7 +131,8 @@ export class ReservationEditPage implements OnInit {
 
   onCancel() {
     console.log('on cancel');
-    this.navCtrl.navigateBack('/app/tabs/reservations/detail/' + this.reservation.uid);
+    // this.navCtrl.navigateBack('/app/tabs/reservations/detail/' + this.reservation.uid);
+    this.dismissModal(false);
   }
 
   async onDeleteReservationUser(reservationUser_uid: string) {
@@ -207,6 +211,7 @@ export class ReservationEditPage implements OnInit {
                 await this.presentDeleteIsSuccessful();
                 // 投稿一覧ページに移動
                 console.log('move to reservation list page');
+                this.dismissModal(false);
                 this.router.navigateByUrl('/app/tabs/reservations');
               });
   }
@@ -242,6 +247,12 @@ export class ReservationEditPage implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  dismissModal(isUpdate: boolean = false) {
+    this.modalCtrl.dismiss({
+      "isUpdate": isUpdate
+    });
   }
 
 }
