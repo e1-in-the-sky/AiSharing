@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user/user.service';
 import * as firebase from 'firebase';
-import { NavController, LoadingController, AlertController } from '@ionic/angular';
+import { NavController, LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { AccountIconService } from '../../services/account-icon/account-icon.service';
 
 @Component({
@@ -21,7 +21,8 @@ export class MypageEditPage implements OnInit {
     private accountIconService: AccountIconService,
     private navCtrl: NavController,
     private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
@@ -65,7 +66,8 @@ export class MypageEditPage implements OnInit {
       });
       alert.present();
       // this.navCtrl.navigateBack('/mypage');
-      this.navCtrl.navigateForward('/mypage');
+      // this.navCtrl.navigateForward('/mypage');
+      this.dismissModal(true);
 
     } catch (err) {
       console.log(err);
@@ -80,7 +82,8 @@ export class MypageEditPage implements OnInit {
 
   onCancel() {
     console.log('onCancel in mypage-edit.page.ts');
-    this.navCtrl.navigateBack('/mypage');
+    // this.navCtrl.navigateBack('/mypage');
+    this.dismissModal(false);
   }
 
   upload(list: any) {
@@ -132,5 +135,11 @@ export class MypageEditPage implements OnInit {
   //     loading.dismiss();
   //   }
   // }
+
+  dismissModal(isUpdate: boolean = false) {
+    this.modalCtrl.dismiss({
+      "isUpdate": isUpdate
+    });
+  }
 
 }

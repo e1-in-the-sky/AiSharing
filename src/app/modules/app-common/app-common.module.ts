@@ -6,6 +6,7 @@ import { UserChipComponent } from '../../components/user-chip/user-chip.componen
 import { Timestamp2stringPipe } from '../../pipes/timestamp2string/timestamp2string.pipe';
 import { ReservationPostPage } from '../../pages/reservation-post/reservation-post.page';
 import { FormsModule } from '@angular/forms';
+import { MypageEditPage } from '../../pages/mypage-edit/mypage-edit.page';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { FormsModule } from '@angular/forms';
     ReservationCardComponent,
     UserChipComponent,
     Timestamp2stringPipe,
-    ReservationPostPage
+    ReservationPostPage,
+    MypageEditPage
   ],
   imports: [
     CommonModule,
@@ -25,7 +27,8 @@ import { FormsModule } from '@angular/forms';
     UserChipComponent
   ],
   entryComponents: [
-    ReservationPostPage
+    ReservationPostPage,
+    MypageEditPage
   ]
 })
 export class AppCommonModule { }

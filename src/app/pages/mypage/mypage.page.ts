@@ -4,9 +4,10 @@ import { UserService } from '../../services/user/user.service';
 import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Reservation } from '../../models/reservation';
-import { NavController, LoadingController, AlertController } from '@ionic/angular';
+import { NavController, LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { AccountIconService } from '../../services/account-icon/account-icon.service';
 import { ReservationUsersService } from '../../services/reservation_users/reservation-users.service';
+import { MypageEditPage } from '../mypage-edit/mypage-edit.page';
 
 @Component({
   selector: 'mypage',
@@ -22,16 +23,14 @@ export class MypagePage implements OnInit {
     private navCtrl: NavController,
     private loadingCtrl: LoadingController,
     private alertController: AlertController,
+    private modalCtrl: ModalController,
     private userService: UserService,
     private reservationService: ReservationService,
     private reservationUsersService: ReservationUsersService
   ) { }
 
   async ngOnInit() {
-    let loading = await this.loadingCtrl.create({
-      // spinner: 'circles',
-      message: '読み込み中...'
-    });
+    let loading = await this.createLoading();
     loading.present();
     // await this.getCurrentUser();
     try {
@@ -42,12 +41,7 @@ export class MypagePage implements OnInit {
       loading.dismiss();
     } catch (err) {
       loading.dismiss();
-      const alert = await this.alertController.create({
-        header: 'エラーが発生しました',
-        // subHeader: 'Subtitle',
-        // message: err,
-        buttons: ['OK']
-      });
+      let alert = await this.createError(err);
       await alert.present();
       console.error(err);
     }
@@ -120,9 +114,49 @@ export class MypagePage implements OnInit {
     console.log('editProfile in mypage.page.ts');
   }
 
-  goToEditPage() {
+  async goToEditPage() {
     console.log('go to edit page');
-    this.navCtrl.navigateForward('/mypage/edit');
+    // this.navCtrl.navigateForward('/mypage/edit');
+    const modal = await this.modalCtrl.create({
+      component: MypageEditPage
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    if (data.isUpdate) {
+      console.log(data);
+      let loading = await this.createLoading();
+      await loading.present();
+      try {
+        var firebaseUser = await this.getCurrentUser();  
+        this.user = await this.userService.getUser(firebaseUser.uid);
+        await this.getMyReservations();
+        await this.getRideReservations();
+        loading.dismiss();
+      
+      } catch (err) {
+        loading.dismiss();
+        let alert = await this.createError(err);
+        await alert.present();
+      }
+    }
+  }
+
+  async createLoading() {
+    let loading = await this.loadingCtrl.create({
+      // spinner: 'circles',
+      message: '読み込み中...'
+    });
+    return loading;
+  }
+
+  async createError(err) {
+    const alert = await this.alertController.create({
+      header: 'エラーが発生しました',
+      // subHeader: 'Subtitle',
+      // message: err,
+      buttons: ['OK']
+    });
+    return alert;
   }
 
 }

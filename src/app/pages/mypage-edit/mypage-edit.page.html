@@ -1,9 +1,14 @@
 <ion-header>
   <ion-toolbar>
+    
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-button (click)="onCancel()">
+        <ion-icon name="arrow-round-back"></ion-icon>
+      </ion-button>
     </ion-buttons>
+
     <ion-title>アカウント情報の編集</ion-title>
+    
   </ion-toolbar>
 </ion-header>
 
