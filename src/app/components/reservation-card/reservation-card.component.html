@@ -53,11 +53,29 @@
             
           </div>
         </ion-col>
+
         <ion-col class="ion-float-left">
+          
+          <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">
+            <p float-right class="norimasu_button" color="ion-color-light-tint">
+              <img src="../../../assets/img/full.png">
+            </p>
+          </div>
+
+          <ng-template #conditionIsNotFull>
+            <div *ngIf="reservation?.condition === '募集終了'; else conditionIsRecruiting">
+              <p>[募集終了の画像]</p>
+            </div>
+          </ng-template>
+          
+          <ng-template #conditionIsRecruiting>  
             <p float-right class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint">
-              <img src="../../../assets/img/norimasu.png"></p>
-            
+              <img src="../../../assets/img/norimasu.png">
+            </p>
+          </ng-template>
+
         </ion-col>
+
       </ion-row>
     </ion-grid>
     
