@@ -24,6 +24,12 @@
       <ion-label>Reservation ID: {{reservationId}}</ion-label>
     </ion-item>
     <ion-item>
+      <ion-label>最初に投稿された日時: {{reservation.created_at | timestamp2string}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>最後に更新された日時: {{reservation.updated_at | timestamp2string}}</ion-label>
+    </ion-item>
+    <ion-item>
       <ion-label>owner name: {{owner_name}}</ion-label>
     </ion-item>
     <ion-item>
