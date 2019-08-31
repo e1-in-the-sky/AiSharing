@@ -48,12 +48,14 @@
             </div> 
           </div>
             <p>出発時刻: {{reservation.departure_time | timestamp2string}}</p>
+            <ion-label *ngIf="errors?.alreadyDeparted" color="danger">すでに出発予定時刻を過ぎた投稿です!</ion-label>
             <p>コメント: {{reservation.comment}}</p>
             <p><ion-button size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button></p>
             
           </div>
         </ion-col>
 
+        <!-- ノリマスボタン周り -->
         <ion-col class="ion-float-left">
           
           <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">

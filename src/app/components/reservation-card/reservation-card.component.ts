@@ -20,6 +20,9 @@ export class ReservationCardComponent implements OnInit {
   @Input()
   reservation: Reservation;
   user: User = new User();  // reservationのオーナー
+  errors = {
+    alreadyDeparted: false
+  }
   
   constructor(
     private db: AngularFirestore,
@@ -30,7 +33,18 @@ export class ReservationCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.checkAlredyDeparted();
     this.reservation.owner.get().then(doc => {this.user = new User(doc.data())});
+  }
+
+  checkAlredyDeparted() {
+    let departure_time = this.reservation.departure_time;
+    if (departure_time instanceof firebase.firestore.Timestamp) {
+      departure_time = departure_time.toDate();
+    }
+    if (departure_time < new Date()){
+      this.errors.alreadyDeparted = true;
+    }
   }
 
   goToReservationDetail() {
