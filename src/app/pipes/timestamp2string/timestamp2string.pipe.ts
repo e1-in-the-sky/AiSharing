@@ -9,17 +9,14 @@ export class Timestamp2stringPipe implements PipeTransform {
     // console.log('value:', value);
     // console.log('value.toDate():', value.toDate());
     var date = value.toDate();
-    return toLocaleString(date);
+    var date_str = [
+      date.getFullYear(),
+      date.getMonth() + 1,
+      date.getDate()
+    ].join( '/' ) + ' '
+    + date.toLocaleTimeString();
+
+    return date_str;
   }
 
-}
-
-function toLocaleString( date )
-{
-    return [
-        date.getFullYear(),
-        date.getMonth() + 1,
-        date.getDate()
-        ].join( '/' ) + ' '
-        + date.toLocaleTimeString();
 }
