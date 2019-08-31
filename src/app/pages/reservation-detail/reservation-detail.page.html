@@ -58,7 +58,8 @@
       </ion-list-header>
       <ion-item *ngFor="let message of messages">
         <user-chip [user_ref]="message.user"></user-chip>
-        <ion-label>{{message.message}}</ion-label>  
+        <ion-label>{{message.message}}</ion-label>
+        <ion-label>{{message.created_at | timestamp2string}}</ion-label>
       </ion-item>
 
       <ion-item>

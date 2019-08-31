@@ -26,7 +26,8 @@ import { ReservationEditPage } from '../../pages/reservation-edit/reservation-ed
   ],
   exports: [
     ReservationCardComponent,
-    UserChipComponent
+    UserChipComponent,
+    Timestamp2stringPipe
   ],
   entryComponents: [
     ReservationPostPage,
