@@ -8,7 +8,7 @@ import { ReservationPostPage } from '../../pages/reservation-post/reservation-po
 import { FormsModule } from '@angular/forms';
 import { MypageEditPage } from '../../pages/mypage-edit/mypage-edit.page';
 import { ReservationEditPage } from '../../pages/reservation-edit/reservation-edit.page';
-import { ReservationFilterPage } from '../../reservation-filter/reservation-filter.page';
+import { ReservationFilterPage } from '../../pages/reservation-filter/reservation-filter.page';
 
 
 @NgModule({

@@ -9,7 +9,7 @@ import { NavController, LoadingController, AlertController, ModalController } fr
 import * as firebase from 'firebase';
 
 import { ReservationPostPage } from '../reservation-post/reservation-post.page';
-import { ReservationFilterPage } from '../../reservation-filter/reservation-filter.page';
+import { ReservationFilterPage } from '../reservation-filter/reservation-filter.page';
 
 @Component({
   selector: 'reservation-list',
