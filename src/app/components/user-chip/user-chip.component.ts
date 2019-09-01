@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../../models/user';
 import * as firebase from 'firebase';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'user-chip',
@@ -14,7 +15,8 @@ export class UserChipComponent implements OnInit {
   user: User = new User();
 
   constructor(
-    public router: Router
+    public router: Router,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
@@ -40,6 +42,7 @@ export class UserChipComponent implements OnInit {
         }
       }
     });
-    this.router.navigateByUrl(path);
+    // this.router.navigateByUrl(path);
+    this.navCtrl.navigateForward(path);
   }
 }

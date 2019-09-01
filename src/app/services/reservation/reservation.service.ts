@@ -91,6 +91,26 @@ export class ReservationService {
     return reservations;
   }
 
+  // ユーザーの中にreservation collectionが存在する場合
+  // async getUserReservations(user_uid) {
+  //   // get reservations of User's(user_uid)
+  //   console.log('in getUserReservations(reservation.service.ts)\nuser_uid:', user_uid);
+  //   var reservations: Reservation[] = [];
+  //   var reservationsRef = this.db.collection('users').doc(user_uid).collection('reservations').ref;
+  //   await reservationsRef.get().then(querySnapshot => {  // departure_timeとかで並び替えしたい
+  //     querySnapshot.forEach(reservationRef => {
+  //       console.log('reservationRef:', reservationRef);
+  //       console.log('reservationRef.data():', reservationRef.data());
+  //       reservationRef.data().reservationRef.get().then(doc => {
+  //         console.log('doc:', doc);
+  //         console.log('doc.data():', doc.data());
+  //         reservations.push(new Reservation(doc.data()));
+  //       });
+  //     });
+  //   });
+  //   return reservations;
+  // }
+
   getRideReservations(user_uid) {
     // get reserved reservations by User(user_uid)
   }

@@ -142,7 +142,7 @@ export class AppComponent implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
-    this.router.navigateByUrl('app/tabs/reservations');
+    this.router.navigateByUrl('/login');
   }
 
   openTutorial() {

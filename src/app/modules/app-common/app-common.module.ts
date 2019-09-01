@@ -8,6 +8,7 @@ import { ReservationPostPage } from '../../pages/reservation-post/reservation-po
 import { FormsModule } from '@angular/forms';
 import { MypageEditPage } from '../../pages/mypage-edit/mypage-edit.page';
 import { ReservationEditPage } from '../../pages/reservation-edit/reservation-edit.page';
+import { ReservationFilterPage } from '../../reservation-filter/reservation-filter.page';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { ReservationEditPage } from '../../pages/reservation-edit/reservation-ed
     Timestamp2stringPipe,
     ReservationPostPage,
     ReservationEditPage,
+    ReservationFilterPage,
     MypageEditPage
   ],
   imports: [
@@ -32,6 +34,7 @@ import { ReservationEditPage } from '../../pages/reservation-edit/reservation-ed
   entryComponents: [
     ReservationPostPage,
     ReservationEditPage,
+    ReservationFilterPage,
     MypageEditPage
   ]
 })

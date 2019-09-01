@@ -8,10 +8,10 @@ const routes: Routes = [
     redirectTo: '/tutorial',
     pathMatch: 'full'
   },
-  {
-    path: 'account/:accountId',
-    loadChildren: './pages/account/account.module#AccountModule'
-  },
+  // {
+  //   path: 'account/:accountId',
+  //   loadChildren: './pages/account/account.module#AccountModule'
+  // },
   {
     path: 'support',
     loadChildren: './pages/support/support.module#SupportModule'
@@ -33,6 +33,7 @@ const routes: Routes = [
     loadChildren: './pages/tutorial/tutorial.module#TutorialModule',
     canLoad: [CheckTutorial]
   },
+
   // { path: 'mypage',
   //   loadChildren: './pages/mypage/mypage.module#MypagePageModule' },
   // { path: 'mypage/edit',

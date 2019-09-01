@@ -9,6 +9,7 @@ import { NavController, LoadingController, AlertController, ModalController } fr
 import * as firebase from 'firebase';
 
 import { ReservationPostPage } from '../reservation-post/reservation-post.page';
+import { ReservationFilterPage } from '../../reservation-filter/reservation-filter.page';
 
 @Component({
   selector: 'reservation-list',
@@ -107,6 +108,15 @@ export class ReservationListPage implements OnInit {
         await alert.present();
       }
     }
+  }
+
+  async createReservationFilterModal() {
+    const modal = await this.modalController.create({
+      component: ReservationFilterPage
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    console.log(data);
   }
 
   async createLoading() {

@@ -90,6 +90,7 @@ export class MypagePage implements OnInit {
     // });
     
     this.reservations = await this.reservationService.getUserReservations(this.user.uid);
+    // console.log('after getUserReservations: reservaions:', this.reservations);
     this.reservations = await this.reservations.sort((a, b) => {
       console.log('ソート中: my reservations');
       return a.departure_time > b.departure_time ? 1 : -1;

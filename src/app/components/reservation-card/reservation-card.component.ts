@@ -3,7 +3,7 @@ import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
-import { AlertController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import { ReservationUsers } from '../../models/reservation-users';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ReservationUsersService } from '../../services/reservation_users/reservation-users.service';
@@ -27,6 +27,7 @@ export class ReservationCardComponent implements OnInit {
   constructor(
     private db: AngularFirestore,
     public router: Router,
+    private navController: NavController,
     public alertController: AlertController,
     private reservationService: ReservationService,
     private reservationUsersService: ReservationUsersService
@@ -51,7 +52,8 @@ export class ReservationCardComponent implements OnInit {
     // for reservation detail page
     // console.log(reservation);
     // console.log(reservation.owner);
-    this.router.navigateByUrl('/app/tabs/reservations/detail/' + this.reservation.uid);
+    // this.router.navigateByUrl('/app/tabs/reservations/detail/' + this.reservation.uid);
+    this.navController.navigateForward('/app/tabs/reservations/detail/' + this.reservation.uid);
   }
 
   async goToAccountDetail() {
