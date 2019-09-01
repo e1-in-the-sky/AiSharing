@@ -78,6 +78,16 @@ const routes: Routes = [
           }
         ]
       },
+      // mypage
+      {
+        path: 'mypage',
+        children: [
+          {
+            path: '',
+            loadChildren: '../mypage/mypage.module#MypagePageModule'
+          }
+        ]
+      },
       {
         path: '',
         redirectTo: '/app/tabs/schedule',

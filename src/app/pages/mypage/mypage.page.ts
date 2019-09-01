@@ -91,6 +91,7 @@ export class MypagePage implements OnInit {
     
     this.reservations = await this.reservationService.getUserReservations(this.user.uid);
     this.reservations = await this.reservations.sort((a, b) => {
+      console.log('ソート中: my reservations');
       return a.departure_time > b.departure_time ? 1 : -1;
     });
   }
@@ -108,6 +109,21 @@ export class MypagePage implements OnInit {
     //     // if not sign in
     //   }
     // });
+
+    this.rideReservations = await this.reservationUsersService.getReservationsByUserUid(this.user.uid);
+    console.log('after getReservationsByUserUid: rideReservaions:', this.rideReservations);
+    this.rideReservations = await this.rideReservations.sort((a, b) => {
+      console.log('ソート中: rideReservations');
+      return a.departure_time > b.departure_time ? 1 : -1;
+    });
+
+    // this.reservationUsersService.getReservationsByUserUid(this.user.uid)
+    //   .then(rideReservations => {
+    //     this.rideReservations = rideReservations.sort((a, b) => {
+    //         console.log('ソート中: rideReservations');
+    //         return a.departure_time > b.departure_time ? 1 : -1;
+    //       });
+    //   });
   }
 
   editProfile() {

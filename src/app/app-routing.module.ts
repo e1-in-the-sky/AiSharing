@@ -33,10 +33,10 @@ const routes: Routes = [
     loadChildren: './pages/tutorial/tutorial.module#TutorialModule',
     canLoad: [CheckTutorial]
   },
-  { path: 'mypage',
-    loadChildren: './pages/mypage/mypage.module#MypagePageModule' },
-  { path: 'mypage/edit',
-    loadChildren: './pages/mypage-edit/mypage-edit.module#MypageEditPageModule' },
+  // { path: 'mypage',
+  //   loadChildren: './pages/mypage/mypage.module#MypagePageModule' },
+  // { path: 'mypage/edit',
+  //   loadChildren: './pages/mypage-edit/mypage-edit.module#MypageEditPageModule' },
 ];
 
 @NgModule({

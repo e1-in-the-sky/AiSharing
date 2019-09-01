@@ -36,7 +36,7 @@ export class UserChipComponent implements OnInit {
       if (user) {
         // account_uidが自分だった場合はマイページに移動
         if (user.uid == account_uid) {
-          path = '/mypage';
+          path = '/app/tabs/mypage';
         }
       }
     });
