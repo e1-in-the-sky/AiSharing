@@ -88,20 +88,6 @@ export class ReservationService {
         reservations.push(reservation);
       });
     });
-    console.log('before:', reservations);
-    var after = reservations.sort((a, b) => {
-      // if (a.departure_time instanceof Date || b.departure_time instanceof Date) {
-      //   // return a.departure_time.getTime() - b.departure_time.getTime();
-      // } else {
-      //   return a.departure_time.seconds - b.departure_time.seconds;
-      // }
-      var a_time: Date = a.departure_time instanceof Date ? a.departure_time : a.departure_time.toDate();
-      var b_time: Date = b.departure_time instanceof Date ? b.departure_time : b.departure_time.toDate();
-      // console.log('', a_time.getTime() - b_time.getTime());
-      return (a_time.getTime() < b_time.getTime() ? 1 : -1);
-    });
-    console.log('after(after):', after);
-    console.log('after(reservations):', reservations);
     return reservations;
   }
 

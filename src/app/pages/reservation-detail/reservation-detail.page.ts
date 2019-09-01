@@ -98,10 +98,13 @@ export class ReservationDetailPage implements OnInit {
     });
   }
 
-  getMessages(){
+  async getMessages(){
     // get this reservation's messages from firestore.
     console.log('in getMessages(reservation-detail.page.ts)');
-    this.messageService.getReservationMessages(this.reservationId).then(messages => {this.messages = messages});
+    this.messages = await this.messageService.getReservationMessages(this.reservationId);
+    this.messages = await this.messages.sort((a, b) => {
+      return a.created_at > b.created_at ? 1 : -1;
+    });
   }
 
   async sendMessage() {
