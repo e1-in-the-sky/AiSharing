@@ -93,15 +93,6 @@ export class ReservationUsersService {
       var reservation = await doc.data().reservation.get();
       reservations.push(new Reservation(reservation.data()));
     });
-    console.log('before:', reservations);
-    var after = reservations.sort((a, b) => {
-      var a_time: Date = a.departure_time instanceof Date ? a.departure_time : a.departure_time.toDate();
-      var b_time: Date = b.departure_time instanceof Date ? b.departure_time : b.departure_time.toDate();
-      return (a_time.getTime() < b_time.getTime() ? 1 : -1);
-      // return a_time.getTime() - b_time.getTime();
-    });
-    console.log('after(after):', after);
-    console.log('after(reservatins):', reservations);
     return reservations;
   }
 

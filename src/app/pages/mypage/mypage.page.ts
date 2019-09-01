@@ -90,6 +90,9 @@ export class MypagePage implements OnInit {
     // });
     
     this.reservations = await this.reservationService.getUserReservations(this.user.uid);
+    this.reservations = await this.reservations.sort((a, b) => {
+      return a.departure_time > b.departure_time ? 1 : -1;
+    });
   }
 
   async getRideReservations() {
@@ -105,8 +108,6 @@ export class MypagePage implements OnInit {
     //     // if not sign in
     //   }
     // });
-
-    this.rideReservations = await this.reservationUsersService.getReservationsByUserUid(this.user.uid);
   }
 
   editProfile() {
