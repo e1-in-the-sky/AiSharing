@@ -31,7 +31,7 @@ export class UserChipComponent implements OnInit {
   async goToAccountDetail() {
     // for account detail page
     var account_uid = this.user.uid;
-    var path = '/account/' + account_uid;
+    var path = '/app/tabs/account/' + account_uid;
     await firebase.auth().onAuthStateChanged(user => {
       if (user) {
         // account_uidが自分だった場合はマイページに移動

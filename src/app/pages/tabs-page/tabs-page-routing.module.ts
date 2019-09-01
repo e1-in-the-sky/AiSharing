@@ -89,6 +89,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'account/:accountId',
+        children: [
+          {
+            path: '',
+            loadChildren: '../account/account.module#AccountModule'
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/app/tabs/schedule',
         pathMatch: 'full'
