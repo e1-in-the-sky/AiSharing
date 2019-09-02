@@ -25,7 +25,7 @@
   
 </ion-header>
 
-<ion-content >
+<ion-content class="background">
   <!--
   <ion-card>
     <ion-card-header>
@@ -91,9 +91,19 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ng-container *ngFor="let reservation of reservations; trackBy: trackFn">
-    <reservation-card [reservation]='reservation'></reservation-card>
+  <ng-container *ngIf="reservations.length !== 0; else nonReservations">
+    <ng-container *ngFor="let reservation of reservations; trackBy: trackFn">
+      <reservation-card [reservation]='reservation'></reservation-card>
+    </ng-container>
   </ng-container>
+
+  <ng-template #nonReservations>
+    <ion-item class="transparent">
+      <ion-label>投稿がありません
+      <ion-img src="../../../assets/img/sharing.png" style="height: 3em; width: 3em; display: inline-block; vertical-align: middle;"></ion-img>
+      を押して投稿してみましょう</ion-label>
+    </ion-item>
+  </ng-template>
 
   <!-- <ion-list ion-no-margin *ngFor="let reservation of reservations">
     <reservation [reservation]="reservation"></reservation>

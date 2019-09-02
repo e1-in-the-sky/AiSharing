@@ -110,17 +110,7 @@ export class ReservationListPage implements OnInit {
     const { data } = await modal.onWillDismiss();
     if (data.isUpdate) {
       console.log(data);
-      let loading = await this.createLoading();
-      await loading.present();
-      try {
-        await this.getReservations();
-        loading.dismiss();
-      
-      } catch (err) {
-        loading.dismiss();
-        let alert = await this.createError(err);
-        await alert.present();
-      }
+      this.getReservationsAndFilterWithLoading();
     }
   }
 
@@ -135,18 +125,7 @@ export class ReservationListPage implements OnInit {
     const { data } = await modal.onWillDismiss();
     if (data) {
       this.filter = data.filter;
-      let loading = await this.createLoading();
-      await loading.present();
-      try {
-        await this.getReservations();
-        this.applyFilterToReservations();
-        loading.dismiss();
-      
-      } catch (err) {
-        loading.dismiss();
-        let alert = await this.createError(err);
-        await alert.present();
-      }
+      this.getReservationsAndFilterWithLoading();
     }
   }
 
