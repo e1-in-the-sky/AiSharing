@@ -65,6 +65,31 @@
         </ion-select>
       </ion-item>
 
+      <!-- 最大人数に達しているものを除外するかのチェックボックス -->
+      <!-- or -->
+      <!-- 残り乗車可能人数による絞り込み -->
+
+      <ion-item>
+        <!-- <ion-label>乗車可能人数</ion-label> -->
+        <ion-button (click)="onClickPassengerCapacity(-1)">ー</ion-button>
+        <ion-label text-center>{{filter.passenger_capacity}}</ion-label>
+        <ion-button (click)="onClickPassengerCapacity(1)">＋</ion-button>
+        <ion-label>人以上乗車可能</ion-label>
+      </ion-item>
+
+      <!-- <ion-item>
+        <ion-label position="floating">乗車可能人数</ion-label>
+        <ion-select [(ngModel)]="filter.passenger_capacity" (change)="filter.passenger_capacity = $event" name="passenger_capacity">
+          <ion-select-option value="0" [selected]="filter.passenger_capacity === 0">0人</ion-select-option>
+          <ion-select-option value="1" [selected]="filter.passenger_capacity === 1">出発予定時刻が遅い順</ion-select-option>
+          <ion-select-option value="2" [selected]="filter.passenger_capacity === 2">投稿が新しい順</ion-select-option>
+          <ion-select-option value="3" [selected]="filter.passenger_capacity === 3">投稿が古い順</ion-select-option>
+          <ion-select-option value="4" [selected]="filter.passenger_capacity === 4">投稿が古い順</ion-select-option>
+        </ion-select>
+      </ion-item> -->
+
+
+
       <ion-button expand="block" color="primary" type="button" (click)="onSearch()">検索</ion-button>
 
     </ion-list>

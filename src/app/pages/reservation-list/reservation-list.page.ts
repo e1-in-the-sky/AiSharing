@@ -33,7 +33,8 @@ export class ReservationListPage implements OnInit {
     departure_time_start: this.today, // 現在
     departure_time_end: new Date(this.today.getFullYear(), this.today.getMonth()+1, this.today.getDate(), this.today.getHours(), this.today.getMinutes()), // 一か月後
     condition: '募集中',
-    sort: '出発予定時刻が早い順'
+    sort: '出発予定時刻が早い順',
+    passenger_capacity: 1
   };
 
   constructor(
@@ -47,13 +48,22 @@ export class ReservationListPage implements OnInit {
   async ngOnInit() {
     // this.getReservations();
     // this.reservations = this.reservationService.getReservations();
+    this.getLoginStatus();
+    this.getReservationsAndFilterWithLoading();
+  }
+
+  async doRefresh(event) {
+    await this.getReservations();
+    event.target.complete();
+  }
+
+  async getReservationsAndFilterWithLoading() {
     let loading = await this.createLoading();
     await loading.present();
 
-    this.getLoginStatus();
-
     try {
       await this.getReservations();
+      this.applyFilterToReservations();
       loading.dismiss();
     
     } catch (err) {
@@ -61,11 +71,6 @@ export class ReservationListPage implements OnInit {
       let alert = await this.createError(err);
       await alert.present();
     }
-  }
-
-  async doRefresh(event) {
-    await this.getReservations();
-    event.target.complete();
   }
 
   async getReservations() {
@@ -128,7 +133,21 @@ export class ReservationListPage implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onWillDismiss();
-    this.filter = data.filter;
+    if (data) {
+      this.filter = data.filter;
+      let loading = await this.createLoading();
+      await loading.present();
+      try {
+        await this.getReservations();
+        this.applyFilterToReservations();
+        loading.dismiss();
+      
+      } catch (err) {
+        loading.dismiss();
+        let alert = await this.createError(err);
+        await alert.present();
+      }
+    }
   }
 
   async createLoading() {
@@ -152,4 +171,121 @@ export class ReservationListPage implements OnInit {
   trackFn(index: any, reservation: Reservation) {
     return reservation.uid;
   }
+
+  // 出発時刻によるソート
+  // order: string (asc or des)
+  // ascの場合は出発時刻が早い順
+  // desの場合は出発時刻が遅い順
+  sortReservationsByDepartureTime(order: string = "asc") {
+    if ( order === "asc" ) {  // 出発時刻が早い順
+      this.reservations = this.reservations.sort((a, b) => {
+        return a.departure_time > b.departure_time ? 1 : -1;
+      });
+    } else if (order === "des") {  // 出発時刻が遅い順
+      this.reservations = this.reservations.sort((a, b) => {
+        return a.departure_time < b.departure_time ? 1 : -1;
+      });
+    }
+  }
+
+  // 投稿時刻によるソート
+  // order: string (asc or des)
+  // ascの場合は投稿時刻が早い順
+  // desの場合は投稿時刻が遅い順
+  sortReservationsByCreatedAt(order: string = "asc") {
+    if (order === "asc") {
+      this.reservations = this.reservations.sort((a, b) => {
+        return a.created_at > b.created_at ? 1 : -1;
+      });
+    } else if (order === "des") {
+      this.reservations = this.reservations.sort((a, b) => {
+        return a.created_at < b.created_at ? 1 : -1;
+      });
+    }
+  }
+
+  // 出発地による絞り込み
+  // departure_name: string (絞り込む出発地の名前)
+  filterReservationsByDepartureName(departure_name: string) {
+    this.reservations
+      = this.reservations.filter(reservation => reservation.departure_name === departure_name);
+  }
+
+  // 目的地による絞り込み
+  // destination_name: string (絞り込む目的地の名前)
+  filterReservationsByDestinationName(destination_name: string) {
+    this.reservations
+      = this.reservations.filter(reservation => reservation.destination_name === destination_name);
+  }
+
+  // 募集状況による絞り込み
+  // condition: string (募集状況: 募集中 or 募集終了)
+  filterReservationsByCondition(condition: string = "募集中") {
+    if (condition !== 'すべて'){
+      this.reservations
+        = this.reservations.filter(reservation => reservation.condition === condition);
+    }
+  }
+
+  // 乗車可能人数による絞り込み
+  // passenger_capacityより乗車可能人数が多い投稿に絞り込む
+  // passenger_capacity: number (乗車可能人数)
+  filterReservationsByPassengerCapacity(passenger_capacity: number) {
+    this.reservations
+      = this.reservations.filter(reservation => reservation.max_passenger_count - reservation.passenger_count >= passenger_capacity);
+  }
+
+  // 出発予定時刻の期間による絞り込み
+  // 出発予定時刻がstart_timeからend_timeの期間にある投稿に絞り込む
+  // start_time: Date
+  // end_time: Date
+  filterReservationsByDepartureTime(start_time: Date, end_time: Date) {
+    var start_time_timestamp = firebase.firestore.Timestamp.fromDate(start_time);
+    var end_time_timestamp = firebase.firestore.Timestamp.fromDate(end_time);
+
+    this.reservations
+      = this.reservations.filter(reservation =>
+        (reservation.departure_time > start_time_timestamp) && (reservation.departure_time < end_time_timestamp));
+  }
+
+  // this.filterで定義されている絞り込みを適用する
+  applyFilterToReservations() {
+    // filter内の募集状況が"すべて"でないとき募集状況で絞り込む
+    if (this.filter.condition !== 'すべて') {
+      this.filterReservationsByCondition(this.filter.condition);
+    }
+
+    // filter内の出発地が空でないとき出発地で絞り込む
+    if (this.filter.departure_name) {
+      this.filterReservationsByDepartureName(this.filter.departure_name);
+    }
+
+    // filter内の目的地が空でないとき目的地で絞り込む
+    if (this.filter.destination_name) {
+      this.filterReservationsByDestinationName(this.filter.destination_name);
+    }
+
+    // filter内の乗車可能人数で絞り込む
+    this.filterReservationsByPassengerCapacity(this.filter.passenger_capacity);
+
+    // filter内の出発期間で絞り込む
+    this.filterReservationsByDepartureTime(this.filter.departure_time_start, this.filter.departure_time_end);
+
+    // filter内のソート条件でソートする
+    switch (this.filter.sort) {
+      case "出発予定時刻が早い順":
+        this.sortReservationsByDepartureTime("asc");
+        break;
+      case "出発予定時刻が遅い順":
+        this.sortReservationsByDepartureTime("des");
+        break;
+      case "投稿が新しい順":
+        this.sortReservationsByCreatedAt("asc");
+        break;
+      case "投稿が古い順":
+        this.sortReservationsByCreatedAt("des");;
+        break;
+    }
+  }
+
 }

@@ -24,13 +24,11 @@ export class ReservationFilterPage implements OnInit {
 
   onCancel() {
     console.log('on cancel');
-    this.dismissModal();
+    this.dismissModal(null);
   }
 
-  dismissModal() {
-    this.modalCtrl.dismiss({
-      filter: this.filter
-    });
+  dismissModal(data) {
+    this.modalCtrl.dismiss(data);
     // this.modalCtrl.dismiss(this.dataForDismiss);
   }
 
@@ -40,7 +38,16 @@ export class ReservationFilterPage implements OnInit {
 
   onSearch() {
     // console.log(this.filter);
-    this.dismissModal();
+    this.dismissModal({
+      filter: this.filter
+    });
+  }
+
+  onClickPassengerCapacity(num) {
+    var r = this.filter.passenger_capacity + num;
+    if (r >= 0) {
+      this.filter.passenger_capacity = r;
+    }
   }
 
 }
