@@ -70,7 +70,9 @@
   
             <ng-template #conditionIsNotFull>
               <div *ngIf="reservation?.condition === '募集終了'; else conditionIsRecruiting">
-                <p>[募集終了の画像]</p>
+                  <p float-right class="norimasu_button" color="ion-color-light-tint">
+                      <img src="../../../assets/img/reserve_finish.png">
+                  </p>
               </div>
             </ng-template>
             
