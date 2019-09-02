@@ -26,6 +26,15 @@ export class ReservationListPage implements OnInit {
   // reservations: Reservation[] = [this.reservation1, this.reservation2, this.reservation3];
   reservations: Reservation[] = [];
   isLogin: Boolean = false;
+  today = new Date();
+  filter = {
+    departure_name: '',
+    destination_name: '',
+    departure_time_start: this.today, // 現在
+    departure_time_end: new Date(this.today.getFullYear(), this.today.getMonth()+1, this.today.getDate(), this.today.getHours(), this.today.getMinutes()), // 一か月後
+    condition: '募集中',
+    sort: '出発予定時刻が早い順'
+  };
 
   constructor(
     private reservationService: ReservationService,
@@ -112,11 +121,14 @@ export class ReservationListPage implements OnInit {
 
   async createReservationFilterModal() {
     const modal = await this.modalController.create({
-      component: ReservationFilterPage
+      component: ReservationFilterPage,
+      componentProps: {
+        'filter': this.filter
+      }
     });
     await modal.present();
     const { data } = await modal.onWillDismiss();
-    console.log(data);
+    this.filter = data.filter;
   }
 
   async createLoading() {
