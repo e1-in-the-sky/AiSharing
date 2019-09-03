@@ -2,27 +2,27 @@
   <ion-card-content>
     <!-- <ion-card-content> -->
     <!-- <ion-chip (click)="goToAccountDetail(reservation.owner.id)">
-      <ion-avatar item-left>
-        <ion-img src="../../../assets/img/speakers/bear.jpg"></ion-img>
-      </ion-avatar>
-      <ion-label>{{user.name}}</ion-label>
+    <ion-avatar item-left>
+    <ion-img src="../../../assets/img/speakers/bear.jpg"></ion-img>
+    </ion-avatar>
+    <ion-label>{{user.name}}</ion-label>
     </ion-chip> -->
     <div class="lr-edge">
       <user-chip [user_ref]="reservation.owner"></user-chip>
       <!-- <div class="ion-text-right">{{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</div> -->
       <div class="right-side">
         <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">
-          <div class="norimasu_padding"><ion-img src="../../../assets/img/full.png"></ion-img></div>
-          <!-- <p float-right class="norimasu_button" color="ion-color-light-tint">
+          <!-- <div class="norimasu_padding"><ion-img src="../../../assets/img/full.png"></ion-img></div> -->
+          <p float-right class="norimasu_button" color="ion-color-light-tint">
             <img src="../../../assets/img/full.png">
-          </p> -->
-          </div>
-        </div>  
+          </p>
+        </div>
+        <!-- </div>   -->
         <ng-template #conditionIsNotFull>
           <div *ngIf="reservation?.condition === '募集終了'; else conditionIsRecruiting">
-              <p float-right class="norimasu_button" color="ion-color-light-tint">
-                  <img src="../../../assets/img/reserve_finish.png">
-              </p>
+            <p float-right class="norimasu_button" color="ion-color-light-tint">
+              <img src="../../../assets/img/reserve_finish.png">
+            </p>
           </div>
         </ng-template>
       
@@ -33,6 +33,7 @@
           </p>
           <!-- <button type="submit"><img src="../../../assets/img/norimasu.png"></button> -->
         </ng-template>
+      </div>
     </div>
   
 
