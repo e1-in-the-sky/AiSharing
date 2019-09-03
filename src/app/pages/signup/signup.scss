@@ -1,3 +1,25 @@
+ion-content{
+  --background: #fff url('../../../assets/img/login-background.jpg') no-repeat center center / cover; 
+}
+
+ion-item.transparent{
+  --background: transparent !important;
+  // background-color: transparent !important;
+  // --background: rgba(255, 255, 255, 0.8);
+}
+
+ion-list{
+  margin: 16px auto;
+  max-width: 300px;
+  --ion-background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;	/* ボックスの四つ角を丸くする */ 
+}
+
+ion-button.signup_button{
+  max-width: 300px;
+  margin: 16px auto;
+}
+
 .signup-logo {
   padding: 20px 0;
   min-height: 200px;
@@ -11,3 +33,13 @@
 .list {
   margin-bottom: 0;
 }
+
+p.taxi_img {
+  max-width: 50%;
+  margin: 0 auto;
+  //text-align: center
+}
+p.taxi_img{
+  text-align: center
+}
+

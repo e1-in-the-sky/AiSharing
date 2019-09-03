@@ -1,8 +1,9 @@
 
 ion-content{
   //background: url(../../../assets/img/taxi_logo.png) no-repeat center center fixed;
-  background-size: cover;
-  background: #fffacd
+  // background-size: cover;
+  // background: #fffacd;
+  --background: #fff url('../../../assets/img/login-background.jpg') no-repeat center center / cover;
   
 }
 
@@ -32,9 +33,28 @@ p.taxi_img{
   text-align: center
 }
 
+ion-item.transparent{
+  --background: transparent !important;
+  // background-color: transparent !important;
+  // --background: rgba(255, 255, 255, 0.8);
+}
 
+ion-list{
+  margin: 16px auto;
+  max-width: 300px;
+  --ion-background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;	/* ボックスの四つ角を丸くする */ 
+}
 
+ion-button.login_button{
+  max-width: 300px;
+  margin: 16px auto;
+}
 
+ion-button.signup_button{
+  max-width: 300px;
+  margin: 16px auto;
+}
 
 // ion-title {
 //   height: 50px;
