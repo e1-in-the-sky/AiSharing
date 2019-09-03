@@ -36,7 +36,7 @@
 
   <!-- 自分の投稿一覧と自分が乗る予定の投稿一覧はタブとかで変更できるようにしたい -->
 
-  <div class="tabs">
+  <!-- <div class="tabs">
     <input id="tab-1" type="radio" name="tab-radio" checked>
     <label class="tab-label" for="tab-1">自分の投稿一覧</label>
     <input id="tab-2" type="radio" name="tab-radio">
@@ -46,6 +46,23 @@
     </div>
     <div class="tab-content tab-2-content">
       <reservation-card [reservation]='reservation' *ngFor="let reservation of rideReservations"></reservation-card>
+    </div>
+  </div> -->
+
+
+  <div class="tabs">
+    <input id="my_reserve" type="radio" name="tab_item" checked>
+    <input id="other_reserve" type="radio" name="tab_item">
+    <div class="tab_area">
+        <label class="tab_item" for="my_reserve">自分の投稿一覧</label>
+        <label class="tab_item" for="other_reserve">相乗り予定の投稿一覧</label>
+    </div>
+    
+    <div class="tab_content" id="my_content">
+      <p class="tab_content_description"><reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card></p>
+    </div>
+    <div class="tab_content" id="other_content">
+      <p class="tab_content_description"><reservation-card [reservation]='reservation' *ngFor="let reservation of rideReservations"></reservation-card></p>
     </div>
   </div>
 
