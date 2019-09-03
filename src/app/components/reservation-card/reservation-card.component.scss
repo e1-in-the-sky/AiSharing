@@ -49,9 +49,18 @@ p.norimasu_button img {
 ion-card-content{
   width: 100%;
   padding-right: 10px;
-  background-color: #ffffe0;
+  //background-color: #ffffe0;
 }
 
+ion-card{
+  background-color: #ffffe0;
+  // background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+  //background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%);
+  // background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+  // background-image: linear-gradient(-20deg, #ddd6f3 0%, #faaca8 100%, #faaca8 100%);
+  //background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+  //background-image: linear-gradient(-225deg, #FFFEFF 0%, #D7FFFE 100%);
+}
 ion-icon {
     font-size: 20px;
 }
