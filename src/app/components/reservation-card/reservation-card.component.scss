@@ -22,13 +22,22 @@ p.norimasu_button img {
 .lr-edge{
   display: flex;
   justify-content: space-between;
-  align-content: flex-start;
+  // align-content: flex-start;
 }
+
+.lr-around{
+  display: flex;
+  justify-content: space-around;
+}
+
 .sidebyside {
   display: flex;
 }
 
-
+.center-loc{
+  // text-align: center;
+  // align-content: flex-start;
+}
 
 .graph_size{
   display: block;
