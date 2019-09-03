@@ -7,8 +7,17 @@
     </ion-avatar>
     <ion-label>{{user.name}}</ion-label>
     </ion-chip> -->
-    <div class="lr-edge">
-      <user-chip [user_ref]="reservation.owner"></user-chip>
+    <!-- <div class="lr-edge"> -->
+      <!-- <user-chip [user_ref]="reservation.owner"></user-chip> -->
+    <div style="display: flex; vertical-align: middle">
+      <ion-avatar (click)="goToAccountDetail(reservation.owner.id)" item-left>
+        <ion-img [src]="user.imageURL"></ion-img>
+      </ion-avatar>
+      <div class="balloon1-left">
+        <ion-label style="vertical-align: middle">{{reservation.comment}}</ion-label>
+      </div>
+    </div>
+      
       <!-- <div class="ion-text-right">{{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</div> -->
       <div class="right-side">
         <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">
@@ -34,7 +43,7 @@
           <!-- <button type="submit"><img src="../../../assets/img/norimasu.png"></button> -->
         </ng-template>
       </div>
-    </div>
+    <!-- </div> -->
   
 
     
@@ -58,11 +67,15 @@
       </div>
     </div>
     <div class="padding">
-      出発時刻: {{reservation.departure_time | timestamp2string}}<br>
+      <ion-icon style="vertical-align: middle" name="time"></ion-icon>
+      {{reservation.departure_time | timestamp2string}}<br>
       <ion-label *ngIf="errors?.alreadyDeparted" color="danger">すでに出発予定時刻を過ぎた投稿です!<br></ion-label>
-      コメント: {{reservation.comment}}<br>
-      <ion-text color="danger" class="ion-float-right"><h1>{{reservation.max_passenger_count}}</h1></ion-text>  
-      <ion-text class="ion-float-right"><h3>{{reservation.passenger_count}}/</h3></ion-text>
+      <!-- <ion-label style="background-color: #ff0fff">コメント: {{reservation.comment}}</ion-label> -->
+      <!-- <ion-text class="ion-float-right"> -->
+      <ion-icon style="vertical-align: middle" name="people"></ion-icon>
+      <ion-label>{{reservation.passenger_count}} / </ion-label>
+      <ion-label style="font-size: 20px; vertical-align: middle" color="danger">{{reservation.max_passenger_count}}</ion-label><br>
+      <!-- </ion-text> -->
       
     <ion-button size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
     </div>
