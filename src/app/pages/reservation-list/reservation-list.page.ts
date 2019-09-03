@@ -53,7 +53,8 @@ export class ReservationListPage implements OnInit {
   }
 
   async doRefresh(event) {
-    await this.getReservations();
+    // await this.getReservations();
+    this.getReservationsAndFilterWithLoading();
     event.target.complete();
   }
 

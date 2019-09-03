@@ -33,10 +33,11 @@ ion-fab img {
 //     font-weight:bold;
 // }
 
-ion-item.transparent{
+.none_reservations{
     // --background: transparent !important;
     // background-color: transparent !important;
     --background: rgba(255, 255, 255, 0.8);
+    // vertical-align: middle;
 }
 
 // ion-label.transparent{

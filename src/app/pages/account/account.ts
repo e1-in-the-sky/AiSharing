@@ -9,6 +9,7 @@ import * as firebase from 'firebase';
 import { UserService } from '../../services/user/user.service';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Reservation } from '../../models/reservation';
+import { User } from '../../models/user';
 
 
 @Component({
@@ -17,6 +18,7 @@ import { Reservation } from '../../models/reservation';
   styleUrls: ['./account.scss'],
 })
 export class AccountPage implements AfterViewInit {
+  user: User = new User();
   accountId: string;
   username: string;
   introduction: string;
@@ -111,9 +113,9 @@ export class AccountPage implements AfterViewInit {
     //     this.username = user.name;
     //     this.introduction = user.introduction;
     //   });
-    var user = await this.userService.getUser(this.accountId);
-    this.username = user.name;
-    this.introduction = user.introduction;
+    this.user = await this.userService.getUser(this.accountId);
+    this.username = this.user.name;
+    this.introduction = this.user.introduction;
   }
 
   async getUserReservations(){

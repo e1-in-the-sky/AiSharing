@@ -3,46 +3,54 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Account</ion-title>
+    <ion-title>アカウント</ion-title>
   </ion-toolbar>
 </ion-header>
 
+<ion-content>
 
-<ion-content >
-  <ion-list>
-    <ion-item>
-      <ion-label >User ID: {{accountId}}</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>User Name: {{username}}</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>自己紹介: {{introduction}}</ion-label>
-    </ion-item>
-  </ion-list>
+  <ion-card>
+    <div style="display:table;  width:100%;">
+      <div style="display:table-cell; width:100px;">
+        <ion-avatar margin>
+          <ion-img [src]="user.imageURL" style="text-align: center;"></ion-img>
+        </ion-avatar>
+      </div>
+      <div style="display:table-cell; text-align: left; vertical-align: middle;">
+        <h2 style="color: black;">{{user.name}}</h2>
+      </div>
+    </div>
+    <div class="intro">
+      <p class="intro_content">{{user?.introduction}}</p>      
+    </div>
+  </ion-card>
 
+  <!-- <div class="ribbon12-wrapper">
+    <p class="ribbon12">Welcome to My Blog!</p>
+    <p>サルワカへようこそ！</p>
+  </div> -->
+
+  <div class="reservations">
+    <p class="reservations_header">{{username}} さんの投稿一覧</p>
 
     <!-- <ion-item style="background-color:#f0ffff"> -->
-      <ion-list class="reservation_list">
-        <ion-list-header >{{username}}の投稿一覧</ion-list-header>
-        <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
-      </ion-list>
+    <ion-list>
+      <!-- <ion-list-header>{{username}}さんの投稿一覧</ion-list-header> -->
+      <reservation-card [reservation]='reservation' *ngFor="let reservation of reservations"></reservation-card>
+    </ion-list>
     <!-- </ion-item> -->
 
-    
+    <!-- <div *ngIf="username" class="ion-padding-top ion-text-center">
+      <img src="https://www.gravatar.com/avatar?d=mm&s=140" alt="avatar">
+      <h2>Display Name: {{username}}</h2>
 
-  
-
-  <!-- <div *ngIf="username" class="ion-padding-top ion-text-center">
-    <img src="https://www.gravatar.com/avatar?d=mm&s=140" alt="avatar">
-    <h2>Display Name: {{username}}</h2>
-
-    <ion-list inset>
-      <ion-item (click)="updatePicture()">Update Picture</ion-item>
-      <ion-item (click)="changeUsername()">Change Username</ion-item>
-      <ion-item (click)="changePassword()">Change Password</ion-item>
-      <ion-item (click)="support()">Support</ion-item>
-      <ion-item (click)="logout()">Logout</ion-item>
-    </ion-list>
-  </div> -->
+      <ion-list inset>
+        <ion-item (click)="updatePicture()">Update Picture</ion-item>
+        <ion-item (click)="changeUsername()">Change Username</ion-item>
+        <ion-item (click)="changePassword()">Change Password</ion-item>
+        <ion-item (click)="support()">Support</ion-item>
+        <ion-item (click)="logout()">Logout</ion-item>
+      </ion-list>
+    </div> -->
+  </div>
 </ion-content>

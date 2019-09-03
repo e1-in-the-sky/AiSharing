@@ -13,7 +13,7 @@
 
     <ion-buttons slot="end">
       <ion-button (click)="goToEditPage()">
-        <ion-icon name="build"></ion-icon>
+        <ion-icon slot="icon-only" name="build"></ion-icon>
       </ion-button>
     </ion-buttons>
 
@@ -30,18 +30,15 @@
   <ion-card>
     <div style="display:table;  width:100%;">
       <div style="display:table-cell; width:100px;">
-        <!-- skyblue Qiita (キータ) は、プログラマのための技術情報共有サービスです。 -->
         <ion-avatar margin>
           <ion-img [src]="user.imageURL" style="text-align: center;"></ion-img>
         </ion-avatar>
       </div>
       <div style="display:table-cell; text-align: left; vertical-align: middle;">
         <h2 style="color: black;">{{user.name}}</h2>
-        <!-- orange Qiita (キータ) は、プログラマのための技術情報共有サービスです。 -->
       </div>
     </div>
     <div class="intro">
-      <!-- <p class="intro_header">自己紹介</p> -->
       <p class="intro_content">{{user?.introduction}}</p>      
     </div>
   </ion-card>
