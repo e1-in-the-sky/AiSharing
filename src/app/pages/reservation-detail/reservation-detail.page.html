@@ -7,9 +7,6 @@
 
     <ion-title style="float: center">
       投稿の詳細
-      <p class="header_logo">
-        <img src="../../../assets/img/car_sharing.png"  height=40px; style="float:right" >
-      </p>
     </ion-title>
     
   </ion-toolbar>
@@ -17,6 +14,7 @@
 
 <ion-content>
   <ion-list>
+    <!-- <user-chip [user_ref]="reservation.owner"></user-chip> ここに大戦争-->
     <ion-item *ngIf="is_my_reservation" (click)="goToEditPage()">
         <ion-button size="small"> 投稿編集 </ion-button>
     </ion-item>
