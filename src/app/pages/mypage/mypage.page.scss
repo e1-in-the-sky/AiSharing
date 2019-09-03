@@ -135,7 +135,7 @@ p.tab_content_description{
 }
 
 /*選択されているタブのコンテンツのみを表示*/
-#my_reserve:checked ~ #item_label.my_content,
+#my_reserve:checked ~ #my_content,
 #other_reserve:checked ~ #other_content {
   display: block;
 }
