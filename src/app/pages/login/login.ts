@@ -37,19 +37,21 @@ export class LoginPage {
           this.router.navigateByUrl('/app/tabs/reservations');
         }, async error => {
           const alert = await this.alertController.create({
-            header: '警告',
-            message: error.message,
+            header: '認証エラー',
+            // message: error.message,
             buttons: ['OK']
           });
+          console.error(error);
           alert.present();
         });
 
     } catch (error) {
       const alert = await this.alertController.create({
-        header: '警告',
-        message: error.message,
+        header: '認証エラー',
+        // message: error.message,
         buttons: ['OK']
       });
+      console.error(error);
       alert.present();
     }
 

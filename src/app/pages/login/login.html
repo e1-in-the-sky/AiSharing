@@ -22,25 +22,26 @@
   <!-- </ion-toolbar> -->
 <!-- </ion-header> -->
 
-<ion-content color="#ffffe0">
+<ion-content>
+<!-- <ion-content color="#ffffe0"> -->
 
   <p class="taxi_img" ><img src="../../../assets/img/taxi_logo.png"></p>
   <form>
-    <ion-list>
-      <ion-item>
-        <ion-label position="floating">メールアドレスを入力</ion-label>
-        <ion-input type="text" [(ngModel)]="data.email" name="email" required></ion-input>
+    <ion-list margin>
+      <ion-item class="transparent" margin>
+        <!-- <ion-label position="floating">メールアドレスを入力</ion-label> -->
+        <ion-input type="text" [(ngModel)]="data.email" name="email" placeholder="メールアドレス" required></ion-input>
       </ion-item>
-      <ion-item>
-        <ion-label position="floating">パスワード</ion-label>
-        <ion-input type="password" [(ngModel)]="data.password" name="password" required></ion-input>
+      <ion-item class="transparent" margin>
+        <!-- <ion-label position="floating">パスワード</ion-label> -->
+        <ion-input type="password" [(ngModel)]="data.password" name="password" placeholder="パスワード" required></ion-input>
       </ion-item>
     </ion-list>
     <p>
-      <ion-button expand="block" color="primary" type="button" (click)="onLogin()">Login</ion-button>
+      <ion-button expand="block" color="primary" type="button" (click)="onLogin()" class="login_button">Login</ion-button>
     </p>
     <p>
-      <ion-button expand="block" fill="clear" color="secondary" type="button" (click)="onSignup()">Sign Up</ion-button>
+      <ion-button expand="block" fill="clear" color="secondary" type="button" (click)="onSignup()" class="signup_button">Sign Up</ion-button>
     </p>
   </form>
 </ion-content>
