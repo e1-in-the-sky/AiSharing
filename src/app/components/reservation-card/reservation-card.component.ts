@@ -78,12 +78,12 @@ export class ReservationCardComponent implements OnInit {
   async goToAccountDetail() {
     // for account detail page
     var account_uid = this.reservation.owner.id;
-    var path = '/account/' + account_uid;
+    var path = '/app/tabs/account/' + account_uid;
     await firebase.auth().onAuthStateChanged(user => {
       if (user) {
         // account_uidが自分だった場合はマイページに移動
         if (user.uid == account_uid) {
-          path = '/mypage';
+          path = '/app/tabs/mypage';
         }
       }
     });
