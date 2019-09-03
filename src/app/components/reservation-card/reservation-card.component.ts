@@ -11,6 +11,8 @@ import { ReservationService } from '../../services/reservation/reservation.servi
 import { AbstractControl } from '@angular/forms'
 import { controlNameBinding } from '@angular/forms/src/directives/reactive_directives/form_control_name';
 import { UserService } from '../../services/user/user.service';
+import { Message } from '../../models/message';
+import { MessageService } from '../../services/message/message.service';
 
 @Component({
   selector: 'reservation-card',
@@ -31,6 +33,7 @@ export class ReservationCardComponent implements OnInit {
     private navController: NavController,
     public alertController: AlertController,
     private userService: UserService,
+    private messageService: MessageService,
     private reservationService: ReservationService,
     private reservationUsersService: ReservationUsersService
   ) { }
@@ -180,7 +183,6 @@ export class ReservationCardComponent implements OnInit {
     console.log(indexOfAlredyNorimasu);
     if (indexOfAlredyNorimasu === -1) {  // まだノリマスを押していないとき
       // 相乗り予約のアラート
-      console.log('in indexOfAlredyNorimasu === -1:', indexOfAlredyNorimasu);
       var alert = await this.createPostAlert(currentUser.uid);
       await alert.present();
       
@@ -201,7 +203,7 @@ export class ReservationCardComponent implements OnInit {
             text: 'はい',
             handler: async () => {
               // 乗車人数を変更するアラート
-              var alert = await this.createUpdateReservationUser(reservationUsers[indexOfAlredyNorimasu]);
+              var alert = await this.createUpdateReservationUser(reservationUsers[indexOfAlredyNorimasu], currentUser.uid);
               alert.present();
             }
           }
@@ -250,12 +252,33 @@ export class ReservationCardComponent implements OnInit {
           console.log('Confirm Ok');
           console.log('on ノリマス:', data);
           console.log('reservation:', this.reservation);
+          var userRef = await this.db.collection('users').doc(currentUserUid).ref;
+          var reservationRef = await this.db.collection('reservations').doc(this.reservation.uid).ref 
+          
+          if (data.comment){
+            console.log('data.comment in if(data.comment):', data.comment);
+            // メッセージの作成
+            var message: Message
+              = new Message({
+                created_at: new Date(),
+                updated_at: new Date(),
+                uid: '',
+                user: userRef,
+                reservation: reservationRef,
+                message: data.comment
+              });
+            // メッセージの送信
+            this.messageService.addMessage(message);
+          }
+
+          // reservationUserの作成
           var reservationUsers: ReservationUsers
             = new ReservationUsers({
-              user: await this.db.collection('users').doc(currentUserUid).ref,
-              reservation: await this.db.collection('reservations').doc(this.reservation.uid).ref,
+              user: userRef,
+              reservation: reservationRef,
               passenger_count: parseInt(alert.message)
             });
+          // reservationUserのチェックと送信
           this.onNorimasu(reservationUsers).then(() => {}, error => {console.log(error)});
         }
         },
@@ -272,11 +295,19 @@ export class ReservationCardComponent implements OnInit {
     return alert;
   }
 
-  async createUpdateReservationUser(reservationUser: ReservationUsers) {
+  async createUpdateReservationUser(reservationUser: ReservationUsers, currentUserUid: string) {
     let alert = await this.alertController.create({
       header: '相乗り予約',
       message: reservationUser.passenger_count.toString(),
       cssClass: 'alert_norimasu',
+      inputs: [
+        {
+          name: 'comment',
+          type: 'text',
+          placeholder: 'メッセージ',
+          // value: '',
+        }
+      ],
       buttons: [
         {
           text: "+",
@@ -304,6 +335,24 @@ export class ReservationCardComponent implements OnInit {
           // reservationUser.passenger_count = parseInt(alert.message);
           // var myUserRef = await this.db.collection('users').doc(currentUserUid).ref
           // this.onNorimasu(myUserRef, data).then(() => {}, error => {console.log(error)});
+          var userRef = await this.db.collection('users').doc(currentUserUid).ref;
+          var reservationRef = await this.db.collection('reservations').doc(this.reservation.uid).ref 
+          
+          if (data.comment){
+            console.log('data.comment in if(data.comment):', data.comment);
+            // メッセージの作成
+            var message: Message
+              = new Message({
+                created_at: new Date(),
+                updated_at: new Date(),
+                uid: '',
+                user: userRef,
+                reservation: reservationRef,
+                message: data.comment
+              });
+            // メッセージの送信
+            this.messageService.addMessage(message);
+          }
           this.onUpdateNorimasu(reservationUser, parseInt(alert.message));
         }
         },
@@ -319,6 +368,10 @@ export class ReservationCardComponent implements OnInit {
     });
     return alert;
   }
+
+  // async sendMessage(message: Message){
+
+  // }
 
   async onNorimasu(reservationUsers: ReservationUsers) {
     console.log(this.reservation.passenger_count);
