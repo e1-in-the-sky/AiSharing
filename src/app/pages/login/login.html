@@ -25,8 +25,9 @@
 <ion-content>
 <!-- <ion-content color="#ffffe0"> -->
 
-  <p class="taxi_img" ><img src="../../../assets/img/taxi_logo.png"></p>
-  <form>
+  <!-- <p class="taxi_img" ><img src="../../../assets/img/taxi_logo.png"></p> -->
+  <div class="login_content">
+  <form >
     <ion-list margin>
       <ion-item class="transparent" margin>
         <!-- <ion-label position="floating">メールアドレスを入力</ion-label> -->
@@ -41,7 +42,8 @@
       <ion-button expand="block" color="primary" type="button" (click)="onLogin()" class="login_button">ログイン</ion-button>
     </p>
     <p>
-      <ion-button expand="block" fill="clear" color="secondary" type="button" (click)="onSignup()" class="signup_button">アカウントを作成</ion-button>
+      <ion-button expand="block"  color="secondary" type="button" (click)="onSignup()" class="signup_button">アカウントを作成</ion-button>
     </p>
   </form>
+</div>
 </ion-content>
