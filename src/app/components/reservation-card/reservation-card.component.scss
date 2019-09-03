@@ -2,10 +2,33 @@ p.norimasu_button img {
     height: 70px;
     width: 70px; 
  }
- ion-img{
-  height: 70px;
-  width: 70px; 
- }
+//  ion-img{
+//   height: 40px;
+//   width: 40px; 
+//}
+.table{
+  display: table;
+}
+
+.left-side{
+  display: table-cell;
+  // padding-right:1%;
+}
+.right-side{
+  align-items: flex-start;
+  //display: table-cell;
+  //margin-right: 1%;
+}
+.lr-edge{
+  display: flex;
+  justify-content: space-between;
+  align-content: flex-start;
+}
+.sidebyside {
+  display: flex;
+}
+
+
 
 .graph_size{
   display: block;
@@ -32,10 +55,6 @@ ion-icon {
 .place_icon img{
   height: 30px;
   width: 25px;
-}
-
-.sidebyside {
-  display: flex;
 }
 
 .padding{

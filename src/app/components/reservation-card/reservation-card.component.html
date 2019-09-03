@@ -7,9 +7,12 @@
       </ion-avatar>
       <ion-label>{{user.name}}</ion-label>
     </ion-chip> -->
-    <div class="sidebyside">
-      <user-chip [user_ref]="reservation.owner"></user-chip>
-      <!-- <div class="ion-text-right">{{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</div> -->
+    <div class="lr-edge">
+      <!-- <div class="left-side"> -->
+        <user-chip [user_ref]="reservation.owner"></user-chip>
+        <!-- <div class="ion-text-right">{{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</div> -->
+      <!-- </div> -->
+      <!-- <div class="right-side"> -->
       <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">
           <div class="norimasu_padding">
             <ion-img src="../../../assets/img/full.png"></ion-img>
@@ -19,7 +22,7 @@
             <img src="../../../assets/img/full.png">
           </p> -->
       </div>
-
+      </div>  
       <ng-template #conditionIsNotFull>
         <div *ngIf="reservation?.condition === '募集終了'; else conditionIsRecruiting">
             <p float-right class="norimasu_button" color="ion-color-light-tint">
@@ -35,7 +38,7 @@
         </p>
         <!-- <button type="submit"><img src="../../../assets/img/norimasu.png"></button> -->
       </ng-template>
-    </div>
+    <!-- </div> -->
   
 
     
@@ -44,22 +47,23 @@
     <!-- <div> -->
       <!-- <p><ion-icon color="danger" name="pin"></ion-icon>{{reservation.departure_name}}-----<ion-icon large name="logo-model-s"></ion-icon>-----
         <ion-icon color="danger" name="pin"></ion-icon>{{reservation.destination_name}}</p> -->
-    <div class="padding">
-    <div class="sidebyside">
-    <div class="place_icon"><img src="../../../assets/img/place_start.png" ></div>
-    <div class="place_text">{{reservation.departure_name}}</div>
+    <!-- <div class="padding"> -->
+    <div class="lr-edge">
+      <div class="sidebyside">
+      <div class="place_icon"><img src="../../../assets/img/place_start.png" ></div>
+      <div class="place_text">{{reservation.departure_name}}</div>
+      </div>
+      <!-- </div> -->
+      
+      <div class="padding2"><p>⇩<ion-icon large name="logo-model-s"></ion-icon>⇩</p></div>
+      
+      <!-- <div class="padding"> -->
+      <div class="sidebyside">
+      <div class="place_icon"><img src="../../../assets/img/place_goal.png"></div>
+      <div class="place_text">{{reservation.destination_name}}</div>
+      </div>
+      <!-- </div> -->
     </div>
-    </div>
-    
-    <div class="padding2"><p>⇩<ion-icon large name="logo-model-s"></ion-icon>⇩</p></div>
-    
-    <div class="padding">
-    <div class="sidebyside">
-    <div class="place_icon"><img src="../../../assets/img/place_goal.png"></div>
-    <div class="place_text">{{reservation.destination_name}}</div>
-    </div>
-    </div>
-    
     <div class="padding">
       出発時刻: {{reservation.departure_time | timestamp2string}}<br>
       <ion-label *ngIf="errors?.alreadyDeparted" color="danger">すでに出発予定時刻を過ぎた投稿です!</ion-label>
