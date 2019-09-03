@@ -53,6 +53,10 @@ export class SignupPage {
     }
   }
 
+  onGoToLogin() {
+    this.router.navigateByUrl('/login');
+  }
+
   async alert_no_information(){
     const alert = await this.alertController.create({
       message: 'Please fill in the your displayname',
