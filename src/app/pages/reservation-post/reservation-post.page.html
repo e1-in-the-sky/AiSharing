@@ -43,8 +43,8 @@
         <ion-button (click)="on_click_passenger(1)">＋</ion-button>
       </ion-row>
       <ion-item>
-        <ion-label position="floating">コメント</ion-label>
-        <ion-input type="text" [(ngModel)]="data.comment" name="comment"></ion-input>
+        <ion-label position="floating" >コメント</ion-label>
+        <ion-input type="text" [(ngModel)]="data.comment" name="comment" maxlength="30"></ion-input>
       </ion-item>
     </ion-list>
     <p>
