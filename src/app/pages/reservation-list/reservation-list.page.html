@@ -99,11 +99,18 @@
   </ng-container>
 
   <ng-template #nonReservations>
-    <ion-item class="none_reservations">
+    <!-- <ion-item class="none_reservations">
       <ion-label>投稿がありません
       <ion-img src="../../../assets/img/sharing.png" style="height: 3em; width: 3em; display: inline-block; vertical-align: middle;"></ion-img>
       を押して投稿してみましょう</ion-label>
-    </ion-item>
+    </ion-item> -->
+    <div class="none_reservations">
+      <p>投稿がありません</p>
+      <p>
+        <img src="../../../assets/img/sharing.png" style="height: 3em; width: 3em; display: inline-block; vertical-align: middle;">
+        を押して投稿してみましょう
+      </p>
+    </div>
   </ng-template>
 
   <!-- <ion-list ion-no-margin *ngFor="let reservation of reservations">
