@@ -24,9 +24,6 @@
     </div>
 
     <ion-item>
-      <ion-img [src]="imageURL"></ion-img>
-    </ion-item>
-    <ion-item>
       <ion-label position="floating">ユーザー名</ion-label>
       <ion-input type="text" [(ngModel)]="user.name" name="name" required></ion-input>
     </ion-item>
@@ -38,10 +35,13 @@
   <!-- <label for="js-import-file__form">読み込むファイル</label>
   <input id="js-import-file__form" (change)="fileUp($ev)" type="file">
   <button id="js-import-file__submit" (click)="submitNewFile()" ion-button block disabled="disabled">読み込み</button> -->
-  <form>
-    <label for="upfile">アイコン画像を変更</label>
-    <input id="upfile" name="upfile" type="file" #fl accept="image/*" (change)="upload(fl.files)" >
-  </form>
+  <div class="image-upload">
+    <label for="upfile">アイコン画像を選択
+      <br>
+      <ion-icon name="images" color="primary" style="height:40px;width:40px"></ion-icon>
+    </label>
+    <input id="upfile" name="upfile" type="file" accept="image/*" (change)="upload(fl.files)">
+  </div>
   <ion-button (click)="onUpdate()">更新</ion-button>
   <ion-button (click)="onCancel()">キャンセル</ion-button>
 </ion-content>
