@@ -18,6 +18,11 @@
       <ion-label position="floating">image URL</ion-label>
       <ion-input type="text" [(ngModel)]="user.imageURL" name="imageURL" required></ion-input>
     </ion-item> -->
+
+    <div class="circle_icon">
+      <img [src]="imageURL">
+    </div>
+
     <ion-item>
       <ion-img [src]="imageURL"></ion-img>
     </ion-item>
