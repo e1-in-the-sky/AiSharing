@@ -47,7 +47,10 @@
     <div class="lr-around detail_and_norimasu">
 
       <!-- 詳細ボタン -->
-      <ion-button fill="clear" size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
+      <!-- <ion-button fill="clear" size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button> -->
+      <div class="norimasu_outfilter">
+        <img (click)="goToReservationDetail(reservation.uid)" src="../../../assets/img/description.png">
+      </div>
       <!-- ここまで -->
       
       <div class="norimasu_outfilter">
