@@ -13,7 +13,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list class="card_background">
     <!-- <ion-item>
       <ion-label position="floating">image URL</ion-label>
       <ion-input type="text" [(ngModel)]="user.imageURL" name="imageURL" required></ion-input>
@@ -23,33 +23,37 @@
       <img [src]="imageURL">
     </div>
 
-    <ion-item>
+    <ion-item class="transparent">
       <ion-label position="floating">ユーザー名</ion-label>
       <ion-input type="text" [(ngModel)]="user.name" name="name" required></ion-input>
     </ion-item>
-    <ion-item>
+    <ion-item class="transparent">
       <ion-label position="floating">自己紹介</ion-label>
       <ion-input type="text" [(ngModel)]="user.introduction" name="introduction" required></ion-input>  
     </ion-item>
   </ion-list>
+
   <!-- <label for="js-import-file__form">読み込むファイル</label>
   <input id="js-import-file__form" (change)="fileUp($ev)" type="file">
   <button id="js-import-file__submit" (click)="submitNewFile()" ion-button block disabled="disabled">読み込み</button> -->
-  <ion-item class="image-upload">
-    <label for="upfile" style="width:100%;height:100%;">
-      <ion-row>
-        <ion-icon name="images" color="primary" style="height:40px;width:40px"></ion-icon>
-        <h4>アイコン画像を選択</h4>
-      </ion-row>
-    </label>
-    <input id="upfile" name="upfile" type="file" #fl accept="image/*" (change)="upload(fl.files)" style="width:100%;height:100%;">
-  </ion-item>
-  <ion-item (click)="onUpdate()">
-    <ion-icon name="refresh" color="primary" style="height:40px;width:40px;"></ion-icon>
-    <h4>更新</h4>
-  </ion-item>
-  <ion-item (click)="onCancel()">
-    <ion-icon name="close" color="primary" style="height:40px;width:40px;"></ion-icon>
-    <h4>キャンセル</h4>
-  </ion-item>
+
+  <ion-list class="card_background">
+    <ion-item class="image-upload transparent">
+      <label for="upfile" style="width:100%;height:100%;">
+        <ion-row>
+          <ion-icon name="images" color="primary" style="height:40px;width:40px"></ion-icon>
+          <h4>アイコン画像を選択</h4>
+        </ion-row>
+      </label>
+      <input id="upfile" name="upfile" type="file" #fl accept="image/*" (change)="upload(fl.files)" style="width:100%;height:100%;">
+    </ion-item>
+    <ion-item (click)="onUpdate()" class="transparent">
+      <ion-icon name="refresh" color="primary" style="height:40px;width:40px;"></ion-icon>
+      <h4>更新</h4>
+    </ion-item>
+    <ion-item (click)="onCancel()" class="transparent">
+      <ion-icon name="close" color="primary" style="height:40px;width:40px;"></ion-icon>
+      <h4>キャンセル</h4>
+    </ion-item>
+  </ion-list>
 </ion-content>
