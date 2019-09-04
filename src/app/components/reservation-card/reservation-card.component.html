@@ -4,7 +4,7 @@
     <!-- アイコン，人数部分 -->
     <div class="lr-edge">
       <ion-item lines="none">
-        <ion-avatar slot="start" (click)="goToAccountDetail(reservation.owner.id)">
+        <ion-avatar slot="start" (click)="goToAccountDetail()">
           <img [src]="user.imageURL">
         </ion-avatar>
         <ion-label>
@@ -49,7 +49,7 @@
       <!-- 詳細ボタン -->
       <!-- <ion-button fill="clear" size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button> -->
       <div class="norimasu_outfilter">
-        <img (click)="goToReservationDetail(reservation.uid)" src="../../../assets/img/description.png">
+        <img (click)="goToReservationDetail()" src="../../../assets/img/description.png">
       </div>
       <!-- ここまで -->
       
