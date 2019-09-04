@@ -49,6 +49,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'taxi-reservation',
+        children: [
+          {
+            path: '',
+            loadChildren: '../taxi-reservation/taxi-reservation.module#TaxiReservationPageModule'
+          }
+        ]
+      },
+      {
         path: 'about',
         children: [
           {

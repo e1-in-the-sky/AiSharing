@@ -35,6 +35,7 @@ const routes: Routes = [
     canLoad: [CheckTutorial]
   },
 
+
   // { path: 'mypage',
   //   loadChildren: './pages/mypage/mypage.module#MypagePageModule' },
   // { path: 'mypage/edit',
