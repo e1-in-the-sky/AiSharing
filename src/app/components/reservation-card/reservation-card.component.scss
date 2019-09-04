@@ -1,8 +1,3 @@
-p.norimasu_button img {
-  height: 70px;
-  width: 70px; 
-}
-
 //  ion-img{
 //   height: 40px;
 //   width: 40px; 
@@ -165,25 +160,22 @@ ion-icon {
 //   align-items: center;
 // }
 
-.norimasu{
-  // width: 100px;
-  // height: 100px;
-  // background: black;
- 
-  // border-top-left-radius: 10px;
-  // border-top-right-radius: 20px;
-  // border-bottom-right-radius: 30px;
-  // border-bottom-left-radius: 40px;
-}
-.outfilter{
-  width: 100px;
-  height: 100px;
-  background: black;
+.norimasu_outfilter{
+  width: 70px;
+  height: 70px;
+  // background: grey;
+  padding: 0;
+  img {
+    // background: red;
+    width: 100%;
+    height: 100%;
+  }
 }
 
-.norimasu img{
+.detail_and_norimasu{
+  padding: 8px;
+  // background-color: grey;
 }
-
 
 .time-padding{
   padding-left: 3%;

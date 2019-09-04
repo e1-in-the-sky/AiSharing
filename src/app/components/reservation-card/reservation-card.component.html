@@ -42,43 +42,46 @@
         <div class="place_text">{{reservation.destination_name}}</div>
       </div>
     </div>
-    <ion-button fill="clear" size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
-    <!-- ここまで -->
-    
-    
-    <div class="outfilter">
-    <!-- ノリマスボタン -->
-    <!-- <div class="norimasu"> -->
-      <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">
-        <!-- <div class="norimasu_padding"><ion-img src="../../../assets/img/full.png"></ion-img></div> -->
-        <p class="norimasu_button" color="ion-color-light-tint">
-          <img src="../../../assets/img/full.png">
-        </p>
-      </div>
-    </div>
-
-    <ng-template #conditionIsNotFull>
-      <div *ngIf="reservation?.condition === '募集終了'; else conditionIsRecruiting">
-        <p float-right class="norimasu_button" color="ion-color-light-tint">
-          <img src="../../../assets/img/reserve_finish.png">
-        </p>
-      </div>
-    </ng-template>
-
-    <div class="norimasu">    
-      <ng-template #conditionIsRecruiting>
-        <!-- <p float-right class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint"> -->
-        <p float-right class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint">
-          <img src="../../../assets/img/norimasu.png">
-        </p>
-        <!-- <button type="submit"><img src="../../../assets/img/norimasu.png"></button> -->
-      </ng-template>
-    </div>
-    <!-- </div> -->
     <!-- ここまで -->
 
-    <ion-button fill="clear" size="small" class="discription_button" (click)="goToReservationDetail()">詳細</ion-button>
-    
+    <div class="lr-around detail_and_norimasu">
+
+      <!-- 詳細ボタン -->
+      <ion-button fill="clear" size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
+      <!-- ここまで -->
+      
+      <div class="norimasu_outfilter">
+      <!-- ノリマスボタン -->
+      <!-- <div class="norimasu"> -->
+        <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">
+          <!-- <div class="norimasu_padding"><ion-img src="../../../assets/img/full.png"></ion-img></div> -->
+          <!-- <p class="norimasu_button"> -->
+            <img src="../../../assets/img/full.png">
+          <!-- </p> -->
+        </div>
+
+        <ng-template #conditionIsNotFull>
+          <div *ngIf="reservation?.condition === '募集終了'; else conditionIsRecruiting">
+            <!-- <p class="norimasu_button"> -->
+              <img src="../../../assets/img/reserve_finish.png">
+            <!-- </p> -->
+          </div>
+        </ng-template>
+
+        <div class="norimasu">    
+          <ng-template #conditionIsRecruiting>
+            <!-- <p float-right class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint"> -->
+            <!-- <p class="norimasu_button" (click)="displayNorimasuAlert()"> -->
+              <img src="../../../assets/img/norimasu.png" (click)="displayNorimasuAlert()">
+            <!-- </p> -->
+            <!-- <button type="submit"><img src="../../../assets/img/norimasu.png"></button> -->
+          </ng-template>
+        </div>
+      <!-- </div> -->
+      <!-- ここまで -->
+      </div>
+
+    </div>
       
   </ion-card-content>
 </ion-card>
