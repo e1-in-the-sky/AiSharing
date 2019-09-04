@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { MypageEditPage } from './mypage-edit.page';
+import { AppCommonModule } from '../../modules/app-common/app-common.module';
 
 const routes: Routes = [
   {
@@ -16,11 +17,12 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    AppCommonModule,
     CommonModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [MypageEditPage]
+  // declarations: [MypageEditPage]
 })
 export class MypageEditPageModule {}

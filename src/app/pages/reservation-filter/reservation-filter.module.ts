@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ReservationFilterPage } from './reservation-filter.page';
+import { AppCommonModule } from '../../modules/app-common/app-common.module';
 
 const routes: Routes = [
   {
@@ -16,11 +17,12 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    AppCommonModule,
     CommonModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ReservationFilterPage]
+  // declarations: [ReservationFilterPage]
 })
 export class ReservationFilterPageModule {}

@@ -29,7 +29,11 @@ import { ReservationFilterPage } from '../../pages/reservation-filter/reservatio
   exports: [
     ReservationCardComponent,
     UserChipComponent,
-    Timestamp2stringPipe
+    Timestamp2stringPipe,
+    MypageEditPage,
+    ReservationPostPage,
+    ReservationEditPage,
+    ReservationFilterPage,
   ],
   entryComponents: [
     ReservationPostPage,
