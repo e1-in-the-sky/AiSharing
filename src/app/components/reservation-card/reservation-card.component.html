@@ -5,7 +5,7 @@
     <div class="lr-edge">
       <ion-item lines="none">
         <ion-avatar slot="start" (click)="goToAccountDetail()">
-          <img [src]="user.imageURL">
+          <ion-img [src]="user.imageURL"></ion-img>
         </ion-avatar>
         <ion-label>
           <h2 (click)="goToAccountDetail()" style="display: inline-block;">{{user.name}}</h2>

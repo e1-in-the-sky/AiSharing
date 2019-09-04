@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { Reservation } from '../../models/reservation';
@@ -19,10 +19,11 @@ import { MessageService } from '../../services/message/message.service';
   templateUrl: './reservation-card.component.html',
   styleUrls: ['./reservation-card.component.scss'],
 })
-export class ReservationCardComponent implements OnInit {
+export class ReservationCardComponent implements OnInit, OnChanges {
   @Input()
   reservation: Reservation;
   user: User = new User();  // reservationのオーナー
+  // user: User = new User();  // reservationのオーナー
   errors = {
     alreadyDeparted: false
   }
@@ -38,9 +39,14 @@ export class ReservationCardComponent implements OnInit {
     private reservationUsersService: ReservationUsersService
   ) { }
 
-  ngOnInit() {
+  ngOnChanges() {
     this.checkAlredyDeparted();
-    this.reservation.owner.get().then(doc => {this.user = new User(doc.data())});
+    if (this.reservation.owner){
+      this.reservation.owner.get().then(doc => {this.user = new User(doc.data())});
+    }
+  }
+
+  ngOnInit() {
   }
 
   getCurrentUser(): firebase.User | Promise<firebase.User> {

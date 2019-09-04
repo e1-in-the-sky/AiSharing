@@ -21,6 +21,7 @@ export class ReservationDetailPage implements OnInit {
   current_user: User = new User();
   owner_name: string = '';
   reservationId: string = '';
+  // reservation: Reservation;
   reservation: Reservation = new Reservation();
   reservation_owner: User = new User();
   departure_name: string = '';
