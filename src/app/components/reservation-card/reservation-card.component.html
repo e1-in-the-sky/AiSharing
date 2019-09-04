@@ -8,7 +8,7 @@
           <img [src]="user.imageURL">
         </ion-avatar>
         <ion-label>
-          <h2>{{user.name}}</h2>
+          <h2 (click)="goToAccountDetail()" style="display: inline-block;">{{user.name}}</h2>
           <p style="font-size: 13px">{{reservation.comment}}</p>
         </ion-label>
       </ion-item>
