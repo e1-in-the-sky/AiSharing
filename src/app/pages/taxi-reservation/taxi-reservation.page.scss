@@ -38,7 +38,7 @@
     top: 20px;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
-    animation-duration: 15s;
+    animation-duration: 10s;
     animation-iteration-count: 1;
 	margin-right: -25px;
 }
@@ -58,12 +58,12 @@
         right: 10%;
     }
     100% {
-        right: 90%;
+        right: 75%;
     }
 }
 @keyframes GoRight {
     0% {
-        right: 90%;
+        right: 75%;
     }
     100% {
         right: 10%;

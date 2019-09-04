@@ -12,7 +12,7 @@
 <ion-content>
   <ion-card  class="background">
     <div class="demo_stage">
-      <div class="demo_wrap" data-order="left">
+      <div class="demo_wrap" [attr.data-order]="data_order" (animationend)="animationend()">
       <span class="demo_item anime"></span>
       </div>
     </div>
