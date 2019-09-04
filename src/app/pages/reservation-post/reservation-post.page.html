@@ -31,17 +31,17 @@
           name="departure_time" (ngModelChange)="on_date_changed()" [min]="min_date" [max]="max_date"></ion-datetime>
       </ion-item>
       <p>最大乗車人数</p>
-      <ion-row>
-        <ion-button (click)="on_click_max_passenger(-1)">ー</ion-button>
+      <ion-item>
+        <img src="../../../assets/img/minus.png" style="height:40px; width:40px;"(click)="on_click_max_passenger(-1)">
         <h3>{{data.max_passenger_count}}</h3>
-        <ion-button (click)="on_click_max_passenger(1)">＋</ion-button>
-      </ion-row>
+        <img src="../../../assets/img/plus.png" style="height:40px; width:40px;" (click)="on_click_max_passenger(1)">
+      </ion-item>
       <p>現在乗車人数</p>
-      <ion-row>
-        <ion-button (click)="on_click_passenger(-1)">ー</ion-button>
+      <ion-item>
+        <img src="../../../assets/img/minus.png" style="height:40px; width:40px;"(click)="on_click_passenger(-1)">
         <h3>{{data.passenger_count}}</h3>
-        <ion-button (click)="on_click_passenger(1)">＋</ion-button>
-      </ion-row>
+        <img src="../../../assets/img/plus.png" style="height:40px; width:40px;"(click)="on_click_passenger(1)">
+      </ion-item>
       <ion-item>
         <ion-label position="floating" >コメント</ion-label>
         <ion-input type="text" [(ngModel)]="data.comment" name="comment" maxlength="30"></ion-input>

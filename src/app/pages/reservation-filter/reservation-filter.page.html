@@ -71,9 +71,9 @@
 
       <ion-item>
         <!-- <ion-label>乗車可能人数</ion-label> -->
-        <ion-button (click)="onClickPassengerCapacity(-1)">ー</ion-button>
+        <img src="../../../assets/img/minus.png" (click)="onClickPassengerCapacity(-1)" style="height:30px; width:30px;">
         <ion-label text-center>{{filter.passenger_capacity}}</ion-label>
-        <ion-button (click)="onClickPassengerCapacity(1)">＋</ion-button>
+        <img src="../../../assets/img/plus.png" (click)="onClickPassengerCapacity(1)" style="height:30px; width:30px;">
         <ion-label>人以上乗車可能</ion-label>
       </ion-item>
 
