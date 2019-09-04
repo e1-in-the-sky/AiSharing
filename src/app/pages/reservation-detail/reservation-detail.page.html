@@ -9,29 +9,37 @@
       投稿の詳細
     </ion-title>
     
+    <ion-buttons slot="end">
+      <ion-button (click)="goToEditPage()">
+        <ion-icon slot="icon-only" name="create"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
-  <reservation-card [reservation]="reservation"></reservation-card>
+  <!-- <div style="display: block;"> -->
+    <!-- <p float-right *ngIf="is_my_reservation" (click)="goToEditPage()">
+      <ion-icon name="create" color="primary" style="height:15px;width:15px;"></ion-icon>
+      投稿の編集
+    </p> -->
+    <reservation-card [reservation]="reservation"></reservation-card>
+  <!-- </div> -->
 
   <ion-list>
-    <!-- <user-chip [user_ref]="reservation.owner"></user-chip> ここに大戦争-->
-    <ion-item *ngIf="is_my_reservation" (click)="goToEditPage()">
-        <ion-button size="small"> 投稿編集 </ion-button>
-    </ion-item>
-    <ion-item>
+    <!-- <user-chip [user_ref]="reservation.owner"></user-chip> ここに大戦争-->  
+    
+    <!-- <ion-item>
       <ion-label>Reservation ID: {{reservationId}}</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>最初に投稿された日時: {{reservation.created_at | timestamp2string}}</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>最後に更新された日時: {{reservation.updated_at | timestamp2string}}</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>owner name: {{owner_name}}</ion-label>
+    </ion-item> -->
+    <ion-list>
+      <ion-text float-right style="padding-right:4%">投稿時間: {{reservation.created_at | timestamp2string}}</ion-text>
+      <ion-text float-right style="padding-right:4%">最終更新: {{reservation.updated_at | timestamp2string}}</ion-text>
+    </ion-list>
+    
+    <!-- <ion-item>
+      <ion-label>投稿者: {{owner_name}}</ion-label>
     </ion-item>
     <ion-item>
       <ion-label>募集状況: {{reservation.condition}}</ion-label>
@@ -47,11 +55,16 @@
     </ion-item>
     <ion-item>
       <ion-label>乗車予定人数/最大乗車人数: {{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</ion-label>
-    </ion-item>
+    </ion-item> -->
 
     <ion-list>
       <ion-list-header>
-        乗車予定者：
+        <ion-text>
+          <p>
+            <ion-icon style="vertical-align: middle;" name="contact"></ion-icon>
+            乗車予定のユーザー
+          </p>
+        </ion-text>
       </ion-list-header>
       <ion-item *ngFor="let reservationUser of reservationUsers">
         <user-chip [user_ref]="reservationUser.user"></user-chip>
@@ -61,14 +74,17 @@
 
     <ion-list>
       <ion-list-header>
-        メッセージ
+        <p><ion-icon  style="vertical-align: middle;" name="chatboxes"></ion-icon>
+        メッセージ</p>
       </ion-list-header>
       <ion-item *ngFor="let message of messages">
-        <user-chip [user_ref]="message.user"></user-chip>
-        <ion-label>
-        <p style="font-size: 9px;">{{message.created_at | timestamp2string}}</p>
-        <h2 style="font-size: 15px; white-space: pre-wrap;">{{message.message}}</h2>
-        </ion-label>
+        <div style="display: block;">
+          <user-chip [user_ref]="message.user"></user-chip>
+          <ion-label style="padding-left: 16px;">
+          <p style="font-size: 9px;">{{message.created_at | timestamp2string}}</p>
+          <h2 style="font-size: 15px; white-space: pre-wrap;">{{message.message}}</h2>
+          </ion-label>
+        </div>
       </ion-item>
 
       <ion-item>
