@@ -1,24 +1,15 @@
 <ion-card>
   <ion-card-content>
-    
-    <!-- アイコン，人数部分 -->
-    <div class="lr-edge">
-      <ion-item lines="none">
-        <ion-avatar slot="start" (click)="goToAccountDetail()">
-          <ion-img [src]="user.imageURL"></ion-img>
-        </ion-avatar>
-        <ion-label>
-          <h2 (click)="goToAccountDetail()" style="display: inline-block;">{{user.name}}</h2>
-          <p style="font-size: 13px">{{reservation.comment}}</p>
-        </ion-label>
-      </ion-item>
-      <!-- 人数部分 -->
-      <div class="people_count">
-        <ion-icon style="vertical-align: middle" name="people"></ion-icon>
-        <ion-label>{{reservation.passenger_count}} / </ion-label>
-        <ion-label style="font-size: 30px; vertical-align: middle" color="danger">{{reservation.max_passenger_count}}</ion-label><br>
-      </div>
-    </div>
+    <!-- アイコン部分 -->
+    <ion-item lines="none">
+      <ion-avatar slot="start" (click)="goToAccountDetail()">
+        <ion-img [src]="user.imageURL"></ion-img>
+      </ion-avatar>
+      <ion-label>
+        <h2 (click)="goToAccountDetail()" style="display: inline-block;">{{user.name}}</h2>
+        <p style="font-size: 13px">{{reservation.comment}}</p>
+      </ion-label>
+    </ion-item>
     <!-- ここまで -->
     
     <!-- 出発時刻 -->
@@ -46,7 +37,6 @@
     <!-- ここまで -->
 
     <div class="lr-around detail_and_norimasu">
-
       <!-- 詳細ボタン -->
       <!-- <ion-button fill="clear" size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button> -->
       <div class="norimasu_outfilter">
@@ -82,9 +72,15 @@
           </ng-template>
         </div>
       <!-- </div> -->
-      <!-- ここまで -->
       </div>
-
+      
+      <!-- 人数カウント -->
+      <div class="people_count">
+        <ion-icon style="vertical-align: middle" name="people"></ion-icon>
+        <ion-label>{{reservation.passenger_count}} / </ion-label>
+        <ion-label style="font-size: 30px; vertical-align: middle" color="danger">{{reservation.max_passenger_count}}</ion-label><br>
+      </div>
+      <!-- ここまで -->
     </div>
       
   </ion-card-content>
