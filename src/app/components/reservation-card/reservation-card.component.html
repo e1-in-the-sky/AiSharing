@@ -1,52 +1,34 @@
 <ion-card>
   <ion-card-content>
-    <ion-item lines="none">
-      <ion-avatar slot="start">
-        <img [src]="user.imageURL">
-      </ion-avatar>
-      <ion-label>
-        <h3>{{user.name}}</h3>
-        <p style="font-size: 10px; word-break: normal;">{{reservation.comment}}</p>
-      </ion-label>
-    </ion-item>
-      
-      
-      
-      <!-- <div class="ion-text-right">{{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</div> -->
-      <div class="right-side">
-        <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">
-          <!-- <div class="norimasu_padding"><ion-img src="../../../assets/img/full.png"></ion-img></div> -->
-          <p float-right class="norimasu_button" color="ion-color-light-tint">
-            <img src="../../../assets/img/full.png">
-          </p>
-        </div>
-        <!-- </div>   -->
-        <ng-template #conditionIsNotFull>
-          <div *ngIf="reservation?.condition === '募集終了'; else conditionIsRecruiting">
-            <p float-right class="norimasu_button" color="ion-color-light-tint">
-              <img src="../../../assets/img/reserve_finish.png">
-            </p>
-          </div>
-        </ng-template>
-      
-        <ng-template #conditionIsRecruiting>
-          <!-- <p float-right class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint"> -->
-          <p float-right class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint">
-            <img src="../../../assets/img/norimasu.png">
-          </p>
-          <!-- <button type="submit"><img src="../../../assets/img/norimasu.png"></button> -->
-        </ng-template>
-      </div>
-    <!-- </div> -->
-  
-
     
-    <!-- <ion-text class="ion-float-right" color="yellow"></ion-text> -->
-      
-    <!-- <div> -->
-      <!-- <p><ion-icon color="danger" name="pin"></ion-icon>{{reservation.departure_name}}-----<ion-icon large name="logo-model-s"></ion-icon>-----
-        <ion-icon color="danger" name="pin"></ion-icon>{{reservation.destination_name}}</p> -->
-    <!-- <div class="padding"> -->
+    <!-- アイコン，人数部分 -->
+    <div class="lr-edge">
+      <ion-item lines="none">
+        <ion-avatar slot="start" (click)="goToAccountDetail(reservation.owner.id)">
+          <img [src]="user.imageURL">
+        </ion-avatar>
+        <ion-label>
+          <h3>{{user.name}}</h3>
+          <p style="font-size: 10px">{{reservation.comment}}</p>
+        </ion-label>
+      </ion-item>
+      <div style="vertical-align: middle">
+        <ion-icon style="vertical-align: middle" name="people"></ion-icon>
+        <ion-label>{{reservation.passenger_count}} / </ion-label>
+        <ion-label style="font-size: 30px; vertical-align: middle" color="danger">{{reservation.max_passenger_count}}</ion-label><br>
+      </div>
+    </div>
+    <!-- ここまで -->
+    
+    <!-- 出発時刻 -->
+    <div class="time-padding">
+      <ion-icon style="vertical-align: middle" name="time"></ion-icon>
+      {{reservation.departure_time | timestamp2string}}<br>
+      <ion-label *ngIf="errors?.alreadyDeparted" color="danger">すでに出発予定時刻を過ぎた投稿です!<br></ion-label>
+    </div>
+    <!-- ここまで -->
+    
+    <!-- 出発地，目的地部分 -->
     <div class="lr-around">
       <div class="sidebyside center-loc">
         <div class="place_icon"><img src="../../../assets/img/place_start.png" ></div>
@@ -60,14 +42,49 @@
         <div class="place_text">{{reservation.destination_name}}</div>
       </div>
     </div>
-    <ion-icon style="vertical-align: middle" name="time"></ion-icon>
-    {{reservation.departure_time | timestamp2string}}<br>
-    <ion-label *ngIf="errors?.alreadyDeparted" color="danger">すでに出発予定時刻を過ぎた投稿です!<br></ion-label>
-    <ion-icon style="vertical-align: middle" name="people"></ion-icon>
-    <ion-label>{{reservation.passenger_count}} / </ion-label>
-    <ion-label style="font-size: 30px; vertical-align: middle" color="danger">{{reservation.max_passenger_count}}</ion-label><br>
     <ion-button fill="clear" size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
+    <!-- ここまで -->
+    
+    
+    <div class="outfilter">
+    <!-- ノリマスボタン -->
+    <!-- <div class="norimasu"> -->
+      <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">
+        <!-- <div class="norimasu_padding"><ion-img src="../../../assets/img/full.png"></ion-img></div> -->
+        <p class="norimasu_button" color="ion-color-light-tint">
+          <img src="../../../assets/img/full.png">
+        </p>
+      </div>
+    </div>
+
+    <ng-template #conditionIsNotFull>
+      <div *ngIf="reservation?.condition === '募集終了'; else conditionIsRecruiting">
+        <p float-right class="norimasu_button" color="ion-color-light-tint">
+          <img src="../../../assets/img/reserve_finish.png">
+        </p>
+      </div>
+    </ng-template>
+
+    <div class="norimasu">    
+      <ng-template #conditionIsRecruiting>
+        <!-- <p float-right class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint"> -->
+        <p float-right class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint">
+          <img src="../../../assets/img/norimasu.png">
+        </p>
+        <!-- <button type="submit"><img src="../../../assets/img/norimasu.png"></button> -->
+      </ng-template>
+    </div>
+    <!-- </div> -->
+    <!-- ここまで -->
+
     
       
   </ion-card-content>
 </ion-card>
+
+
+<!-- <ion-text class="ion-float-right" color="yellow"></ion-text> -->      
+<!-- <div> -->
+<!-- <p><ion-icon color="danger" name="pin"></ion-icon>{{reservation.departure_name}}-----<ion-icon large name="logo-model-s"></ion-icon>-----
+<ion-icon color="danger" name="pin"></ion-icon>{{reservation.destination_name}}</p> -->
+<!-- <div class="padding"> -->
