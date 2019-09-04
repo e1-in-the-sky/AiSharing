@@ -1,6 +1,6 @@
-ion-title{
-    font-weight:bold;
-}
+// ion-title{
+//     font-weight:bold;
+// }
 
 p.header_logo{
     position: absolute;
@@ -15,4 +15,13 @@ p.header_logo{
 ion-button{
     position: absolute; 
     right: 10px;
+}
+
+ion-icon {
+    font-size: 25px;
+    color: primary;
+}
+
+ion-text{
+    vertical-align: middle;
 }
