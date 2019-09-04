@@ -34,6 +34,11 @@ export class SignupPage implements OnInit {
     this.menu.enable(false);
   }
 
+  ionViewDidLeave() {
+    // enable the root left menu when leaving the page
+    this.menu.enable(true);
+  }
+
   async onSignup() {
     this.submitted = true;
     if(!this.data.displayName){

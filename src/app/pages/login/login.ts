@@ -30,6 +30,11 @@ export class LoginPage implements OnInit {
     this.menu.enable(false);
   }
 
+  ionViewDidLeave() {
+    // enable the root left menu when leaving the page
+    this.menu.enable(true);
+  }
+
   async onLogin() {
     this.submitted = true;
 
