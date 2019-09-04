@@ -1,7 +1,7 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController, Events } from '@ionic/angular';
+import { AlertController, Events, MenuController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -17,17 +17,22 @@ import { UserService } from '../../services/user/user.service';
   templateUrl: 'signup.html',
   styleUrls: ['./signup.scss'],
 })
-export class SignupPage {
+export class SignupPage implements OnInit {
   data: { displayName: string, email: string, password: string } = { displayName: '', email: '', password: '' };
   submitted = false;
 
   constructor(
     public events: Events,
     public router: Router,
+    public menu: MenuController,
     public alertController: AlertController,
     private db: AngularFirestore,
     public userService: UserService
   ) {}
+
+  ngOnInit() {
+    this.menu.enable(false);
+  }
 
   async onSignup() {
     this.submitted = true;

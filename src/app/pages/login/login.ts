@@ -1,7 +1,7 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController, Events } from '@ionic/angular';
+import { AlertController, Events, MenuController } from '@ionic/angular';
 
 import { UserData } from '../../providers/user-data';
 
@@ -15,15 +15,20 @@ import * as firebase from 'firebase';
   templateUrl: 'login.html',
   styleUrls: ['./login.scss'],
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   data: { email: string, password: string } = { email: '', password: '' };
   submitted = false;
 
   constructor(
     public events: Events,
     public router: Router,
+    public menu: MenuController,
     public alertController: AlertController
   ) { }
+
+  ngOnInit() {
+    this.menu.enable(false);
+  }
 
   async onLogin() {
     this.submitted = true;
