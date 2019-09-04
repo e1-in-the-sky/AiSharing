@@ -22,29 +22,34 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent implements OnInit {
   appPages = [
+    // {
+    //   title: 'Schedule',
+    //   url: '/app/tabs/schedule',
+    //   icon: 'calendar'
+    // },
+    // {
+    //   title: 'Speakers',
+    //   url: '/app/tabs/speakers',
+    //   icon: 'contacts'
+    // },
+    // {
+    //   title: 'Map',
+    //   url: '/app/tabs/map',
+    //   icon: 'map'
+    // },
+    // {
+    //   title: 'About',
+    //   url: '/app/tabs/about',
+    //   icon: 'information-circle'
+    // },
     {
-      title: 'Schedule',
-      url: '/app/tabs/schedule',
-      icon: 'calendar'
-    },
-    {
-      title: 'Speakers',
-      url: '/app/tabs/speakers',
-      icon: 'contacts'
-    },
-    {
-      title: 'Map',
-      url: '/app/tabs/map',
-      icon: 'map'
-    },
-    {
-      title: 'About',
-      url: '/app/tabs/about',
-      icon: 'information-circle'
-    },
-    {
-      title: 'Reservations',
+      title: '投稿一覧',
       url: '/app/tabs/reservations',
+      icon: 'chatbubbles'
+    },
+    {
+      title: 'タクシー予約',
+      url: '/app/tabs/taxi-reservation',
       icon: 'paper-plane'
     }
   ];
