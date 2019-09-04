@@ -35,13 +35,28 @@
   <!-- <label for="js-import-file__form">読み込むファイル</label>
   <input id="js-import-file__form" (change)="fileUp($ev)" type="file">
   <button id="js-import-file__submit" (click)="submitNewFile()" ion-button block disabled="disabled">読み込み</button> -->
-  <div class="image-upload">
+  <!--<div class="image-upload">
     <label for="upfile">アイコン画像を選択
       <br>
       <ion-icon name="images" color="primary" style="height:40px;width:40px"></ion-icon>
     </label>
     <input id="upfile" name="upfile" type="file" accept="image/*" (change)="upload(fl.files)">
-  </div>
-  <ion-button (click)="onUpdate()">更新</ion-button>
-  <ion-button (click)="onCancel()">キャンセル</ion-button>
+  </div>-->
+  <ion-item class="image-upload">
+    <label for="upfile" style="width:100%;height:100%;">
+      <ion-row>
+        <ion-icon name="images" color="primary" style="height:40px;width:40px"></ion-icon>
+        <h4>アイコン画像を選択</h4>
+      </ion-row>
+    </label>
+    <input id="upfile" name="upfile" type="file" accept="image/*" (change)="upload(fl.files)" style="width:100%;height:100%;">
+  </ion-item>
+  <ion-item (click)="onUpdate()">
+    <ion-icon name="refresh" color="primary" style="height:40px;width:40px;"></ion-icon>
+    <h4>更新</h4>
+  </ion-item>
+  <ion-item (click)="onCancel()">
+    <ion-icon name="close" color="primary" style="height:40px;width:40px;"></ion-icon>
+    <h4>キャンセル</h4>
+  </ion-item>
 </ion-content>
