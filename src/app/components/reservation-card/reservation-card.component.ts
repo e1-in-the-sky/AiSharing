@@ -40,6 +40,7 @@ export class ReservationCardComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnChanges() {
+    this.errors.alreadyDeparted = false;
     this.checkAlredyDeparted();
     if (this.reservation.owner){
       this.reservation.owner.get().then(doc => {this.user = new User(doc.data())});
