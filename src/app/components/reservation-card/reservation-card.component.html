@@ -1,22 +1,16 @@
 <ion-card>
   <ion-card-content>
-    <!-- <ion-card-content> -->
-    <!-- <ion-chip (click)="goToAccountDetail(reservation.owner.id)">
-    <ion-avatar item-left>
-    <ion-img src="../../../assets/img/speakers/bear.jpg"></ion-img>
-    </ion-avatar>
-    <ion-label>{{user.name}}</ion-label>
-    </ion-chip> -->
-    <!-- <div class="lr-edge"> -->
-      <!-- <user-chip [user_ref]="reservation.owner"></user-chip> -->
-    <div style="display: flex; vertical-align: middle">
-      <ion-avatar (click)="goToAccountDetail(reservation.owner.id)" item-left>
-        <ion-img [src]="user.imageURL"></ion-img>
+    <ion-item lines="none">
+      <ion-avatar slot="start">
+        <img [src]="user.imageURL">
       </ion-avatar>
-      <div class="balloon1-left">
-        <ion-label style="vertical-align: middle">{{reservation.comment}}</ion-label>
-      </div>
-    </div>
+      <ion-label>
+        <h3>{{user.name}}</h3>
+        <p style="font-size: 10px; word-break: normal;">{{reservation.comment}}</p>
+      </ion-label>
+    </ion-item>
+      
+      
       
       <!-- <div class="ion-text-right">{{reservation.passenger_count}}人/{{reservation.max_passenger_count}}人</div> -->
       <div class="right-side">
@@ -66,19 +60,13 @@
         <div class="place_text">{{reservation.destination_name}}</div>
       </div>
     </div>
-    <div class="padding">
-      <ion-icon style="vertical-align: middle" name="time"></ion-icon>
-      {{reservation.departure_time | timestamp2string}}<br>
-      <ion-label *ngIf="errors?.alreadyDeparted" color="danger">すでに出発予定時刻を過ぎた投稿です!<br></ion-label>
-      <!-- <ion-label style="background-color: #ff0fff">コメント: {{reservation.comment}}</ion-label> -->
-      <!-- <ion-text class="ion-float-right"> -->
-      <ion-icon style="vertical-align: middle" name="people"></ion-icon>
-      <ion-label>{{reservation.passenger_count}} / </ion-label>
-      <ion-label style="font-size: 20px; vertical-align: middle" color="danger">{{reservation.max_passenger_count}}</ion-label><br>
-      <!-- </ion-text> -->
-      
-    <ion-button size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
-    </div>
+    <ion-icon style="vertical-align: middle" name="time"></ion-icon>
+    {{reservation.departure_time | timestamp2string}}<br>
+    <ion-label *ngIf="errors?.alreadyDeparted" color="danger">すでに出発予定時刻を過ぎた投稿です!<br></ion-label>
+    <ion-icon style="vertical-align: middle" name="people"></ion-icon>
+    <ion-label>{{reservation.passenger_count}} / </ion-label>
+    <ion-label style="font-size: 30px; vertical-align: middle" color="danger">{{reservation.max_passenger_count}}</ion-label><br>
+    <ion-button fill="clear" size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button>
     
       
   </ion-card-content>
