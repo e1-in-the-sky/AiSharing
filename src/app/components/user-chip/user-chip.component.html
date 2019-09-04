@@ -1,6 +1,25 @@
-<ion-chip (click)="goToAccountDetail()">
+<!-- <ion-chip (click)="goToAccountDetail()">
   <ion-avatar item-left >
     <ion-img [src]="user.imageURL"></ion-img>
   </ion-avatar>
   <ion-label item-right>{{user.name}}</ion-label>
+</ion-chip> -->
+
+<!-- <ion-chip (click)="goToAccountDetail()">
+  <ion-item lines="none">
+    <ion-avatar slot="start" (click)="goToAccountDetail()">
+      <ion-img [src]="user.imageURL"></ion-img>
+    </ion-avatar>
+    <ion-label>
+      <h2 color="primary" (click)="goToAccountDetail()" style="display: inline-block;">{{user.name}}</h2>
+    </ion-label>
+  </ion-item>
+</ion-chip> -->
+
+
+<ion-chip style="background-color:white" outline=true color="primary">
+  <ion-avatar>
+    <img [src]="user.imageURL">
+  </ion-avatar>
+  <ion-label (click)="goToAccountDetail()" style="display: inline-block;">{{user.name}}</ion-label>
 </ion-chip>
