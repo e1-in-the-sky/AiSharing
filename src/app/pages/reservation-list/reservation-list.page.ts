@@ -40,6 +40,7 @@ export class ReservationListPage implements OnInit {
   constructor(
     private reservationService: ReservationService,
     public router: Router,
+    // private navCtrl: NavController,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     public modalController: ModalController
@@ -98,6 +99,7 @@ export class ReservationListPage implements OnInit {
         this.isLogin = true;
       } else {
         this.isLogin = false;
+        this.router.navigateByUrl('/login');
       }
     });
   }
