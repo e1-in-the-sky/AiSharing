@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar  color="header" text-center>
 
     <ion-buttons slot="start">
       <ion-button (click)="onCancel()">
@@ -8,7 +8,7 @@
     </ion-buttons>
     
 
-    <ion-title>投稿の編集</ion-title>
+    <ion-title style="float: center">投稿の編集</ion-title>
     
   </ion-toolbar>
 </ion-header>
@@ -100,7 +100,7 @@
           <ion-icon slot="icon-only" name="ios-close-circle"></ion-icon>
         </ion-button>
         <user-chip [user_ref]="message.user"></user-chip>
-        <ion-label>{{message.message}}</ion-label>  
+        <ion-label style="white-space: pre-wrap;">{{message.message}}</ion-label>  
       </ion-item>
     </ion-list>
 
