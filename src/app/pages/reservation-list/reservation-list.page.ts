@@ -134,7 +134,7 @@ export class ReservationListPage implements OnInit {
 
   async createLoading() {
     let loading = await this.loadingCtrl.create({
-      // spinner: 'circles',
+      spinner: 'circles',
       message: '読み込み中...'
     });
     return loading;
@@ -172,16 +172,16 @@ export class ReservationListPage implements OnInit {
 
   // 投稿時刻によるソート
   // order: string (asc or des)
-  // ascの場合は投稿時刻が早い順
-  // desの場合は投稿時刻が遅い順
+  // ascの場合は投稿時刻が(早い順)(近い順)
+  // desの場合は投稿時刻が(遅い順)(遠い順)
   sortReservationsByCreatedAt(order: string = "asc") {
     if (order === "asc") {
       this.reservations = this.reservations.sort((a, b) => {
-        return a.created_at > b.created_at ? 1 : -1;
+        return a.created_at < b.created_at ? 1 : -1;
       });
     } else if (order === "des") {
       this.reservations = this.reservations.sort((a, b) => {
-        return a.created_at < b.created_at ? 1 : -1;
+        return a.created_at > b.created_at ? 1 : -1;
       });
     }
   }

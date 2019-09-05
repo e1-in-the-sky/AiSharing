@@ -73,6 +73,20 @@ export class MypagePage implements OnInit {
     });
   }
 
+  async doRefresh(event) {
+    // await this.getReservations();
+    // await this.getCurrentUser();
+    try {
+      await this.getMyReservations();
+      await this.getRideReservations();
+    } catch (err) {
+      let alert = await this.createError(err);
+      await alert.present();
+      console.error(err);
+    }
+    event.target.complete();
+  }
+
   async getMyReservations() {
     // get current user posted reservations from firestore.
     console.log('getMyReservations in mypage.page.ts');
@@ -161,7 +175,7 @@ export class MypagePage implements OnInit {
 
   async createLoading() {
     let loading = await this.loadingCtrl.create({
-      // spinner: 'circles',
+      spinner: 'circles',
       message: '読み込み中...'
     });
     return loading;

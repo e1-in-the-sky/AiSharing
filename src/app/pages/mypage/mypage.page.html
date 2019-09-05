@@ -27,6 +27,12 @@
 </ion-header>
 
 <ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+    
+
   <ion-card>
     <div style="display:table;  width:100%;">
       <div style="display:table-cell; width:100px;">

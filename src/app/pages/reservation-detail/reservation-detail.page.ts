@@ -215,7 +215,7 @@ export class ReservationDetailPage implements OnInit {
 
   async createLoading() {
     let loading = await this.loadingCtrl.create({
-      // spinner: 'circles',
+      spinner: 'circles',
       message: '読み込み中...'
     });
     return loading;

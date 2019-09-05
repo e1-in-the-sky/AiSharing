@@ -3,7 +3,7 @@ import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, LoadingController } from '@ionic/angular';
 import { ReservationUsers } from '../../models/reservation-users';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ReservationUsersService } from '../../services/reservation_users/reservation-users.service';
@@ -33,6 +33,7 @@ export class ReservationCardComponent implements OnInit, OnChanges {
     public router: Router,
     private navController: NavController,
     public alertController: AlertController,
+    private loadingCtrl: LoadingController,
     private userService: UserService,
     private messageService: MessageService,
     private reservationService: ReservationService,
@@ -179,6 +180,10 @@ export class ReservationCardComponent implements OnInit, OnChanges {
 
   async displayNorimasuAlert() {
     console.log('on ノリマス');
+    
+    var loading = await this.createLoading();
+    loading.present();
+
     // カレントユーザーの取得
     var firebaseUser = await this.getCurrentUser();
     var currentUser = await this.userService.getUser(firebaseUser.uid);
@@ -186,6 +191,8 @@ export class ReservationCardComponent implements OnInit, OnChanges {
     // すでにノリマスを押した人の一覧にカレントユーザーがいないか確認
     var reservationUsers: ReservationUsers[] = await this.reservationUsersService.getReservationUsersByReservationUid(this.reservation.uid);
     var indexOfAlredyNorimasu: number = reservationUsers.findIndex(reservationUser => reservationUser.user.id === currentUser.uid);
+
+    loading.dismiss();
 
     console.log(indexOfAlredyNorimasu);
     if (indexOfAlredyNorimasu === -1) {  // まだノリマスを押していないとき
@@ -443,6 +450,14 @@ export class ReservationCardComponent implements OnInit, OnChanges {
       var errorAlert = await this.createError(err);
       errorAlert.present();
     }
+  }
+
+  async createLoading() {
+    let loading = await this.loadingCtrl.create({
+      spinner: 'circles',
+      message: '読み込み中...'
+    });
+    return loading;
   }
 
   async createError(err) {
