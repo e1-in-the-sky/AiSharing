@@ -8,7 +8,7 @@ import { ReservationService } from '../../services/reservation/reservation.servi
 import { UserService } from '../../services/user/user.service';
 import { MessageService } from '../../services/message/message.service';
 import { ReservationUsersService } from '../../services/reservation_users/reservation-users.service';
-import { NavController, AlertController, ModalController } from '@ionic/angular';
+import { NavController, AlertController, ModalController, NumericValueAccessor } from '@ionic/angular';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -23,6 +23,8 @@ export class ReservationEditPage implements OnInit {
   reservationUsers: ReservationUsers[] = [];
   messages: Message[] = [];
   condition: boolean = true;
+  min_passenger_count: number;
+  index_owner: number;
 
   departure_time: string = '';
 
@@ -42,15 +44,38 @@ export class ReservationEditPage implements OnInit {
   // 自分の投稿でないときは編集できないようにしないといけない
   ngOnInit() {
     // this.reservationId = this.route.snapshot.paramMap.get('reservationId');
-    
+    Promise.all([
+      new Promise((resolve, reject) => {
+        this.getReservation().then(() => {
+          resolve(this.getReservationOwner());
+        })
+      }),
+      new Promise((resolve, reject) => {
+        resolve(this.getReservationUsers());
+      })
+    ]).then(() =>{
+      this.index_owner = this.reservationUsers.findIndex(reservationUser => reservationUser.user.id === this.reservation.owner.id);
+      console.log(this.index_owner);
+      this.min_passenger_count = this.reservation.passenger_count;
+      if(this.index_owner != -1){
+        this.min_passenger_count = this.reservation.passenger_count - this.reservationUsers[this.index_owner].passenger_count + 1;
+      }
+    });
     this.getReservation().then(() => {
       this.getReservationOwner();
     });
     this.getReservationUsers();
     this.getMessages();
   }
+  //var firebaseUser = await this.getCurrentUser();
+  //var currentUser = await this.userService.getUser(firebaseUser.uid);
 
-  async getReservation(){
+  //// すでにノリマスを押した人の一覧にカレントユーザーがいないか確認
+  //var reservationUsers: ReservationUsers[] = await this.reservationUsersService.
+  //getReservationUsersByReservationUid(this.reservation.uid);
+  //var indexOfAlredyNorimasu: number = reservationUsers.findIndex(reservationUser => reservationUser.user.id === currentUser.uid);
+
+  async getReservation() {
     // get reservation
     await this.reservationService
       .getReservation(this.reservationId)
@@ -60,7 +85,7 @@ export class ReservationEditPage implements OnInit {
       });
   }
 
-  async getReservationOwner(){
+  async getReservationOwner() {
     // get reservation owner
     await this.userService
       .getUser(this.reservation.owner.id)
@@ -69,7 +94,7 @@ export class ReservationEditPage implements OnInit {
       });
   }
 
-  async getReservationUsers(){
+  async getReservationUsers() {
     // get ReservationUsers array
     await this.reservationUsersService
       .getReservationUsersByReservationUid(this.reservationId)
@@ -78,7 +103,7 @@ export class ReservationEditPage implements OnInit {
       });
   }
 
-  async getMessages(){
+  async getMessages() {
     // get Message array of this reservation
     await this.messageService
       .getReservationMessages(this.reservationId)
@@ -118,11 +143,19 @@ export class ReservationEditPage implements OnInit {
   }
 
   async updateReservation() {
+    if (this.index_owner != -1) {
+      try {
+        await this.reservationUsersService.updateReservationUsers(this.reservationUsers[this.index_owner].uid, this.reservationUsers[this.index_owner]);
+      } catch (err) {
+        console.error("updateReservationUsers in reservation-edit.page.ts\nerr:", err);
+        throw err;
+      }
+    }
     this.reservation.updated_at = new Date();
     this.reservation.departure_time = new Date(this.departure_time);
     try {
       await this.reservationService.updateReservation(this.reservation.uid, this.reservation);
-    } catch(err) {
+    } catch (err) {
       console.error('updateReservation in reservation-edit.page.ts:\nerr:', err);
       throw err;
     }
@@ -211,15 +244,15 @@ export class ReservationEditPage implements OnInit {
   async deleteReservation() {
     // delelte reservation
     await this.reservationService.deleteReservation(this.reservationId)
-              .then(async () => {
-                // 投稿の削除に成功したら
-                // 成功したポップアップを表示
-                await this.presentDeleteIsSuccessful();
-                // 投稿一覧ページに移動
-                console.log('move to reservation list page');
-                this.dismissModal(false);
-                this.router.navigateByUrl('/app/tabs/reservations');
-              });
+      .then(async () => {
+        // 投稿の削除に成功したら
+        // 成功したポップアップを表示
+        await this.presentDeleteIsSuccessful();
+        // 投稿一覧ページに移動
+        console.log('move to reservation list page');
+        this.dismissModal(false);
+        this.router.navigateByUrl('/app/tabs/reservations');
+      });
   }
 
   async presentDeleteConfirm() {
@@ -259,6 +292,22 @@ export class ReservationEditPage implements OnInit {
     this.modalCtrl.dismiss({
       "isUpdate": isUpdate
     });
+  }
+
+  on_change_passenger_count(x) {
+    let dif = this.reservation.passenger_count;
+    this.reservation.passenger_count = this.clamp(this.reservation.passenger_count + x, this.min_passenger_count, this.reservation.max_passenger_count);
+    dif = this.reservation.passenger_count - dif;
+    this.reservationUsers[this.index_owner].passenger_count += dif;
+  }
+
+  on_change_max_passenger_count(x) {
+    this.reservation.max_passenger_count = this.clamp(this.reservation.max_passenger_count + x, this.reservation.passenger_count, 100);
+  }
+
+
+  clamp(x, min, max) {
+    return Math.max(Math.min(x, max), min);
   }
 
 }

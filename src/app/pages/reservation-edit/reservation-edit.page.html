@@ -55,13 +55,17 @@
         <!-- <ion-input type="text" [(ngModel)]="data.departure_time" name="departure_time" required></ion-input> -->
         <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="departure_time" name="departure_time"></ion-datetime>
       </ion-item>
+      <p>最大乗車人数</p>
       <ion-item>
-        <ion-label position="floating">最大乗車人数</ion-label>
-        <ion-input type="number" min="1" [(ngModel)]="reservation.max_passenger_count" name="max_passenger_count" required></ion-input>
+        <img src="../../../assets/img/minus.png" style="height:40px; width:40px;"(click)="on_change_max_passenger_count(-1)">
+        <h3>{{reservation.max_passenger_count}}</h3>
+        <img src="../../../assets/img/plus.png" style="height:40px; width:40px;"(click)="on_change_max_passenger_count(1)">
       </ion-item>
+      <p>現在乗車人数</p>
       <ion-item>
-        <ion-label position="floating">現在乗車人数</ion-label>
-        <ion-input type="number" min="1" max="{{reservation.max_passenger_count}}" [(ngModel)]="reservation.passenger_count" name="passenger_count" required></ion-input>
+        <img src="../../../assets/img/minus.png" style="height:40px; width:40px;"(click)="on_change_passenger_count(-1)">
+        <h3>{{reservation.passenger_count}}</h3>
+        <img src="../../../assets/img/plus.png" style="height:40px; width:40px;"(click)="on_change_passenger_count(1)">
       </ion-item>
       <ion-item>
         <ion-label position="floating">コメント</ion-label>
