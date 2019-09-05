@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common'
+import { YahooService } from '../../services/yahoo/yahoo.service';
 
 @Component({
   selector: 'reservation-post',
@@ -42,6 +43,26 @@ export class ReservationPostPage implements OnInit {
       updated_at: new Date()
     };
 
+  default_mapimg_option = {
+    lat: 35.681093831866455,
+    lon: 139.76716278230535,
+    z: 17,
+    width: 300,
+    height: 200,
+    pointer: 'on'
+  };
+  
+  // departure_img_url: string = "https://map.yahooapis.jp/map/V1/static?appid=dj00aiZpPTM0eVQwUUlPM0s0VSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDI-&lat=35.681093831866455&lon=139.76716278230535&z=17&width=300&height=200&pointer=on";
+  departure_img_url: string = "";
+  // departure_img_url: string = this.yahooService.get_mapimg_url({
+  //   lat: 35.681093831866455,
+  //   lon: 139.76716278230535,
+  //   z: 17,
+  //   width: 300,
+  //   height: 200,
+  //   pointer: 'on'
+  // });
+
   constructor(
     private navCtrl: NavController,
     private modalCtrl: ModalController,
@@ -50,6 +71,7 @@ export class ReservationPostPage implements OnInit {
     private reservationService: ReservationService,
     public alertController: AlertController,
     public datepipe: DatePipe,
+    private yahooService: YahooService
   ) { }
 
   today = new Date();
@@ -61,6 +83,15 @@ export class ReservationPostPage implements OnInit {
     this.min_date = this.datepipe.transform(this.today, "yyyy-MM-dd");
     this.next_year.setFullYear(this.next_year.getFullYear() + 1); 
     this.max_date = this.datepipe.transform(this.next_year, "yyyy-MM-dd");
+    this.departure_img_url = this.yahooService.get_mapimg_url({
+      lat: 37.508048055556,
+      lon: 139.932011666667,
+      z: 17,
+      width: 300,
+      height: 200,
+      // pointer: 'on',
+      pin1: [37.508048055556, 139.932011666667, '会津若松']
+    });
   }
 
   async on_date_changed(){

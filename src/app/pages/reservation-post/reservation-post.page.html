@@ -25,6 +25,7 @@
         <ion-label position="floating">出発地</ion-label>
         <ion-input type="text" [(ngModel)]="data.departure_name" name="departure_name" required></ion-input>
       </ion-item>
+      <img class="location-img" [src]="departure_img_url" *ngIf="departure_img_url !== ''">
       <ion-item>
         <ion-label position="floating">目的地</ion-label>
         <ion-input type="text" [(ngModel)]="data.destination_name" name="destination_name" required></ion-input>
