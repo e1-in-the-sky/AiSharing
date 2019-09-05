@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { MypageEditPage } from '../../pages/mypage-edit/mypage-edit.page';
 import { ReservationEditPage } from '../../pages/reservation-edit/reservation-edit.page';
 import { ReservationFilterPage } from '../../pages/reservation-filter/reservation-filter.page';
+import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
+import { YahooService } from '../../services/yahoo/yahoo.service';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { ReservationFilterPage } from '../../pages/reservation-filter/reservatio
   imports: [
     CommonModule,
     IonicModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule,
+    HttpClientJsonpModule
   ],
   exports: [
     ReservationCardComponent,
@@ -40,6 +44,9 @@ import { ReservationFilterPage } from '../../pages/reservation-filter/reservatio
     ReservationEditPage,
     ReservationFilterPage,
     MypageEditPage
+  ],
+  providers: [
+    YahooService
   ]
 })
 export class AppCommonModule { }

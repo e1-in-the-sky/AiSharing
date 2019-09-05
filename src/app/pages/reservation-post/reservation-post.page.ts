@@ -92,6 +92,9 @@ export class ReservationPostPage implements OnInit {
       // pointer: 'on',
       pin1: [37.508048055556, 139.932011666667, '会津若松']
     });
+    this.yahooService.get_local_info({
+      query: '会津若松駅'
+    });
   }
 
   async on_date_changed(){
