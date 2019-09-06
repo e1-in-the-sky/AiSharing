@@ -53,7 +53,7 @@ export class ReservationPostPage implements OnInit {
   };
   
   // departure_img_url: string = "https://map.yahooapis.jp/map/V1/static?appid=dj00aiZpPTM0eVQwUUlPM0s0VSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDI-&lat=35.681093831866455&lon=139.76716278230535&z=17&width=300&height=200&pointer=on";
-  departure_img_url: string = "";
+  // departure_img_url: string = "";
   // departure_img_url: string = this.yahooService.get_mapimg_url({
   //   lat: 35.681093831866455,
   //   lon: 139.76716278230535,
@@ -62,6 +62,11 @@ export class ReservationPostPage implements OnInit {
   //   height: 200,
   //   pointer: 'on'
   // });
+
+  checkInputDepartureInterval: NodeJS.Timer;
+  departureLocalInfo: any = {};
+  indexOfSelectedDepatureLocation: number = 0;
+  departureLocationMapImageUrl: string = '';
 
   constructor(
     private navCtrl: NavController,
@@ -83,18 +88,18 @@ export class ReservationPostPage implements OnInit {
     this.min_date = this.datepipe.transform(this.today, "yyyy-MM-dd");
     this.next_year.setFullYear(this.next_year.getFullYear() + 1); 
     this.max_date = this.datepipe.transform(this.next_year, "yyyy-MM-dd");
-    this.departure_img_url = this.yahooService.get_mapimg_url({
-      lat: 37.508048055556,
-      lon: 139.932011666667,
-      z: 17,
-      width: 300,
-      height: 200,
-      // pointer: 'on',
-      pin1: [37.508048055556, 139.932011666667, '会津若松']
-    });
-    this.yahooService.get_local_info({
-      query: '会津若松駅'
-    });
+    // this.departureLocationMapImageUrl = this.yahooService.get_mapimg_url({
+    //   lat: 37.508048055556,
+    //   lon: 139.932011666667,
+    //   z: 17,
+    //   width: 300,
+    //   height: 200,
+    //   // pointer: 'on',
+    //   pin1: [37.508048055556, 139.932011666667, '会津若松']
+    // });
+    // this.yahooService.getLocalInfo({
+    //   query: '会津若松駅'
+    // });
   }
 
   async on_date_changed(){
@@ -213,6 +218,73 @@ export class ReservationPostPage implements OnInit {
     this.modalCtrl.dismiss({
       "isUpdate": isUpdate
     });
+  }
+  
+  inputDeparture(ev) {
+    // console.log('ev:', ev);
+    this.data.departure_name = ev;
+    // すでにチェック待ちの場合は停止させる。
+    if (this.checkInputDepartureInterval) {
+      clearTimeout(this.checkInputDepartureInterval);
+      this.checkInputDepartureInterval = undefined;
+    }
+    // ローカルでできるチェックを行う。
+    // if (!val.match(/^[a-zA-Z]+$/)) {
+    //   return;
+    // }
+    if (!ev) {
+      // this.departureLocalInfo = {};
+      return;
+    }
+  
+    this.checkInputDepartureInterval = setTimeout(async () => {
+      this.checkInputDepartureInterval = undefined;
+      // サーバーチェックリクエスト処理
+      var result = await this.yahooService.getLocalInfo({
+        query: this.data.departure_name
+      });
+      result.subscribe((localInfo) => {
+        console.log('localInfo:', localInfo);
+        this.indexOfSelectedDepatureLocation=0;
+        this.departureLocalInfo = localInfo;
+        this.selectDepartureLocation()
+      });
+    }, 1500);
+
+  }
+
+  // serverCheck(val: string): void {
+  //   // すでにチェック待ちの場合は停止させる。
+  //   if (this.checkInterval) {
+  //     clearTimeout(this.checkInterval);
+  //     this.checkInterval = undefined;
+  //   }
+  //   // ローカルでできるチェックを行う。
+  //   if (!val.match(/^[a-zA-Z]+$/)) {
+  //     return;
+  //   }
+ 
+  //   this.checkInterval = setTimeout(() => {
+  //     this.checkInterval = undefined;
+  //     // サーバーチェックリクエスト処理
+  //   }, 1500);
+  // }
+
+  selectDepartureLocation() {
+    if (this.departureLocalInfo.Feature) {
+      var coordinate = this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation]
+        .Geometry.Coordinates.split(',');
+      this.departureLocationMapImageUrl = this.yahooService.get_mapimg_url({
+        lat: Number(coordinate[1]),
+        lon: Number(coordinate[0]),
+        z: 17,
+        width: 300,
+        height: 200,
+        // pointer: 'on',
+        pin: [Number(coordinate[1]), Number(coordinate[0]), this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name]
+        // pin1: [Number(coordinate[1]), Number(coordinate[0]), this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name]
+      });  
+    }
   }
 
 }

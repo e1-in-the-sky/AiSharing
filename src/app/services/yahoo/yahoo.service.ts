@@ -15,13 +15,26 @@ export class YahooService {
 
   get_mapimg_url(param) {
     var query = new URLSearchParams(param).toString();
-    console.log(query);
+    // console.log(query);
     return this.static_map_request_url + '?appid=' + this.appid + '&' + query;
   }
 
-  async get_local_info(param) {
+  async getLocalInfo(param) {
     // https://map.yahooapis.jp/search/local/V1/localSearch?appid=＜あなたのアプリケーションID＞&query=%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3
     param.appid = this.appid;
+    param.output = "json"
+    // console.log('query(original):', param.query);
+
+    // param.query = param.query.replace(/\s+/g, "+");
+    // console.log('query(reprace):', param.query);
+
+    // simple version
+    // this.http.get("https://map.yahooapis.jp/search/local/V1/localSearch?appid=dj00aiZpPTM0eVQwUUlPM0s0VSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDI-&query=会津若松")
+    //   .subscribe((data) => console.log(data));
+
+    // simple jsonp 成功する例
+    // this.http.jsonp("https://map.yahooapis.jp/search/local/V1/localSearch?appid=dj00aiZpPTM0eVQwUUlPM0s0VSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDI-&output=json&query=会津若松", "callback")
+    //   .subscribe((data) => console.log(data));
 
     // ver.1
     // let httpOptions = {
@@ -42,13 +55,15 @@ export class YahooService {
 
     // ver.3
     var query = new URLSearchParams(param).toString();
-    console.log(query);
+    // console.log(query);
     // console.log(this.local_serch_url + '?' + httpParams.toString());
-    var result = this.http.jsonp(this.local_serch_url + '?' + query, "callback");
-    console.log(result);
-    result.subscribe((entry) => {
-      console.log('entry:', entry);
-    });
+    // var result = this.http.jsonp(this.local_serch_url + '?' + query, "callback");
+    // console.log(result);
+    // result.subscribe((entry) => {
+    //   console.log('entry:', entry);
+    // });
+    return this.http.jsonp(this.local_serch_url + '?' + query, "callback");
+
 
   }
 }
