@@ -63,10 +63,22 @@ export class ReservationPostPage implements OnInit {
   //   pointer: 'on'
   // });
 
+  // 出発地に関しての情報
   checkInputDepartureInterval: NodeJS.Timer;
   departureLocalInfo: any = {};
   indexOfSelectedDepatureLocation: number = 0;
   departureLocationMapImageUrl: string = '';
+  selectedDepartureAddress: string = '';
+
+  // 目的地に関しての情報
+  checkInputDestinationInterval: NodeJS.Timer;
+  destinationLocalInfo: any = {};
+  indexOfSelectedDestinationLocation: number = 0;
+  destinationLocationMapImageUrl: string = '';
+  selectedDestinationAddress: string = '';
+
+  // 経路に関しての情報
+  courseMapImageUrl: string = '';
 
   constructor(
     private navCtrl: NavController,
@@ -100,6 +112,7 @@ export class ReservationPostPage implements OnInit {
     // this.yahooService.getLocalInfo({
     //   query: '会津若松駅'
     // });
+    this.setCourseMapImageUrl();
   }
 
   async on_date_changed(){
@@ -138,8 +151,10 @@ export class ReservationPostPage implements OnInit {
           uid: '',
           // owner: user.uid
           owner: this.db.collection('users').doc(user.uid).ref,
-          departure_name: this.data.departure_name,
-          destination_name: this.data.destination_name,
+          // departure_name: this.data.departure_name,
+          // destination_name: this.data.destination_name,
+          departure_name: this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name,
+          destination_name: this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Name,
           departure_point: this.data.departure_point,
           destination_point: this.data.destination_point,
           departure_time: new Date(this.data.departure_time),
@@ -219,6 +234,76 @@ export class ReservationPostPage implements OnInit {
       "isUpdate": isUpdate
     });
   }
+
+  // getMapImageUrl(coordinate, location_name, z=17, width=300, height=200) {
+  getMapImageUrl(localInfo, selectedIndex, z=17, width=300, height=200) {
+    var coordinate = localInfo.Feature[selectedIndex].Geometry.Coordinates.split(',');
+    return this.yahooService.get_mapimg_url({
+      lat: Number(coordinate[1]),
+      lon: Number(coordinate[0]),
+      z: z,
+      width: width,
+      height: height,
+      // pointer: 'on',
+      pin: [Number(coordinate[1]), Number(coordinate[0]), localInfo.Feature[selectedIndex].Name]
+      // pin1: [Number(coordinate[1]), Number(coordinate[0]), this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name]
+    });
+  }
+
+  getCourseMapImageUrl(width=300, height=200) {
+    // var route = this.data.departure_point.latitude.toString() + ','
+    //             + this.data.departure_point.longitude.toString() + ','
+    //             + this.data.destination_point.latitude.toString() + ','
+    //             + this.data.destination_point.longitude.toString();
+    
+    var param = {
+      // route: route,
+      width: width,
+      height: height,
+    }
+    var departure_name = this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name;
+    var destination_name = this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Name;
+    this.courseMapImageUrl = this.yahooService.getCourse(this.data.departure_point, this.data.destination_point, param, departure_name, destination_name);
+  }
+
+  setCourseMapImageUrl() {
+    // 出発地と目的地の位置情報が設定されているか確認
+    var empty_geopoint = new firebase.firestore.GeoPoint(0, 0);
+    var is_exist_geopoint = (!this.data.departure_point.isEqual(empty_geopoint))
+                              && (!this.data.destination_point.isEqual(empty_geopoint));
+
+    if (is_exist_geopoint) { // 設定されている場合
+      // YahooAPIを使い経路図の画像URLを取得
+      this.getCourseMapImageUrl();
+
+    } else {  // 設定されていない場合 
+      // 何もしない
+      return;
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////
+  // 入力が変更されるたびにをリアルタイムでサーバーから取得する
+  // 入力が変更されるたびに毎回取得するとサーバーとの通信が増えるため
+  // setTimeoutで1500ms入力の変更がない場合サーバーと通信する
+  ///////////////////////////////////////////////////////////////
+  // serverCheck(val: string): void {
+  //   // すでにチェック待ちの場合は停止させる。
+  //   if (this.checkInterval) {
+  //     clearTimeout(this.checkInterval);
+  //     this.checkInterval = undefined;
+  //   }
+  //   // ローカルでできるチェックを行う。
+  //   if (!val.match(/^[a-zA-Z]+$/)) {
+  //     return;
+  //   }
+  //
+  //   this.checkInterval = setTimeout(() => {
+  //     this.checkInterval = undefined;
+  //     // サーバーチェックリクエスト処理
+  //   }, 1500);
+  // }
+  ////////////////////////////////////////////////////////////////
   
   inputDeparture(ev) {
     // console.log('ev:', ev);
@@ -240,51 +325,106 @@ export class ReservationPostPage implements OnInit {
     this.checkInputDepartureInterval = setTimeout(async () => {
       this.checkInputDepartureInterval = undefined;
       // サーバーチェックリクエスト処理
+      // 出発地に入力されている名前に関係するロケーションの情報を取得する
       var result = await this.yahooService.getLocalInfo({
         query: this.data.departure_name
       });
       result.subscribe((localInfo) => {
         console.log('localInfo:', localInfo);
+        // 位置に関する初期化設定
+        this.data.departure_point = new firebase.firestore.GeoPoint(0, 0);
+        // 選択されているインデックスを初期化
         this.indexOfSelectedDepatureLocation=0;
+        // 出発地のロケーションの候補を設定する
         this.departureLocalInfo = localInfo;
+        // 出発地を選択する
         this.selectDepartureLocation()
       });
     }, 1500);
 
   }
 
-  // serverCheck(val: string): void {
-  //   // すでにチェック待ちの場合は停止させる。
-  //   if (this.checkInterval) {
-  //     clearTimeout(this.checkInterval);
-  //     this.checkInterval = undefined;
-  //   }
-  //   // ローカルでできるチェックを行う。
-  //   if (!val.match(/^[a-zA-Z]+$/)) {
-  //     return;
-  //   }
- 
-  //   this.checkInterval = setTimeout(() => {
-  //     this.checkInterval = undefined;
-  //     // サーバーチェックリクエスト処理
-  //   }, 1500);
-  // }
-
   selectDepartureLocation() {
     if (this.departureLocalInfo.Feature) {
-      var coordinate = this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation]
-        .Geometry.Coordinates.split(',');
-      this.departureLocationMapImageUrl = this.yahooService.get_mapimg_url({
-        lat: Number(coordinate[1]),
-        lon: Number(coordinate[0]),
-        z: 17,
-        width: 300,
-        height: 200,
-        // pointer: 'on',
-        pin: [Number(coordinate[1]), Number(coordinate[0]), this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name]
-        // pin1: [Number(coordinate[1]), Number(coordinate[0]), this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name]
-      });  
+      // 選択されているロケーションの位置座標の取得
+      var coordinate = this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Geometry.Coordinates.split(',');
+      // 位置情報を登録
+      this.data.departure_point = new firebase.firestore.GeoPoint(Number(coordinate[1]), Number(coordinate[0]));
+
+      // 選択されているロケーションのマップ画像を取得
+      this.departureLocationMapImageUrl
+        = this.getMapImageUrl(
+          this.departureLocalInfo,
+          this.indexOfSelectedDepatureLocation
+          )
+      
+      // 選択されているロケーションの住所を取得
+      this.selectedDepartureAddress = this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Property.Address;
+      
+      // 経路画像のURLを設置する
+      this.setCourseMapImageUrl();
     }
   }
+  
+  inputDestination(ev) {
+    // console.log('ev:', ev);
+    this.data.destination_name = ev;
+    // すでにチェック待ちの場合は停止させる。
+    if (this.checkInputDestinationInterval) {
+      clearTimeout(this.checkInputDestinationInterval);
+      this.checkInputDestinationInterval = undefined;
+    }
+    // ローカルでできるチェックを行う。
+    // if (!val.match(/^[a-zA-Z]+$/)) {
+    //   return;
+    // }
+    if (!ev) {
+      // 目的地の入力が空のときは何もしない
+      return;
+    }
+  
+    this.checkInputDestinationInterval = setTimeout(async () => {
+      this.checkInputDestinationInterval = undefined;
+      // サーバーチェックリクエスト処理
+      // 目的地に入力されている名前に関係するロケーションの情報を取得する
+      var result = await this.yahooService.getLocalInfo({
+        query: this.data.destination_name
+      });
+      result.subscribe((localInfo) => {
+        console.log('localInfo:', localInfo);
+        // 位置に関する初期化設定
+        this.data.destination_point = new firebase.firestore.GeoPoint(0, 0);
+        // 選択されているインデックスを初期化
+        this.indexOfSelectedDestinationLocation=0;
+        // 目的地のロケーションの候補を設定する
+        this.destinationLocalInfo = localInfo;
+        // 目的地を選択する
+        this.selectDestinationLocation()
+      });
+    }, 1500);
+
+  }
+
+  selectDestinationLocation() {
+    if (this.destinationLocalInfo.Feature) {
+      // 選択されているロケーションの位置座標の取得
+      var coordinate = this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Geometry.Coordinates.split(',');
+      // 位置情報を登録
+      this.data.destination_point = new firebase.firestore.GeoPoint(Number(coordinate[1]), Number(coordinate[0]));
+      
+      // 選択されているロケーションのマップ画像を取得
+      this.destinationLocationMapImageUrl
+        = this.getMapImageUrl(
+          this.destinationLocalInfo,
+          this.indexOfSelectedDestinationLocation
+          )
+      
+      // 選択されているロケーションの住所を取得
+      this.selectedDestinationAddress = this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Property.Address;
+      // 経路画像のURLを設置する
+      this.setCourseMapImageUrl();
+    }
+  }
+
 
 }

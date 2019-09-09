@@ -7,6 +7,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 export class YahooService {
   appid: string = 'dj00aiZpPTM0eVQwUUlPM0s0VSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDI-';
   static_map_request_url: string = 'https://map.yahooapis.jp/map/V1/static';
+  course_map_request_url: string = 'https://map.yahooapis.jp/course/V1/routeMap';
   local_serch_url: string = 'https://map.yahooapis.jp/search/local/V1/localSearch';
 
   constructor(
@@ -19,51 +20,48 @@ export class YahooService {
     return this.static_map_request_url + '?appid=' + this.appid + '&' + query;
   }
 
+  // https://map.yahooapis.jp/course/V1/routeMap
+  getCourse(
+    departure_point: firebase.firestore.GeoPoint,
+    destination_point: firebase.firestore.GeoPoint,
+    param,
+    departure_name: string = '',
+    destination_name: string = ''
+    ) {
+    var route = departure_point.latitude.toString() + ','
+    + departure_point.longitude.toString() + ','
+    + destination_point.latitude.toString() + ','
+    + destination_point.longitude.toString();
+
+    var text = '';
+
+    param.appid = this.appid;
+    param.route = route;
+    var query = new URLSearchParams(param).toString();
+
+    // departure_nameが存在する場合
+    if (departure_name){ 
+      text += '&text=' + departure_point.latitude.toString() + ',' + departure_point.longitude.toString()
+              + '|label:' + departure_name;
+    }
+
+    // destination_nameが存在する場合
+    if (destination_name) {
+      text += '&text=' + destination_point.latitude.toString() + ',' +destination_point.longitude.toString()
+              + '|label:' + destination_name;
+    }
+
+    // textが空でないとき
+    query += text;
+    
+    return this.course_map_request_url + '?' + query;
+  }
+
   async getLocalInfo(param) {
     // https://map.yahooapis.jp/search/local/V1/localSearch?appid=＜あなたのアプリケーションID＞&query=%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3
     param.appid = this.appid;
     param.output = "json"
-    // console.log('query(original):', param.query);
-
-    // param.query = param.query.replace(/\s+/g, "+");
-    // console.log('query(reprace):', param.query);
-
-    // simple version
-    // this.http.get("https://map.yahooapis.jp/search/local/V1/localSearch?appid=dj00aiZpPTM0eVQwUUlPM0s0VSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDI-&query=会津若松")
-    //   .subscribe((data) => console.log(data));
-
-    // simple jsonp 成功する例
-    // this.http.jsonp("https://map.yahooapis.jp/search/local/V1/localSearch?appid=dj00aiZpPTM0eVQwUUlPM0s0VSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDI-&output=json&query=会津若松", "callback")
-    //   .subscribe((data) => console.log(data));
-
-    // ver.1
-    // let httpOptions = {
-    //   headers: new HttpHeaders().set('Content-Type','application/json'),
-    //   // headers: new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded'),
-    //   // headers: new HttpHeaders().set('Content-Type','application/xml'),
-    //   // params: new HttpParams(param)
-    //   params: new HttpParams().set('appid', this.appid).set('query', param.query)
-    // };
-    // this.http.get(this.local_serch_url, httpOptions).subscribe(response => {
-    //   console.log('response:', response);
-    // });
-
-    // ver.2
-    // var query = new URLSearchParams(param).toString();
-    // this.http.get(this.local_serch_url + '?' + query, {responseType: 'text'})
-    //   .subscribe(result => {console.log(result)})
-
-    // ver.3
     var query = new URLSearchParams(param).toString();
-    // console.log(query);
-    // console.log(this.local_serch_url + '?' + httpParams.toString());
-    // var result = this.http.jsonp(this.local_serch_url + '?' + query, "callback");
-    // console.log(result);
-    // result.subscribe((entry) => {
-    //   console.log('entry:', entry);
-    // });
     return this.http.jsonp(this.local_serch_url + '?' + query, "callback");
-
-
   }
 }
