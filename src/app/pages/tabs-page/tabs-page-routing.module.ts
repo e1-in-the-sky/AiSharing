@@ -58,6 +58,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'reservation-post',
+        children: [
+          {
+            path: '',
+            loadChildren: '../reservation-post/reservation-post.module#ReservationPostPageModule'
+          }
+        ]
+      },
+      {
         path: 'about',
         children: [
           {

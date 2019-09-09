@@ -145,7 +145,7 @@ export class ReservationPostPage implements OnInit {
 
   async alert_no_information() {
     const alert = await this.alertController.create({
-      message: 'Please fill departure place and destination',
+      message: '出発地と目的地を入力してください',
       buttons: ['OK']
     });
     await alert.present();
@@ -153,7 +153,7 @@ export class ReservationPostPage implements OnInit {
 
   async alert_no_time() {
     const alert = await this.alertController.create({
-      message: 'Please fill in departure time',
+      message: '出発時刻を入力してください',
       buttons: ['OK']
     });
     await alert.present();
@@ -161,7 +161,7 @@ export class ReservationPostPage implements OnInit {
 
   async alert_invalid_time(){
     const alert = await this.alertController.create({
-      message: "Please fill valid departure time",
+      message: "適切な出発時刻を入力してください",
       buttons: ["OK"],
     });
     await alert.present();
@@ -169,7 +169,7 @@ export class ReservationPostPage implements OnInit {
 
   async alert_complete_send() {
     const alert = await this.alertController.create({
-      message: 'Complete posting',
+      message: '投稿が完了しました',
       buttons: ['OK']
     });
     await alert.present();
