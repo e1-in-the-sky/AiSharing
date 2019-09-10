@@ -9,10 +9,44 @@ export class YahooService {
   static_map_request_url: string = 'https://map.yahooapis.jp/map/V1/static';
   course_map_request_url: string = 'https://map.yahooapis.jp/course/V1/routeMap';
   local_serch_url: string = 'https://map.yahooapis.jp/search/local/V1/localSearch';
+  map_js_url: string = 'https://map.yahooapis.jp/js/V1/jsapi';
 
   constructor(
     private http: HttpClient
   ) { }
+
+  getYahooMaps(): Promise<any>  {
+    const win = window as any;
+    // console.log('win:', win);
+    // console.log('win.google:', win.google);
+    // const googleModule = win.google;
+    // if (googleModule && googleModule.maps) {
+    //   return Promise.resolve(googleModule.maps);
+    // }
+
+    return new Promise((resolve, reject) => {
+      // const apiKey = 'AIzaSyB8pf6ZdFQj5qw7rc_HSGrhUwQKfIe9ICw';
+      const script = document.createElement('script');
+      // script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&v=3.31`;
+      script.src = this.map_js_url + '?appid=' + this.appid;
+      // script.async = true;
+      // script.defer = true;
+      document.body.appendChild(script);
+      script.onload = () => {
+        console.log('win(2):', win);
+        console.log('win.google(2):', win.google);
+        console.log('win.Y:', win.Y);
+        // const googleModule2 = win.google;
+        // if (googleModule2 && googleModule2.maps) {
+        //   resolve(googleModule2.maps);
+        if (win.Y) {
+          resolve(win.Y);
+        } else {
+          reject('Yahoo maps not available');
+        }
+      };
+    });
+  }
 
   get_mapimg_url(param) {
     var query = new URLSearchParams(param).toString();

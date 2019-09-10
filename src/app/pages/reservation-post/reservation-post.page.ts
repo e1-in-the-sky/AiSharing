@@ -96,7 +96,16 @@ export class ReservationPostPage implements OnInit {
   min_date = "";
   max_date = "";
 
-  ngOnInit() {
+  // Y: any; // Yahoo APIのY
+
+  async ngOnInit() {
+    const Y = await this.yahooService.getYahooMaps();
+    console.log('Y:', Y);
+    var ymap = new Y.Map("map");
+    console.log('ymap:', ymap);
+    console.log('Y.LayerSetId.NORMAL:', Y.LayerSetId.NORMAL);
+    // ymap.drawMap(new Y.LatLng(35.66572, 139.73100), 17, Y.LayerSetId.NORMAL);
+    ymap.drawMap(new Y.LatLng(35.66572, 139.73100));
     this.min_date = this.datepipe.transform(this.today, "yyyy-MM-dd");
     this.next_year.setFullYear(this.next_year.getFullYear() + 1); 
     this.max_date = this.datepipe.transform(this.next_year, "yyyy-MM-dd");
@@ -112,7 +121,6 @@ export class ReservationPostPage implements OnInit {
     // this.yahooService.getLocalInfo({
     //   query: '会津若松駅'
     // });
-    this.setCourseMapImageUrl();
   }
 
   async on_date_changed(){
