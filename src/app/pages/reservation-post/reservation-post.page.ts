@@ -10,6 +10,7 @@ import { AlertController } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common'
 import { YahooService } from '../../services/yahoo/yahoo.service';
+import { LeafletService } from '../../services/leaflet/leaflet.service';
 
 @Component({
   selector: 'reservation-post',
@@ -80,6 +81,9 @@ export class ReservationPostPage implements OnInit {
   // 経路に関しての情報
   courseMapImageUrl: string = '';
 
+  departureMarker: any;
+  destinationMarker: any;
+
   constructor(
     private navCtrl: NavController,
     private modalCtrl: ModalController,
@@ -88,7 +92,8 @@ export class ReservationPostPage implements OnInit {
     private reservationService: ReservationService,
     public alertController: AlertController,
     public datepipe: DatePipe,
-    private yahooService: YahooService
+    private yahooService: YahooService,
+    private leafletService: LeafletService
   ) { }
 
   today = new Date();
@@ -97,15 +102,21 @@ export class ReservationPostPage implements OnInit {
   max_date = "";
 
   // Y: any; // Yahoo APIのY
+  L: any; // Leaflet APIのL
+  map: any; // Leaflet APIのmap
 
   async ngOnInit() {
-    const Y = await this.yahooService.getYahooMaps();
-    console.log('Y:', Y);
-    var ymap = new Y.Map("map");
-    console.log('ymap:', ymap);
-    console.log('Y.LayerSetId.NORMAL:', Y.LayerSetId.NORMAL);
-    // ymap.drawMap(new Y.LatLng(35.66572, 139.73100), 17, Y.LayerSetId.NORMAL);
-    ymap.drawMap(new Y.LatLng(35.66572, 139.73100));
+    this.prepareLeafletMap();
+    // Yahoo javascript api  ////////////////////////////////////////////////////////////
+    // const Y = await this.yahooService.getYahooMaps();
+    // console.log('Y:', Y);
+    // var ymap = new Y.Map("map");
+    // console.log('ymap:', ymap);
+    // console.log('Y.LayerSetId.NORMAL:', Y.LayerSetId.NORMAL);
+    // // ymap.drawMap(new Y.LatLng(35.66572, 139.73100), 17, Y.LayerSetId.NORMAL);
+    // ymap.drawMap(new Y.LatLng(35.66572, 139.73100));
+    //////////////////////////////////////////////////////////////////////////////////////
+
     this.min_date = this.datepipe.transform(this.today, "yyyy-MM-dd");
     this.next_year.setFullYear(this.next_year.getFullYear() + 1); 
     this.max_date = this.datepipe.transform(this.next_year, "yyyy-MM-dd");
@@ -121,6 +132,84 @@ export class ReservationPostPage implements OnInit {
     // this.yahooService.getLocalInfo({
     //   query: '会津若松駅'
     // });
+  }
+
+  async prepareLeafletMap() {
+    this.L = await this.leafletService.getLeafletMaps();
+    //地図を表示するdiv要素のidを設定
+    this.map = this.L.map('map');
+    //地図の中心とズームレベルを指定
+    this.map.setView([35.681236, 139.767125], 11);  // 東京駅 35.681236 139.767125
+    //表示するタイルレイヤのURLとAttributionコントロールの記述を設定して、地図に追加する
+    // L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+    //     attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+    // }).addTo(map);
+
+    //スケールコントロールを最大幅200px、右下、m単位で地図に追加
+    this.L.control.scale({ maxWidth: 100, position: 'bottomright', imperial: false }).addTo(this.map);
+
+    // ピンの追加
+    // this.moveDepartureMarker(35.40, 136, "ここはどこ？", true);
+    
+    //地理院地図の標準地図タイル
+    var gsi = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
+    {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+    //地理院地図の淡色地図タイル
+    var gsipale = this.L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+      {attribution: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
+    //オープンストリートマップのタイル
+    var osm = this.L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+      {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
+    //baseMapsオブジェクトのプロパティに3つのタイルを設定
+    var baseMaps = {
+      "地理院地図" : gsi,
+      "淡色地図" : gsipale,
+      "オープンストリートマップ"  : osm
+    };
+    //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
+    //コントロール内にプロパティ名が表示される
+    this.L.control.layers(baseMaps).addTo(this.map);
+    gsi.addTo(this.map);
+  }
+
+  moveDepartureMarker(lat, lon, name: string, openPopup: boolean = true) {
+    if (this.departureMarker) {
+      this.map.removeLayer(this.departureMarker);
+    }
+    this.departureMarker = this.L.marker([lat, lon], {title: name});
+    this.departureMarker.addTo(this.map);
+
+    if (name) {
+      // this.departureMarker.bindTooltip(name);
+      if (openPopup) {
+        this.departureMarker.bindPopup(name).openPopup();
+      } else {
+        this.departureMarker.bindPopup(name);
+      }
+    }
+
+    //地図の中心とズームレベルを指定
+    this.map.setView([lat, lon], 11);
+  }
+
+  moveDestinationMarker(lat, lon, name: string, openPopup: boolean = true) {
+    if (this.destinationMarker) {
+      this.map.removeLayer(this.destinationMarker);
+    }
+    this.destinationMarker = this.L.marker([lat, lon], {title: name});
+    this.destinationMarker.addTo(this.map);
+
+    if (name) {
+      // this.destinationMarker.bindTooltip(name);
+      if (openPopup) {
+        this.destinationMarker.bindPopup(name).openPopup();
+      } else {
+        this.destinationMarker.bindPopup(name);
+      }
+    }
+
+    //地図の中心とズームレベルを指定
+    this.map.setView([lat, lon], 11);
   }
 
   async on_date_changed(){
@@ -371,6 +460,9 @@ export class ReservationPostPage implements OnInit {
       
       // 経路画像のURLを設置する
       this.setCourseMapImageUrl();
+
+      // 選択されているロケーションに出発地のピンを移動する(LeafletAPI)
+      this.moveDepartureMarker(Number(coordinate[1]), Number(coordinate[0]), this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name, true);
     }
   }
   
@@ -431,6 +523,9 @@ export class ReservationPostPage implements OnInit {
       this.selectedDestinationAddress = this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Property.Address;
       // 経路画像のURLを設置する
       this.setCourseMapImageUrl();
+
+      // 選択されているロケーションに目的地のピンを移動する(LeafletAPI)
+      this.moveDestinationMarker(Number(coordinate[1]), Number(coordinate[0]), this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Name, true);
     }
   }
 
