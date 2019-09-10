@@ -17,24 +17,48 @@ export class LeafletService {
     // }
 
     return new Promise((resolve, reject) => {
+      // leaflet
+      const leaflet_link = document.createElement('link');
+      leaflet_link.rel = "stylesheet";
+      leaflet_link.href = "https://unpkg.com/leaflet@1.3.0/dist/leaflet.css";
+      document.body.appendChild(leaflet_link);
 
-      const link = document.createElement('link');
-      link.rel = "stylesheet";
-      link.href = "https://unpkg.com/leaflet@1.3.0/dist/leaflet.css";
-      document.body.appendChild(link);
+      const leaflet_script = document.createElement('script');
+      leaflet_script.src = "https://unpkg.com/leaflet@1.3.0/dist/leaflet.js";
+      document.body.appendChild(leaflet_script);
 
-      const script = document.createElement('script');
-      script.src = "https://unpkg.com/leaflet@1.3.0/dist/leaflet.js";
-      document.body.appendChild(script);
-
-      script.onload = () => {
+      leaflet_script.onload = () => {
         console.log('win:', win);
         console.log('win.L:', win.L);
+
         if (win.L) {
           resolve(win.L);
         } else {
           reject('Leaflet maps not available');
         }        
+      };
+    })
+  }
+
+  getLeafletRouting(): Promise<any> {
+    const win = window as any;
+    return new Promise((resolve, reject) => {
+      // leaflet-routing-machine
+      const leaflet_routing_link = document.createElement('link');
+      leaflet_routing_link.rel = "stylesheet";
+      leaflet_routing_link.href = "https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css";
+      document.body.appendChild(leaflet_routing_link);
+
+      const leaflet_routing_script = document.createElement('script');
+      leaflet_routing_script.src = "https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js";
+      
+      document.body.appendChild(leaflet_routing_script);
+      leaflet_routing_script.onload = () => {
+        console.log('win:', win);
+        console.log('win.L:', win.L);
+        console.log('win.L.Routing:', win.L.Routing);
+        console.log('win.L.Routing.control:', win.L.Routing.control);
+        resolve(win.L.Routing);
       };
     })
   }

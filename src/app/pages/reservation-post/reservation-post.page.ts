@@ -170,6 +170,33 @@ export class ReservationPostPage implements OnInit {
     //コントロール内にプロパティ名が表示される
     this.L.control.layers(baseMaps).addTo(this.map);
     gsi.addTo(this.map);
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ルート
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //     leaflet-routing-machine.js:17932 You are using OSRM's demo server. Please note that it is **NOT SUITABLE FOR PRODUCTION USE**.
+    // Refer to the demo server's usage policy: https://github.com/Project-OSRM/osrm-backend/wiki/Api-usage-policy
+    //
+    // To change, set the serviceUrl option.
+    //
+    // Please do not report issues with this server to neither Leaflet Routing Machine or OSRM - it's for
+    // demo only, and will sometimes not be available, or work in unexpected ways.
+    //
+    // Please set up your own OSRM server, or use a paid service provider for production.
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    var routing = await this.leafletService.getLeafletRouting();
+    routing.control({
+      waypoints: [
+        this.L.latLng(37.506801, 139.930428),   // 37.506801 139.930428
+        this.L.latLng(37.47972, 139.96083)   // 東山温泉 37.47972 139.96083
+      ]
+    }).addTo(this.map);
+    // this.L.Routing.control({
+    //   waypoints: [
+    //     this.L.latLng(57.74, 11.94),
+    //     this.L.latLng(57.6792, 11.949)
+    //   ]
+    // }).addTo(this.map);
   }
 
   moveDepartureMarker(lat, lon, name: string, openPopup: boolean = true) {
