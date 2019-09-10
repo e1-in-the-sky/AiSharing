@@ -81,6 +81,10 @@ export class ReservationPostPage implements OnInit {
   // 経路に関しての情報
   courseMapImageUrl: string = '';
 
+  totalDistance: number;
+  totalTime: number;
+  fare: number;
+
   departureMarker: any;
   destinationMarker: any;
 
@@ -104,6 +108,7 @@ export class ReservationPostPage implements OnInit {
   // Y: any; // Yahoo APIのY
   L: any; // Leaflet APIのL
   map: any; // Leaflet APIのmap
+  routeControl: any; // Leaflet APIのroute control
 
   async ngOnInit() {
     this.prepareLeafletMap();
@@ -174,7 +179,7 @@ export class ReservationPostPage implements OnInit {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ルート
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //     leaflet-routing-machine.js:17932 You are using OSRM's demo server. Please note that it is **NOT SUITABLE FOR PRODUCTION USE**.
+    // leaflet-routing-machine.js:17932 You are using OSRM's demo server. Please note that it is **NOT SUITABLE FOR PRODUCTION USE**.
     // Refer to the demo server's usage policy: https://github.com/Project-OSRM/osrm-backend/wiki/Api-usage-policy
     //
     // To change, set the serviceUrl option.
@@ -185,12 +190,39 @@ export class ReservationPostPage implements OnInit {
     // Please set up your own OSRM server, or use a paid service provider for production.
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     var routing = await this.leafletService.getLeafletRouting();
-    routing.control({
+    this.routeControl = routing.control({
       waypoints: [
         this.L.latLng(37.506801, 139.930428),   // 37.506801 139.930428
         this.L.latLng(37.47972, 139.96083)   // 東山温泉 37.47972 139.96083
       ]
     }).addTo(this.map);
+ 
+    this.routeControl.on('routesfound', (e) => {
+      // If you're interested in every time the user selects a route, the routeselected event is more approriate.
+      // console.log('e:', e);
+      // console.log('e.routes:', e.routes);
+      this.totalDistance = e.routes[0].summary.totalDistance;
+      this.totalTime = e.routes[0].summary.totalTime;
+      this.fare = this.getFare(this.totalDistance);
+      console.log('Total Distance (unit: m):', this.totalDistance);
+      console.log('Total Time (unit: s):', this.totalTime);
+      console.log('Fare:', this.fare);
+      // var routes = e.routes;
+    });
+
+    // add new waypoints
+    // L.routing.control.setWaypoints([
+    //   L.latLng(lat1, lon1),
+    //   L.latLng(lat2, lon2)
+    // ]);
+
+    // var totalDistance = routeControl._routes[0].summary.totalDistance;
+    // var totalTime = routeControl._routes[0].summary.totalTime;
+    console.log('routeControl:', this.routeControl);
+    console.log('routeControl.e:', this.routeControl.e);
+    console.log('routeControl.routes:', this.routeControl.routes);
+    // console.log('Total Distance (unit: m):', totalDistance);
+    // console.log('Total Time (unit: s):', totalTime);
     // this.L.Routing.control({
     //   waypoints: [
     //     this.L.latLng(57.74, 11.94),
@@ -237,6 +269,11 @@ export class ReservationPostPage implements OnInit {
 
     //地図の中心とズームレベルを指定
     this.map.setView([lat, lon], 11);
+  }
+
+  // distance の単位はメートル
+  getFare(distance) {
+    return 510 + 90 * Math.floor((distance < 1000 ? 0 : distance - 1000) / 282);
   }
 
   async on_date_changed(){
@@ -490,6 +527,18 @@ export class ReservationPostPage implements OnInit {
 
       // 選択されているロケーションに出発地のピンを移動する(LeafletAPI)
       this.moveDepartureMarker(Number(coordinate[1]), Number(coordinate[0]), this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name, true);
+
+      // 経路(LeafletAPI)
+      var container = this.L.DomUtil.create('div');
+      var latlng = new this.L.LatLng( coordinate[1], coordinate[0] );
+      this.L.popup()
+        .setContent(container)
+        .setLatLng(latlng)
+        .openOn(this.map);
+      this.routeControl.spliceWaypoints(0, 1, latlng);
+      this.map.closePopup();
+      console.log('total distance:', this.totalDistance);
+      console.log('total time:', this.totalTime);
     }
   }
   
@@ -553,6 +602,16 @@ export class ReservationPostPage implements OnInit {
 
       // 選択されているロケーションに目的地のピンを移動する(LeafletAPI)
       this.moveDestinationMarker(Number(coordinate[1]), Number(coordinate[0]), this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Name, true);
+
+      // 経路(LeafletAPI)
+      var container = this.L.DomUtil.create('div');
+      var latlng = new this.L.LatLng( coordinate[1], coordinate[0] );
+      this.L.popup()
+        .setContent(container)
+        .setLatLng(latlng)
+        .openOn(this.map);
+      this.routeControl.spliceWaypoints(this.routeControl.getWaypoints().length - 1, 1, latlng);
+      this.map.closePopup();
     }
   }
 
