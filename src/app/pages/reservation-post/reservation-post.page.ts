@@ -113,13 +113,13 @@ export class ReservationPostPage implements OnInit {
   async ngOnInit() {
     this.prepareLeafletMap();
     // Yahoo javascript api  ////////////////////////////////////////////////////////////
-    // const Y = await this.yahooService.getYahooMaps();
-    // console.log('Y:', Y);
-    // var ymap = new Y.Map("map");
-    // console.log('ymap:', ymap);
-    // console.log('Y.LayerSetId.NORMAL:', Y.LayerSetId.NORMAL);
-    // // ymap.drawMap(new Y.LatLng(35.66572, 139.73100), 17, Y.LayerSetId.NORMAL);
-    // ymap.drawMap(new Y.LatLng(35.66572, 139.73100));
+    const Y = await this.yahooService.getYahooMaps();
+    console.log('Y:', Y);
+    var ymap = new Y.Map("yahoomap");
+    console.log('ymap:', ymap);
+    console.log('Y.LayerSetId.NORMAL:', Y.LayerSetId.NORMAL);
+    // ymap.drawMap(new Y.LatLng(35.66572, 139.73100), 17, Y.LayerSetId.NORMAL);
+    ymap.drawMap(new Y.LatLng(35.66572, 139.73100));
     //////////////////////////////////////////////////////////////////////////////////////
 
     this.min_date = this.datepipe.transform(this.today, "yyyy-MM-dd");
