@@ -126,7 +126,7 @@
     
     <!-- Yahoo API Map -->
     <p *ngIf="totalDistance">距離: {{totalDistance / 1000 | number:'1.0-1'}}km</p>
-    <p *ngIf="totalTime">時間: {{totalTime / 60 | number:'1.0-1'}}分</p>
+    <p *ngIf="totalTime">時間: {{totalTime / 60 | number:'1.0-0'}}分</p>
     <p *ngIf="fare">参考料金: {{fare | number:'1.0-0'}}円</p>
     <div id="map" style="width:300px; height:200px"></div>
     <div id="yahoomap" style="width:300px; height:200px"></div>
