@@ -1,22 +1,33 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { ConferenceData } from '../../providers/conference-data';
 import { Platform } from '@ionic/angular';
 import { LeafletService } from '../../services/leaflet/leaflet.service';
+import { ReservationService } from '../../services/reservation/reservation.service';
+import { Reservation } from '../../models/reservation';
 
 @Component({
   selector: 'page-map',
   templateUrl: 'map.html',
   styleUrls: ['./map.scss']
 })
-export class MapPage implements AfterViewInit {
+export class MapPage implements OnInit{
   @ViewChild('mapCanvas') mapElement: ElementRef;
 
   L: any;
   map: any;
+  markerClusterGroup: any;
+  reservations: Reservation[] = [];
+  reservationMarkers: any;
+
+  zoom: number;
+  posCenter: any;
+  posNW: any;
+  posSE: any;
 
   constructor(
     public confData: ConferenceData,
     public platform: Platform,
+    private reservationService: ReservationService,
     private leafletService: LeafletService
     ) {}
 
@@ -78,8 +89,16 @@ export class MapPage implements AfterViewInit {
 //     };
 //   });
 
-  async ngAfterViewInit() {
-   this.prepareLeafletMap(); 
+  // async ngAfterViewInit() {
+  async ngOnInit() {
+    this.prepareLeafletMap();
+  //  this.reservations = await this.reservationService.getReservations();
+  }
+
+  async ionViewWillEnter() {
+    // this.getMapPosition();
+    this.reservations = await this.reservationService.getReservations();
+    // this.setMarkers();
   }
 
   async prepareLeafletMap() {
@@ -117,6 +136,77 @@ export class MapPage implements AfterViewInit {
     //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
     //コントロール内にプロパティ名が表示される
     this.L.control.layers(baseMaps).addTo(this.map);
-    gsi.addTo(this.map);
+    osm.addTo(this.map);
+    // gsi.addTo(this.map);
+
+    this.markerClusterGroup = await this.leafletService.getLeafletMarkerCluster();
+    // console.log('markerClusterGroup:', this.markerClusterGroup);
+    this.reservationMarkers = this.markerClusterGroup();
+    // console.log('reservationMarkers:', this.reservationMarkers);
+
+    this.getMapPosition();
+    this.setMarkers();
+
+    // マップが動いた時の処理
+    this.map.on('moveend', (e) => {
+      this.getMapPosition();
+      this.setMarkers();
+    });
+
   }
+
+  // マップの位置情報を取得する
+  getMapPosition() {
+    // 中心座標の緯度経度を取得
+    this.posCenter = this.map.getCenter();
+    // console.log('center:', this.posCenter);
+    // ズーム値を取得
+    this.zoom = this.map.getZoom();
+    // console.log('zoom:', this.zoom);
+    // 表示されているマップの角座標の取得
+    var bounds = this.map.getBounds();
+    this.posNW = bounds.getNorthWest();　//北端と西端の座標を取得
+    this.posSE = bounds.getSouthEast();　//南端と東端なら
+    // console.log('posNW:', this.posNW);
+    // console.log('posSE:', this.posSE);
+  }
+
+  // 投稿一覧のマーカーを設置する
+  async setMarkers() {
+    // this.reservationMarkers = [];
+    this.reservationMarkers = this.markerClusterGroup();
+    // var displayReservations = this.reservations.filter(reservation => this.isReservationInDisplayMap(reservation));
+    var displayReservations = this.reservations;
+    // console.log('displayReservations:', displayReservations)
+    displayReservations.forEach(reservation => this.setReservationMarker(reservation));
+    this.map.addLayer(this.reservationMarkers);
+  }
+
+  setReservationMarker(reservation: Reservation) {
+    var departureMarker = this.L.marker([reservation.departure_point.latitude, reservation.departure_point.longitude], {title: reservation.departure_name});
+    // departureMarker.addTo(this.map);
+    departureMarker.bindPopup(reservation.departure_name);
+    var destinationMarker = this.L.marker([reservation.destination_point.latitude, reservation.destination_point.longitude], {title: reservation.destination_name});
+    // destinationMarker.addTo(this.map);
+    destinationMarker.bindPopup(reservation.destination_name);
+
+    // this.reservationMarkers.push(departureMarker);
+    // this.reservationMarkers.push(destinationMarker);
+    this.reservationMarkers.addLayer(departureMarker);
+    this.reservationMarkers.addLayer(destinationMarker);
+  }
+
+  // 投稿の出発地か目的地が表示されているマップ内か判定
+  isReservationInDisplayMap(reservation: Reservation){
+    // console.log('reservation:', reservation);
+    return this.isCoordinateInDisplayMap(reservation.departure_point)
+            || this.isCoordinateInDisplayMap(reservation.destination_point);
+  }
+
+  // 座標が表示されているマップ内か判定
+  isCoordinateInDisplayMap(coordinate) {
+    return ((this.posSE.lat < coordinate.latitude) && (coordinate.latitude < this.posNW.lat))
+            && ((this.posNW.lng < coordinate.longitude) && (coordinate.longitude < this.posSE.lng))
+  }
+  
 }

@@ -16,6 +16,12 @@ export class LeafletService {
     //   return Promise.resolve(googleModule.maps);
     // }
 
+    if (win.L) {
+      return new Promise((resolve, reject) => {
+        resolve(win.L);
+      });
+    }
+
     return new Promise((resolve, reject) => {
       // leaflet
       const leaflet_link = document.createElement('link');
@@ -42,6 +48,13 @@ export class LeafletService {
 
   getLeafletRouting(): Promise<any> {
     const win = window as any;
+
+    if (win.L.Routing) {
+      return new Promise((resolve, reject) => {
+        resolve(win.L.Routing);
+      });
+    }
+
     return new Promise((resolve, reject) => {
       // leaflet-routing-machine
       const leaflet_routing_link = document.createElement('link');
@@ -60,7 +73,34 @@ export class LeafletService {
         console.log('win.L.Routing.control:', win.L.Routing.control);
         resolve(win.L.Routing);
       };
-    })
+    });
+  }
+
+  getLeafletMarkerCluster(): Promise<any> {
+    const win = window as any;
+
+    if (win.L.markerClusterGroup) {
+      return new Promise((resolve, reject) => {
+        resolve(win.L.markerClusterGroup);
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      const leaflet_marker_cluster_link = document.createElement('link');
+      leaflet_marker_cluster_link.rel = "stylesheet";
+      leaflet_marker_cluster_link.href = "https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css";
+      document.body.appendChild(leaflet_marker_cluster_link);
+      const leaflet_marker_cluster_default_link = document.createElement('link');
+      leaflet_marker_cluster_default_link.rel = "stylesheet";
+      leaflet_marker_cluster_default_link.href = "https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css";
+      document.body.appendChild(leaflet_marker_cluster_default_link);
+      const leaflet_marker_cluster_script = document.createElement('script');
+      leaflet_marker_cluster_script.src = "https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js";
+      document.body.appendChild(leaflet_marker_cluster_script);
+      leaflet_marker_cluster_script.onload = () => {
+        resolve(win.L.markerClusterGroup);
+      };
+    });
   }
 
     //   // const apiKey = 'AIzaSyB8pf6ZdFQj5qw7rc_HSGrhUwQKfIe9ICw';

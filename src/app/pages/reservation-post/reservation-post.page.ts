@@ -141,8 +141,9 @@ export class ReservationPostPage implements OnInit {
 
   async prepareLeafletMap() {
     this.L = await this.leafletService.getLeafletMaps();
+
     //地図を表示するdiv要素のidを設定
-    this.map = this.L.map('map');
+    this.map = this.L.map('course_map');
     //地図の中心とズームレベルを指定
     this.map.setView([35.681236, 139.767125], 11);  // 東京駅 35.681236 139.767125
     //表示するタイルレイヤのURLとAttributionコントロールの記述を設定して、地図に追加する
