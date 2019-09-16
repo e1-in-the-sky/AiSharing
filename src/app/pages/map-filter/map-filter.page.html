@@ -1,0 +1,100 @@
+<ion-header>
+    <ion-toolbar>
+  
+      <ion-buttons slot="start">
+        <ion-button (click)="onCancel()">
+          <ion-icon name="arrow-round-back"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+  
+      <ion-title>マップフィルター</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <form>
+      <ion-list>
+  
+        <ion-item>
+          <ion-label position="floating">募集状況</ion-label>
+          <ion-select [(ngModel)]="filter.condition" (change)="filter.condition = $event" name="condition">
+            <ion-select-option value="すべて" [selected]="filter.condition === 'すべて'">すべて</ion-select-option>
+            <ion-select-option value="募集中" [selected]="filter.condition === '募集中'">募集中</ion-select-option>
+            <ion-select-option value="募集終了" [selected]="filter.condition === '募集終了'">募集終了</ion-select-option>
+          </ion-select>
+        </ion-item>
+      
+        <ion-item>
+          <ion-label position="floating">出発地</ion-label>
+          <ion-input type="text" [(ngModel)]="filter.departure_name" name="departure_name" required></ion-input>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label position="floating">目的地</ion-label>
+          <ion-input type="text" [(ngModel)]="filter.destination_name" name="destination_name" required></ion-input>
+        </ion-item>
+  
+        <!-- <ion-item>
+          <ion-label position="floating">出発時刻開始</ion-label>
+          <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm"
+            [ngModel]="filter.departure_time_start | date: 'y-MM-dd HH:mm'" (ngModelChange)="filter.departure_time_start = toDate($event)" name="departure_time_start"></ion-datetime>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label position="floating">出発時刻終了</ion-label>
+          <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm"
+            [ngModel]="filter.departure_time_end | date: 'y-MM-dd HH:mm'" (ngModelChange)="filter.departure_time_end = toDate($event)" name="departure_time_end"></ion-datetime>
+        </ion-item> -->
+  
+        <ion-item>
+          <ion-label position="floating">出発時刻</ion-label>
+          <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm"
+            [ngModel]="filter.departure_time_start | date: 'y-MM-dd HH:mm'" (ngModelChange)="filter.departure_time_start = toDate($event)" name="departure_time_start"></ion-datetime>
+          から
+          <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm"
+          [ngModel]="filter.departure_time_end | date: 'y-MM-dd HH:mm'" (ngModelChange)="filter.departure_time_end = toDate($event)" name="departure_time_end"></ion-datetime>
+        </ion-item>
+  
+        <!-- 並び替え -->
+        <!-- <ion-item>
+          <ion-label position="floating">並び替え</ion-label>
+          <ion-select [(ngModel)]="filter.sort" (change)="filter.sort = $event" name="sort">
+            <ion-select-option value="出発予定時刻が早い順" [selected]="filter.sort === '出発予定時刻が早い順'">出発予定時刻が早い順</ion-select-option>
+            <ion-select-option value="出発予定時刻が遅い順" [selected]="filter.sort === '出発予定時刻が遅い順'">出発予定時刻が遅い順</ion-select-option>
+            <ion-select-option value="投稿が新しい順" [selected]="filter.sort === '投稿が新しい順'">投稿が新しい順</ion-select-option>
+            <ion-select-option value="投稿が古い順" [selected]="filter.sort === '投稿が古い順'">投稿が古い順</ion-select-option>
+          </ion-select>
+        </ion-item> -->
+  
+        <!-- 最大人数に達しているものを除外するかのチェックボックス -->
+        <!-- or -->
+        <!-- 残り乗車可能人数による絞り込み -->
+  
+        <ion-item>
+          <!-- <ion-label>乗車可能人数</ion-label> -->
+          <img src="../../../assets/img/minus.png" (click)="onClickPassengerCapacity(-1)" style="height:30px; width:30px;">
+          <ion-label text-center>{{filter.passenger_capacity}}</ion-label>
+          <img src="../../../assets/img/plus.png" (click)="onClickPassengerCapacity(1)" style="height:30px; width:30px;">
+          <ion-label>人以上乗車可能</ion-label>
+        </ion-item>
+  
+        <!-- <ion-item>
+          <ion-label position="floating">乗車可能人数</ion-label>
+          <ion-select [(ngModel)]="filter.passenger_capacity" (change)="filter.passenger_capacity = $event" name="passenger_capacity">
+            <ion-select-option value="0" [selected]="filter.passenger_capacity === 0">0人</ion-select-option>
+            <ion-select-option value="1" [selected]="filter.passenger_capacity === 1">出発予定時刻が遅い順</ion-select-option>
+            <ion-select-option value="2" [selected]="filter.passenger_capacity === 2">投稿が新しい順</ion-select-option>
+            <ion-select-option value="3" [selected]="filter.passenger_capacity === 3">投稿が古い順</ion-select-option>
+            <ion-select-option value="4" [selected]="filter.passenger_capacity === 4">投稿が古い順</ion-select-option>
+          </ion-select>
+        </ion-item> -->
+  
+  
+  
+        <ion-button expand="block" color="primary" type="button" (click)="onSearch()">検索</ion-button>
+  
+      </ion-list>
+    </form>
+  
+  </ion-content>
+  

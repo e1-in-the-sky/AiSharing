@@ -48,6 +48,11 @@ export class AppComponent implements OnInit {
       icon: 'chatbubbles'
     },
     {
+      title: 'マップ',
+      url: '/app/tabs/map',
+      icon: 'map'
+    },
+    {
       title: 'タクシー予約',
       url: '/app/tabs/taxi-reservation',
       icon: 'paper-plane'

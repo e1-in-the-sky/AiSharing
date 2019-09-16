@@ -11,6 +11,8 @@ import { ReservationEditPage } from '../../pages/reservation-edit/reservation-ed
 import { ReservationFilterPage } from '../../pages/reservation-filter/reservation-filter.page';
 import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import { YahooService } from '../../services/yahoo/yahoo.service';
+import { MapFilterPage } from '../../pages/map-filter/map-filter.page';
+import { MapReservationsPage } from '../../pages/map-reservations/map-reservations.page';
 
 
 @NgModule({
@@ -21,7 +23,9 @@ import { YahooService } from '../../services/yahoo/yahoo.service';
     ReservationPostPage,
     ReservationEditPage,
     ReservationFilterPage,
-    MypageEditPage
+    MypageEditPage,
+    MapFilterPage,
+    MapReservationsPage
   ],
   imports: [
     CommonModule,
@@ -38,12 +42,16 @@ import { YahooService } from '../../services/yahoo/yahoo.service';
     ReservationPostPage,
     ReservationEditPage,
     ReservationFilterPage,
+    MapFilterPage,
+    MapReservationsPage
   ],
   entryComponents: [
     ReservationPostPage,
     ReservationEditPage,
     ReservationFilterPage,
-    MypageEditPage
+    MypageEditPage,
+    MapFilterPage,
+    MapReservationsPage
   ],
   providers: [
     YahooService

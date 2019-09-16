@@ -231,5 +231,4 @@ export class ReservationDetailPage implements OnInit {
     console.error(err);
     return alert;
   }
-
 }

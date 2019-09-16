@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="arrow-round-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  
+    <ion-title>出発地が中心から近い投稿</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="reservations.length !== 0; else nonReservations">
+    <!-- <ng-container *ngFor="let reservation of reservations; trackBy: trackFn"> -->
+    <ng-container *ngFor="let reservation of reservations;">
+      <reservation-card [reservation]='reservation'></reservation-card>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #nonReservations>
+    <div class="none_reservations">
+      <p>投稿がありません</p>
+      <!-- <p>
+        <img src="../../../assets/img/sharing.png" style="height: 3em; width: 3em; display: inline-block; vertical-align: middle;">
+        を押して投稿してみましょう
+      </p> -->
+    </div>
+  </ng-template>
+</ion-content>

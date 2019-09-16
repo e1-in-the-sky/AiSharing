@@ -1,13 +1,59 @@
 <ion-header>
   <ion-toolbar>
+
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    
     <ion-title>Map</ion-title>
+    <!-- 日付をタイトルに入れるサンプル -->
+    <!-- <ion-title>{{displayDate | date: "yyyy/MM/dd"}}</ion-title> -->
+    <!-- <ion-title><label><input type="date" color="primary" class="header-date"></label></ion-title> -->
+    <!-- <ion-title><ion-datetime displayFormat='YYYY年MM月DD日' [ngModel]="displayDate.toISOString()" (ngModelChange)="setDisplayDate($event)"></ion-datetime></ion-title> -->
+    
+    <ion-buttons slot="end">
+      <ion-button (click)="createReservationFilterModal()">
+        <ion-icon slot="icon-only" name="options"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <!-- <div #mapCanvas class="map-canvas"></div> -->
   <div id="map" class="map-canvas"></div>
+
+  <!-- 現在地ボタン -->
+  <!-- <div style="left: 0; top: 48px; width: 48px; height: 48px; background: white; z-index: 2;">現在地</div> -->
+
+  <!-- 選択された投稿について -->
+  <ng-container *ngIf="selectedReservation">
+    <div class="reservation-card" style="padding: 8px; margin: 0 5%; height: auto; bottom: 5%;" [attr.data-order]="reservationCardAnim">
+      <p style="font-size: 12px; margin: 0; display: inline-block;" class="clickable" (click)="map.setView([selectedReservation.departure_point.latitude, selectedReservation.departure_point.longitude], map.getZoom())">出発地: {{selectedReservation.departure_name}}</p><br>
+      <p style="font-size: 12px; margin: 0; display: inline-block;" class="clickable" (click)="map.setView([selectedReservation.destination_point.latitude, selectedReservation.destination_point.longitude], map.getZoom())">目的地: {{selectedReservation.destination_name}}</p><br>
+      <p style="font-size: 12px; margin: 0; display: inline-block;" class="clickable" (click)="goToReservationDetail(selectedReservation.uid)">詳細</p>
+      <!-- <ion-button (click)="goToReservationDetail(selectedReservation.uid)">詳細</ion-button> -->
+      <!-- <span style="font-size: 12px; margin: 0;" (click)="slideOutReservationCard()">左へ</span> -->
+    </div>
+  </ng-container>
+  
+  <!-- スライドについて -->
+  <!-- <ion-slides pager="true" [options]="slideOpts" class="reservation-slides">
+    <ng-container *ngFor="let reservation of reservations;">
+      <ion-slide>
+        <div class="reservation-card" style="padding: 8px;">
+          <p style="font-size: 8px; margin: 0;">出発地: {{reservation.departure_name}}</p>
+          <p style="font-size: 8px; margin: 0;">目的地: {{reservation.destination_name}}</p>
+        </div>
+      </ion-slide>
+    </ng-container>
+    <ion-slide>
+      <p style="font-size: 16px; padding: 16px;" class="reservation-card">スライド終わり</p>
+    </ion-slide>
+  </ion-slides> -->
+
+  <!-- <ng-container *ngFor="let reservation of reservations;"> -->
+    <!-- <reservation-card [reservation]='reservations[0]' class="reservation-card" *ngIf="reservations[0]"></reservation-card> -->
+  <!-- </ng-container> -->
 </ion-content>

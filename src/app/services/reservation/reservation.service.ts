@@ -37,7 +37,7 @@ export class ReservationService {
       } else {
         reservation = new Reservation(doc.data());
         console.log('doc.data():', doc.data());
-        console.log('reservation:', reservation);
+        // console.log('reservation:', reservation);
       }
     })
     .catch(err => {

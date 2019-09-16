@@ -45,6 +45,14 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: '../map/map.module#MapModule'
+          },
+          {
+            path: 'filter',
+            loadChildren: '../map-filter/map-filter.module#MapFilterPageModule'
+          },
+          {
+            path: 'reservations',
+            loadChildren: '../map-reservations/map-reservations.module#MapReservationsPageModule'
           }
         ]
       },

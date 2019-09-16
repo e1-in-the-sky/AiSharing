@@ -122,6 +122,17 @@ export class ReservationPostPage implements OnInit {
     ymap.drawMap(new Y.LatLng(35.66572, 139.73100));
     //////////////////////////////////////////////////////////////////////////////////////
 
+    // Yahoo javascript api 2019/09/14 ///////////////////////////////////////////////////
+    // this.yahooService.getYahooMaps().then( Y => {
+    //   console.log('Y:', Y);
+    //   var ymap = new Y.Map("yahoomap");
+    //   console.log('ymap:', ymap);
+    //   console.log('Y.LayerSetId.NORMAL:', Y.LayerSetId.NORMAL);
+    //   // ymap.drawMap(new Y.LatLng(35.66572, 139.73100), 17, Y.LayerSetId.NORMAL);
+    //   ymap.drawMap(new Y.LatLng(35.66572, 139.73100));  
+    // });
+    //////////////////////////////////////////////////////////////////////////////////////
+
     this.min_date = this.datepipe.transform(this.today, "yyyy-MM-dd");
     this.next_year.setFullYear(this.next_year.getFullYear() + 1); 
     this.max_date = this.datepipe.transform(this.next_year, "yyyy-MM-dd");
@@ -197,6 +208,8 @@ export class ReservationPostPage implements OnInit {
         this.L.latLng(37.47972, 139.96083)   // 東山温泉 37.47972 139.96083
       ]
     }).addTo(this.map);
+
+    this.routeControl.hide();
  
     this.routeControl.on('routesfound', (e) => {
       // If you're interested in every time the user selects a route, the routeselected event is more approriate.
