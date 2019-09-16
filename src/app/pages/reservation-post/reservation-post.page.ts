@@ -151,7 +151,15 @@ export class ReservationPostPage implements OnInit {
   }
 
   async prepareLeafletMap() {
-    this.L = await this.leafletService.getLeafletMaps();
+    const win = window as any;
+    if (!win.L) {
+      console.log("win.Lが存在しません");
+      // this.L = await this.leafletService.getLeafletMaps();
+      this.L = await this.leafletService.includeAllLeaflet();
+    } else {
+      console.log("win.Lが存在します");
+      this.L = win.L;
+    }
 
     //地図を表示するdiv要素のidを設定
     this.map = this.L.map('course_map');
@@ -206,7 +214,8 @@ export class ReservationPostPage implements OnInit {
       waypoints: [
         this.L.latLng(37.506801, 139.930428),   // 37.506801 139.930428
         this.L.latLng(37.47972, 139.96083)   // 東山温泉 37.47972 139.96083
-      ]
+      ],
+      router: win.L.Routing.graphHopper('0dc4f299-a491-452f-97e0-515c296c9453')  // graph hopperを使っている
     }).addTo(this.map);
 
     this.routeControl.hide();
@@ -540,7 +549,7 @@ export class ReservationPostPage implements OnInit {
       this.setCourseMapImageUrl();
 
       // 選択されているロケーションに出発地のピンを移動する(LeafletAPI)
-      this.moveDepartureMarker(Number(coordinate[1]), Number(coordinate[0]), this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name, true);
+      // this.moveDepartureMarker(Number(coordinate[1]), Number(coordinate[0]), this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name, true);
 
       // 経路(LeafletAPI)
       var container = this.L.DomUtil.create('div');
@@ -615,7 +624,7 @@ export class ReservationPostPage implements OnInit {
       this.setCourseMapImageUrl();
 
       // 選択されているロケーションに目的地のピンを移動する(LeafletAPI)
-      this.moveDestinationMarker(Number(coordinate[1]), Number(coordinate[0]), this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Name, true);
+      // this.moveDestinationMarker(Number(coordinate[1]), Number(coordinate[0]), this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Name, true);
 
       // 経路(LeafletAPI)
       var container = this.L.DomUtil.create('div');

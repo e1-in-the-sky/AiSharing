@@ -62,6 +62,7 @@ export class LeafletService {
         // leaflet easy button
         this.includeLeafletEasyButton()
       ]);
+      await this.includeGraphHopper();  // graph Hopperの読み込み
       if (win.L) {
         resolve(win.L);
       } else {
@@ -121,6 +122,27 @@ export class LeafletService {
           resolve(win.L.Routing);
         } else {
           reject('Leaflet Routin Machine not available');
+        }
+      }
+    });
+  }
+
+  includeGraphHopper() {
+    // http://www.liedman.net/lrm-graphhopper/dist/lrm-graphhopper-1.2.0.min.js
+    const win = window as any;
+
+    return new Promise((resolve, reject) => {
+      const graphhopper_script = document.createElement('script');
+      graphhopper_script.src = "http://www.liedman.net/lrm-graphhopper/dist/lrm-graphhopper-1.2.0.min.js";
+      document.body.appendChild(graphhopper_script);
+
+      graphhopper_script.onload = () => {
+        if (win.L.Routing.graphHopper) {
+          console.log("graph hopper is available");
+          resolve(win.L.Routing.graphHopper);
+        } else {
+          console.log('graph hopper is not available');
+          reject("graph hopper is not available");
         }
       }
     });

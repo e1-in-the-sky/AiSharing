@@ -255,17 +255,18 @@ export class MapPage implements OnInit{
 
   }
 
-  async includeLeaflet() {
-    console.log('start include leaflet');
-    this.L = await this.leafletService.includeAllLeaflet();
-    console.log('end include leaflet');
-  }
+  // async includeLeaflet() {
+  //   console.log('start include leaflet');
+  //   this.L = await this.leafletService.includeAllLeaflet();
+  //   console.log('end include leaflet');
+  // }
 
   async initLeafletMap() {
     console.log('start initLeafletMap');
     this.leafletIsAlredyPrepared = true;
     // this.L = await this.leafletService.getLeafletMaps();
-    await this.includeLeaflet();
+    // await this.includeLeaflet();
+    this.L = await this.leafletService.includeAllLeaflet();
     console.log('after leaflet include');
     //地図を表示するdiv要素のidを設定
     this.map = this.L.map('map');
