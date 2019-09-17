@@ -129,11 +129,12 @@ export class LeafletService {
 
   includeGraphHopper() {
     // http://www.liedman.net/lrm-graphhopper/dist/lrm-graphhopper-1.2.0.min.js
+    // https://www.liedman.net/lrm-graphhopper/dist/lrm-graphhopper-1.2.0.min.js
     const win = window as any;
 
     return new Promise((resolve, reject) => {
       const graphhopper_script = document.createElement('script');
-      graphhopper_script.src = "http://www.liedman.net/lrm-graphhopper/dist/lrm-graphhopper-1.2.0.min.js";
+      graphhopper_script.src = "https://www.liedman.net/lrm-graphhopper/dist/lrm-graphhopper-1.2.0.min.js";
       document.body.appendChild(graphhopper_script);
 
       graphhopper_script.onload = () => {
