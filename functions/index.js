@@ -76,6 +76,9 @@ exports.routeSearch = functions.https.onRequest(async (req, res) => {
             max_passenger_count: reservation.max_passenger_count,
             passenger_count: reservation.passenger_count,
             departure_time: reservation.departure_time,
+            fare: reservation.fare,
+            total_distance: reservation.total_distance,
+            total_time: total_time,
             departure_point: {
                 lat: reservation.departure_point.latitude,
                 lng: reservation.departure_point.longitude
@@ -87,6 +90,83 @@ exports.routeSearch = functions.https.onRequest(async (req, res) => {
         }
         reservations.push(reservation);
     });
+    cal_distance = function(dep, des){
+        deg2rad = Math.PI / 180.0;
+        r = 6378.137;
 
-    res.send({departure: departure_point, destination: destination_point, reservations: reservations});
+        slat = dep.lat * deg2rad;
+        slng = dep.lng * deg2rad;
+        glat = des.lat * deg2rad;
+        glng = des.lng * deg2rad;
+
+        sx = Math.cos(slng) * Math.cos(slat);
+        sy = Math.sin(slng) * Math.cos(slat);
+        sz = Math.sin(slat);
+        gx = Math.cos(glng) * Math.cos(glat);
+        gy = Math.sin(glng) * Math.cos(glat);
+        gz = Math.sin(glat);
+
+        dot = sx * gx + sy * gy + sz * gz;
+        d = r * Math.acos(dot);
+        return d;
+    };
+
+    fastreservations = (valid_distance, max_count, walk_speed, car_speed) =>{
+        responses = [];
+        nows = [];
+        reservations.forEach(reserve => {
+            distance = cal_distance(departure_point,reserve.departure_point);
+            if(reserve.condition !== "募集中")return;
+            if(distance <= valid_distance){
+                add = {
+                    logs: {reserve},
+                    destination_point: reserve.destination_point,
+                    total_time: reserve.total_time + distance / walk_speed,
+                };
+                nows.push(add);
+            }
+        });
+        nows.sort((a,b)=>{
+            a_time = a.total_time + cul_distance(a.destination_point, destination_point);
+            b_time = b.total_time + cul_distance(b.destination_point, destination_point);
+            return a_time - b_time;
+        });
+        while(nows.length>=10)nows.pop();
+        nows.forEach(now_target => {
+            distance = cal_distance(now_target.destination_point, destination_point);
+            if(distance > valid_distance)return;
+            responses.push(now_target);
+        });
+        for(var i=0;i<max_count;i+=1){
+            next_nows = [];
+            nows.forEach(now_target => {
+                reservations.forEach(reserve => {
+                    distance = cal_distance(now_target.destination_point,reserve.departure_point);
+                    if(reserve.condition !== "募集中")return;
+                    if(distance <= valid_distance){
+                        add = {
+                            logs: now_target.logs.concat({reserve}),
+                            destination_point: reserve.destination_point,
+                            total_time: reserve.total_time + distance / walk_speed + now_target.total_time,
+                        };
+                        next_nows.push(add);
+                    }
+                });
+            });
+            nows = next_nows;
+            nows.sort((a,b)=>{
+                a_time = a.total_time + cul_distance(a.destination_point, destination_point);
+                b_time = b.total_time + cul_distance(b.destination_point, destination_point);
+                return a_time - b_time;
+            });
+            while(nows.length>=10)nows.pop();
+            nows.forEach(now_target => {
+                distance = cal_distance(now_target.destination_point, destination_point);
+                if(distance > valid_distance)return;
+                responses.push(now_target);
+            });
+        }
+    }
+
+    res.send({departure: departure_point, destination: destination_point, reservations: reservations, Number: distance});
 });
