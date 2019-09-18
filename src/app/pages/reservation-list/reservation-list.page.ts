@@ -46,7 +46,7 @@ export class ReservationListPage implements OnInit {
     this.filter = {
       departure_name: '',
       destination_name: '',
-      departure_time_day: this.today,
+      // departure_time_day: this.today,
       departure_time_start: this.today, // 現在
       departure_time_end: new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 23, 59),
       condition: '募集中',
@@ -278,6 +278,8 @@ export class ReservationListPage implements OnInit {
     this.filterReservationsByPassengerCapacity(this.filter.passenger_capacity);
 
     // filter内の出発期間で絞り込む
+    console.log('departure_time_start:', this.filter.departure_time_start);
+    console.log('departure_time_end:', this.filter.departure_time_end);
     this.filterReservationsByDepartureTime(this.filter.departure_time_start, this.filter.departure_time_end);
 
     // filter内のソート条件でソートする
