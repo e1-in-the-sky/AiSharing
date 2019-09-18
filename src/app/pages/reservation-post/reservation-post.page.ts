@@ -26,6 +26,11 @@ export class ReservationPostPage implements OnInit {
     departure_time: string,
     max_passenger_count: number,
     passenger_count: number,
+
+    total_distance: number,
+    total_time: number,
+    fare: number,
+
     comment: string,
     condition: string,
     created_at: Date | firebase.firestore.Timestamp,
@@ -38,6 +43,11 @@ export class ReservationPostPage implements OnInit {
       departure_time: '',
       max_passenger_count: 4,
       passenger_count: 1,
+
+      total_distance: 0,  // 移動距離(m)
+      total_time: 0,  // 移動時間(s)
+      fare: 0,  // 運賃(円)
+
       comment: 'よろしくお願いします。',
       condition: '募集中',
       created_at: new Date(),
@@ -113,13 +123,13 @@ export class ReservationPostPage implements OnInit {
   async ngOnInit() {
     this.prepareLeafletMap();
     // Yahoo javascript api  ////////////////////////////////////////////////////////////
-    const Y = await this.yahooService.getYahooMaps();
-    console.log('Y:', Y);
-    var ymap = new Y.Map("yahoomap");
-    console.log('ymap:', ymap);
-    console.log('Y.LayerSetId.NORMAL:', Y.LayerSetId.NORMAL);
-    // ymap.drawMap(new Y.LatLng(35.66572, 139.73100), 17, Y.LayerSetId.NORMAL);
-    ymap.drawMap(new Y.LatLng(35.66572, 139.73100));
+    // const Y = await this.yahooService.getYahooMaps();
+    // console.log('Y:', Y);
+    // var ymap = new Y.Map("yahoomap");
+    // console.log('ymap:', ymap);
+    // console.log('Y.LayerSetId.NORMAL:', Y.LayerSetId.NORMAL);
+    // // ymap.drawMap(new Y.LatLng(35.66572, 139.73100), 17, Y.LayerSetId.NORMAL);
+    // ymap.drawMap(new Y.LatLng(35.66572, 139.73100));
     //////////////////////////////////////////////////////////////////////////////////////
 
     // Yahoo javascript api 2019/09/14 ///////////////////////////////////////////////////
@@ -182,6 +192,9 @@ export class ReservationPostPage implements OnInit {
     //地理院地図の淡色地図タイル
     var gsipale = this.L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
       {attribution: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
+    //地理院地図の航空地図タイル
+    var gsiphoto = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
+      {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
     //オープンストリートマップのタイル
     var osm = this.L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
       {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
@@ -189,12 +202,14 @@ export class ReservationPostPage implements OnInit {
     var baseMaps = {
       "地理院地図" : gsi,
       "淡色地図" : gsipale,
+      "航空地図" : gsiphoto,
       "オープンストリートマップ"  : osm
     };
     //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
     //コントロール内にプロパティ名が表示される
     this.L.control.layers(baseMaps).addTo(this.map);
-    gsi.addTo(this.map);
+    osm.addTo(this.map);
+    // gsi.addTo(this.map);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ルート
@@ -344,6 +359,9 @@ export class ReservationPostPage implements OnInit {
           departure_time: new Date(this.data.departure_time),
           max_passenger_count: this.data.max_passenger_count,
           passenger_count: this.data.passenger_count,
+          total_distance: this.totalDistance,  // 移動距離(m)
+          total_time: this.totalTime,  // 移動時間(s)
+          fare: this.fare,  // 運賃(円)
           comment: this.data.comment,
           condition: this.data.condition,
           created_at: new Date(),

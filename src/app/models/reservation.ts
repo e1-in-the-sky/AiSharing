@@ -24,6 +24,11 @@ export class Reservation {
     public destination_point: firebase.firestore.GeoPoint = new firebase.firestore.GeoPoint(0, 0);
     public passenger_count: number = 1;
     public max_passenger_count: number = 4;
+
+    public total_distance: number = 0;  // 移動距離(m)
+    public total_time: number = 0;  // 移動時間(s)
+    public fare: number = 0;  // 運賃(円)
+
     public condition: string = '募集中';
     public comment: string = 'よろしくお願いします。';
     public readonly created_at: firebase.firestore.Timestamp | Date = new firebase.firestore.Timestamp(0, 0);
