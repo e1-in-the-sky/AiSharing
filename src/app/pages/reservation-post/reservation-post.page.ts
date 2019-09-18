@@ -18,6 +18,59 @@ import { LeafletService } from '../../services/leaflet/leaflet.service';
   styleUrls: ['./reservation-post.page.scss'],
 })
 export class ReservationPostPage implements OnInit {
+  // この画面でユーザーができること  /////////////////
+  // 1. 出発地の入力
+  //   a. 提案された出発地の選択
+  // 2. 目的地の入力
+  //   a. 提案された目的地の選択
+  // 3. 出発時刻の選択  (ngModelで対応)
+  // 4. 最大乗車人数の入力  (ngModelで対応)
+  // 5. 現在乗車人数の入力  (ngModelで対応)
+  // 6. コメントの入力  (ngModelで対応)
+  // 7. 投稿
+  /////////////////////////////////////////////////
+
+  // 初期設定  ////////////////////////////////////
+  // 1. 投稿データの初期化
+  // 2. 地図の初期化
+  /////////////////////////////////////////////////
+
+  // 1. 出発地を入力したとき  ///////////////////////
+  //   a. 場所の提案
+  // (済)提案する場所がないときは、エラーを表示(アラートだと入力のたびに出てきて邪魔)
+  // 提案する場所がないときは、手動で出発地を決める（理想）
+  /////////////////////////////////////////////////
+  
+  // 2. 目的地を入力したとき  ///////////////////////
+  //   a. 場所の提案
+  // (済)提案する場所がないときは、エラーを表示(アラートだと入力のたびに出てきて邪魔)
+  // 提案する場所がないときは、手動で目的地を決める(理想)
+  //////////////////////////////////////////////////
+
+  // 7. 投稿  //////////////////////////////////////
+  //  1. 投稿情報のバリデーション
+  //  2. 投稿に必要なデータをまとめる
+  //  3. 投稿
+  //  4. 投稿詳細などほかの画面に遷移
+  //////////////////////////////////////////////////
+
+  // 提案された場所を選んだ時  //////////////////////
+  // 地図にマーカーの設置
+  // もし、出発地と目的地が両方あるときは、ルートを表示する
+  /////////////////////////////////////////////////
+
+  // ルートについて  ///////////////////////////////
+  // 初期: 地図上には何も表示しない
+  // 片方選択: 地図にマーカーだけ設置
+  // 両方選択: 地図にマーカーとルートを設置
+  // 
+  // 両方が選択されている状態から選択されていない状態になったときは
+  // 1. ルートを削除（おそらく同時にマーカーも消される）
+  // 2. 選択されているマーカーを設置
+  // 片方が選択されている状態から選択されていない状態になったときは
+  // 1. マーカーを削除
+  //////////////////////////////////////////////////
+
   data: {
     departure_name: string,
     destination_name: string,
@@ -54,14 +107,17 @@ export class ReservationPostPage implements OnInit {
       updated_at: new Date()
     };
 
-  default_mapimg_option = {
-    lat: 35.681093831866455,
-    lon: 139.76716278230535,
-    z: 17,
-    width: 300,
-    height: 200,
-    pointer: 'on'
-  };
+  isLoadingDeparuteLocalInfo: boolean = false;
+  isLoadingDestinationLocalInfo: boolean = false;
+
+  // default_mapimg_option = {
+  //   lat: 35.681093831866455,
+  //   lon: 139.76716278230535,
+  //   z: 17,
+  //   width: 300,
+  //   height: 200,
+  //   pointer: 'on'
+  // };
   
   // departure_img_url: string = "https://map.yahooapis.jp/map/V1/static?appid=dj00aiZpPTM0eVQwUUlPM0s0VSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDI-&lat=35.681093831866455&lon=139.76716278230535&z=17&width=300&height=200&pointer=on";
   // departure_img_url: string = "";
@@ -174,7 +230,7 @@ export class ReservationPostPage implements OnInit {
     //地図を表示するdiv要素のidを設定
     this.map = this.L.map('course_map');
     //地図の中心とズームレベルを指定
-    this.map.setView([35.681236, 139.767125], 11);  // 東京駅 35.681236 139.767125
+    this.map.setView([37.52378812, 139.938139], 11);  // 東京駅 35.681236 139.767125  会津大学: 37.52378812, 139.938139
     //表示するタイルレイヤのURLとAttributionコントロールの記述を設定して、地図に追加する
     // L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
     //     attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
@@ -227,9 +283,12 @@ export class ReservationPostPage implements OnInit {
     var routing = await this.leafletService.getLeafletRouting();
     this.routeControl = routing.control({
       waypoints: [
-        this.L.latLng(37.506801, 139.930428),   // 37.506801 139.930428
-        this.L.latLng(37.47972, 139.96083)   // 東山温泉 37.47972 139.96083
+        null
+        // this.L.latLng(37.506801, 139.930428),   // 37.506801 139.930428
+        // this.L.latLng(37.47972, 139.96083)   // 東山温泉 37.47972 139.96083
       ],
+      createMarker: (i, waypoints, n) => {
+        return win.L.marker(waypoints.latLng, {draggable: false})},
       router: win.L.Routing.graphHopper('0dc4f299-a491-452f-97e0-515c296c9453')  // graph hopperを使っている
     }).addTo(this.map);
 
@@ -521,9 +580,11 @@ export class ReservationPostPage implements OnInit {
     // }
     if (!ev) {
       // this.departureLocalInfo = {};
+      this.isLoadingDeparuteLocalInfo = false;
       return;
     }
   
+    this.isLoadingDeparuteLocalInfo = true;
     this.checkInputDepartureInterval = setTimeout(async () => {
       this.checkInputDepartureInterval = undefined;
       // サーバーチェックリクエスト処理
@@ -542,6 +603,7 @@ export class ReservationPostPage implements OnInit {
         // 出発地を選択する
         this.selectDepartureLocation()
       });
+      this.isLoadingDeparuteLocalInfo = false;
     }, 1500);
 
   }
@@ -597,9 +659,11 @@ export class ReservationPostPage implements OnInit {
     // }
     if (!ev) {
       // 目的地の入力が空のときは何もしない
-      return;
+    this.isLoadingDestinationLocalInfo = false;
+    return;
     }
   
+    this.isLoadingDestinationLocalInfo = true;
     this.checkInputDestinationInterval = setTimeout(async () => {
       this.checkInputDestinationInterval = undefined;
       // サーバーチェックリクエスト処理
@@ -618,6 +682,7 @@ export class ReservationPostPage implements OnInit {
         // 目的地を選択する
         this.selectDestinationLocation()
       });
+      this.isLoadingDestinationLocalInfo = false;
     }, 1500);
 
   }
