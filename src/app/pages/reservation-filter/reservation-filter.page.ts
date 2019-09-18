@@ -36,6 +36,14 @@ export class ReservationFilterPage implements OnInit {
     return new Date(ev);
   }
 
+  addTime(targetdate, ev){
+    var daytime = new Date(targetdate)
+    daytime.setHours(ev.slice(0,2))
+    daytime.setMinutes(ev.slice(-2))
+    return new Date(daytime);
+  }
+
+
   onSearch() {
     // console.log(this.filter);
     this.dismissModal({
