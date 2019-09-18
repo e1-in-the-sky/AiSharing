@@ -86,7 +86,14 @@
   </ion-card> -->
   <!-- <body>
     </body> -->
-  
+  <ion-label position="floating">日付</ion-label>
+  <!-- <ion-datetime displayFormat="YYYY-MM-DD" pickerFormat="YYYY-MM-DD"
+  [ngModel]="displaydate_start | date: 'y-MM-dd'" (ngModelChange)="displaydate_start = toDate($event); DisplayReservations()" name="displaydate_start"></ion-datetime> -->
+  <input type="date" [ngModel]="displaydate_start | date: 'y-MM-dd'" 
+  (ngModelChange)="displaydate_start = toDate($event); DisplayReservations()" name="displaydate_start">
+  <!-- <ion-button expand="block" color="primary" type="button" (click)="onSearch()">検索</ion-button> -->
+
+
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>

@@ -27,15 +27,12 @@ export class ReservationListPage implements OnInit {
   reservations: Reservation[] = [];
   isLogin: Boolean = false;
   today = new Date();
-  filter = {
-    departure_name: '',
-    destination_name: '',
-    departure_time_start: this.today, // 現在
-    departure_time_end: new Date(this.today.getFullYear(), this.today.getMonth()+1, this.today.getDate(), this.today.getHours(), this.today.getMinutes()), // 一か月後
-    condition: '募集中',
-    sort: '出発予定時刻が早い順',
-    passenger_capacity: 1
-  };
+  filter;
+
+  displaydate_start: Date;
+
+  
+  // displaydate_end = new Date(this.displaydate_start.getFullYear(), this.displaydate_start.getMonth(), this.displaydate_start.getDate()+1, this.displaydate_start.getHours(), this.today.getMinutes())
 
   constructor(
     private reservationService: ReservationService,
@@ -47,14 +44,30 @@ export class ReservationListPage implements OnInit {
   ) {  }
 
   async ngOnInit() {
+    this.today.setHours(12);
+    this.today.setMinutes(0);
+    this.today.setSeconds(0);
+
+    this.filter = {
+      departure_name: '',
+      destination_name: '',
+      departure_time_start: this.today, // 現在
+      departure_time_end: new Date(this.today.getFullYear(), this.today.getMonth()+1, this.today.getDate(), this.today.getHours(), this.today.getMinutes()), // 一か月後
+      condition: '募集中',
+      sort: '出発予定時刻が早い順',
+      passenger_capacity: 1
+    };
     // this.getReservations();
     // this.reservations = this.reservationService.getReservations();
+    console.log("ngoninit")
+    this.DisplayReservations();
     this.getLoginStatus();
     this.getReservationsAndFilterWithLoading();
   }
 
   async doRefresh(event) {
     // await this.getReservations();
+    console.log("dorefresh")
     this.getReservationsAndFilterWithLoading();
     event.target.complete();
   }
@@ -75,6 +88,7 @@ export class ReservationListPage implements OnInit {
     }
   }
 
+  
   async getReservations() {
     try {
       this.reservations = await this.reservationService.getReservations();
@@ -269,5 +283,28 @@ export class ReservationListPage implements OnInit {
         break;
     }
   }
+  
+  toDate(ev) {
+    return new Date(ev);
+  }
+
+  async DisplayReservations() {
+    await this.getReservations();
+    console.log("DisplayReservations")
+    
+    var start_time_timestamp = firebase.firestore.Timestamp.fromDate(this.today);
+    var displaydate_end = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), this.today.getHours()+11, this.today.getMinutes()+59, this.today.getSeconds()+59)
+    var end_time_timestamp = firebase.firestore.Timestamp.fromDate(displaydate_end);    
+    
+    // console.log("displaydate_end=" + displaydate_end)
+
+    this.reservations
+      = this.reservations.filter(reservation =>
+        (reservation.departure_time > start_time_timestamp) && (reservation.departure_time < end_time_timestamp));
+  }
+
+  
+  
+
 
 }
