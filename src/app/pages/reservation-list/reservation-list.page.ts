@@ -48,7 +48,7 @@ export class ReservationListPage implements OnInit {
       destination_name: '',
       departure_time_day: this.today,
       departure_time_start: this.today, // 現在
-      departure_time_end: new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), this.today.getHours()+1, this.today.getMinutes()),
+      departure_time_end: new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 23, 59),
       condition: '募集中',
       sort: '出発予定時刻が早い順',
       passenger_capacity: 1
