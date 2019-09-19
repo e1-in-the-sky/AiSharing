@@ -1,9 +1,9 @@
-<ion-card>
+<ion-card (click)="goToReservationDetail()">
   <ion-card-content>
     <div style="display: flex; vertical-align: middle">
       <!-- アイコン部分 -->
       <ion-item lines="none">
-        <ion-avatar slot="start" (click)="goToAccountDetail()">
+        <ion-avatar slot="start" (click)="goToAccountDetail($event)">
           <ion-img [src]="user.imageURL"></ion-img>
         </ion-avatar>
         <ion-label>
@@ -22,6 +22,9 @@
       <!-- ここまで -->
     </div>
 
+    <ion-label *ngIf="reservation?.onlywoman">女性限定<br></ion-label>
+    <ion-label *ngIf="reservation?.bigluggage">大きい荷物有り<br></ion-label>
+    
     <!-- 出発時刻 -->
     <ion-icon style="padding-left: 10%; vertical-align: middle" name="time"></ion-icon>
     {{reservation.departure_time | timestamp2string}}<br>
@@ -48,15 +51,15 @@
     <!-- <div class="lr-around detail_and_norimasu"> -->
     <!-- 詳細ボタン -->
     <!-- <ion-button fill="clear" size="small" class="discription_button" (click)="goToReservationDetail(reservation.uid)">詳細</ion-button> -->
-    <div class="norimasu_outfilter">
+    <!-- <div class="norimasu_outfilter">
       <img (click)="goToReservationDetail()" src="../../../assets/img/description.png" class="description_button" ontouchstart="">
-    </div>
+    </div> -->
     <!-- ここまで -->
 
-    <div class="wrapper">
+    <!-- <div class="wrapper">
       <a class="fancy-button bg-gradient1"><span (click)="goToReservationDetail()">詳細</span></a>
-      <!-- <a href="#" class="fancy-button bg-gradient2"><span><i class="fa fa-envelope"></i>Messages</span></a> -->
-    </div>
+      <a href="#" class="fancy-button bg-gradient2"><span><i class="fa fa-envelope"></i>Messages</span></a>
+    </div> -->
     
     <div class="norimasu_outfilter">
     <!-- ノリマスボタン -->
