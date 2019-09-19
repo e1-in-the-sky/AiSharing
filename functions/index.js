@@ -60,7 +60,7 @@ exports.routeSearch = functions.https.onRequest(async (req, res) => {
         lng: Number(route[3])
     };
 
-    var valid_distance = query.valid_distance ? query.valid_distance : 10000;
+    var valid_distance = query.valid_distance ? query.valid_distance : 1000;
     var max_count = query.max_count ? query.max_count : 1;
     var walk_speed = 80;  // 80m/m
     var car_speed = 1000;  // 1000m/m
@@ -87,6 +87,8 @@ exports.routeSearch = functions.https.onRequest(async (req, res) => {
             fare: reservation.fare,
             total_distance: reservation.total_distance,
             total_time: reservation.total_time,
+            destination_name: reservation.destination_name,
+            departure_name: reservation.departure_name,
             departure_point: {
                 lat: reservation.departure_point.latitude,
                 lng: reservation.departure_point.longitude
@@ -100,7 +102,7 @@ exports.routeSearch = functions.https.onRequest(async (req, res) => {
     });
     cal_distance = function(dep, des){
         deg2rad = Math.PI / 180.0;
-        r = 6378.137;
+        r = 6378137.0;
 
         slat = dep.lat * deg2rad;
         slng = dep.lng * deg2rad;
@@ -144,6 +146,8 @@ exports.routeSearch = functions.https.onRequest(async (req, res) => {
             }
         });
 
+        console.log("nows size is" + nows.length);
+
         nows.sort((a,b)=>{
             a_time = a.total_time + cal_distance(a.destination_point, destination_point);
             b_time = b.total_time + cal_distance(b.destination_point, destination_point);
@@ -151,11 +155,16 @@ exports.routeSearch = functions.https.onRequest(async (req, res) => {
         });
         
         while(nows.length>=10)nows.pop();
+        new_nows = [];
         nows.forEach(now_target => {
             distance = cal_distance(now_target.destination_point, destination_point);
-            if(distance > valid_distance)return;
+            if(distance > valid_distance){
+                new_nows.push(now_target);
+                return;
+            }
             responses.push(now_target);
         });
+        nows = new_nows;
 
         for(var i=0;i<max_count;i+=1){
             next_nows = [];
@@ -164,9 +173,10 @@ exports.routeSearch = functions.https.onRequest(async (req, res) => {
                     distance = cal_distance(now_target.destination_point,reserve.departure_point);
                     if(reserve.condition !== "募集中")return;
                     if(distance <= valid_distance){
+                        new_logs = now_target.logs.slice();
+                        new_logs.push(reserve);
                         add = {
-                            logs: now_target.logs.push(reserve),
-                            // logs: now_target.logs.concat({reserve}),  // Error: concatがありません
+                            logs: new_logs,
                             destination_point: reserve.destination_point,
                             total_time: reserve.total_time + distance / walk_speed + now_target.total_time,
                         };
@@ -176,16 +186,21 @@ exports.routeSearch = functions.https.onRequest(async (req, res) => {
             });
             nows = next_nows;
             nows.sort((a,b)=>{
-                a_time = a.total_time + cal_distance(a.destination_point, destination_point);
-                b_time = b.total_time + cal_distance(b.destination_point, destination_point);
+                a_time = a.total_time + cal_distance(a.destination_point, destination_point) / car_speed;
+                b_time = b.total_time + cal_distance(b.destination_point, destination_point) / car_speed;
                 return a_time - b_time;
             });
             while(nows.length>=10)nows.pop();
+            new_nows = [];
             nows.forEach(now_target => {
                 distance = cal_distance(now_target.destination_point, destination_point);
-                if(distance > valid_distance)return;
+                if(distance > valid_distance){
+                    new_nows.push(now_target);
+                    return;
+                }
                 responses.push(now_target);
             });
+            nows = new_nows;
         }
         return responses;
     }
