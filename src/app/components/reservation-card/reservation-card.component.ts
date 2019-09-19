@@ -83,7 +83,9 @@ export class ReservationCardComponent implements OnInit, OnChanges {
     this.navController.navigateForward('/app/tabs/reservations/detail/' + this.reservation.uid);
   }
 
-  async goToAccountDetail() {
+  async goToAccountDetail(e: any) {
+    e.stopPropagation();
+    console.log("goToAccountDetailをクリック")
     // for account detail page
     var account_uid = this.reservation.owner.id;
     var path = '/app/tabs/account/' + account_uid;

@@ -25,6 +25,9 @@ export class Reservation {
     public passenger_count: number = 1;
     public max_passenger_count: number = 4;
 
+    public onlywoman: boolean = false;
+    public bigluggage: boolean = false;
+
     public total_distance: number = 0;  // 移動距離(m)
     public total_time: number = 0;  // 移動時間(s)
     public fare: number = 0;  // 運賃(円)

@@ -79,6 +79,8 @@ export class ReservationPostPage implements OnInit {
     departure_time: string,
     max_passenger_count: number,
     passenger_count: number,
+    onlywoman: boolean,
+    bigluggage: boolean,
 
     total_distance: number,
     total_time: number,
@@ -96,6 +98,8 @@ export class ReservationPostPage implements OnInit {
       departure_time: '',
       max_passenger_count: 4,
       passenger_count: 1,
+      onlywoman: false,
+      bigluggage: false, 
 
       total_distance: 0,  // 移動距離(m)
       total_time: 0,  // 移動時間(s)
@@ -421,6 +425,8 @@ export class ReservationPostPage implements OnInit {
           total_distance: this.totalDistance,  // 移動距離(m)
           total_time: this.totalTime,  // 移動時間(s)
           fare: this.fare,  // 運賃(円)
+          onlywoman: this.data.onlywoman,
+          bigluggage: this.data.bigluggage,
           comment: this.data.comment,
           condition: this.data.condition,
           created_at: new Date(),
@@ -458,6 +464,7 @@ export class ReservationPostPage implements OnInit {
     this.data.passenger_count = this.clamp(this.data.passenger_count + amount, 1, this.data.max_passenger_count - 1);
   }
 
+  
   async alert_no_information() {
     const alert = await this.alertController.create({
       message: '出発地と目的地を入力してください',

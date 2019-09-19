@@ -132,6 +132,15 @@
         <img src="../../../assets/img/plus.png" style="height:40px; width:40px;"(click)="on_click_passenger(1)">
       </ion-item>
       <ion-item>
+        <ion-checkbox (click)="data.onlywoman = !data.onlywoman"></ion-checkbox>
+        女性限定
+      </ion-item>
+      <ion-item>
+        <ion-checkbox (click)="data.bigluggage = !data.bigluggage"></ion-checkbox>        
+        大きい荷物あり
+      </ion-item>
+      
+      <ion-item>
         <ion-label position="floating" >コメント</ion-label>
         <ion-input type="text" [(ngModel)]="data.comment" name="comment" maxlength="30"></ion-input>
       </ion-item>
