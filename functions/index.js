@@ -242,7 +242,7 @@ exports.routeSearch2 = functions.https.onRequest(async (req, res) => {
         departure_time = new Date();
     }
     // var departure_time = query.departure_time ? new Date(query.departure_time) : new Date();
-    var valid_distance = query.valid_distance ? query.valid_distance : 10000;
+    var valid_distance = query.valid_distance ? query.valid_distance : 1000;
     var max_count = query.max_count ? query.max_count : 5;
     var walk_speed = 80;  // 80m/m
     var car_speed = 1000;  // 1000m/m
@@ -415,9 +415,16 @@ exports.routeSearch2 = functions.https.onRequest(async (req, res) => {
             // nows.forEach(now => {
             //     if (now.next_total_time < 
             // });
-            nows.filter(now => {
-                
+
+            nows.forEach(now => {
+                if (now.walk_time_2g[now.walk_time_2g.length - 1] < 10) {
+                    responses.push(now);
+                    nows.shift();
+                }
             });
+
+            while (responses.length > 5) responses.pop(); 
+            if (responses.length == 5) break;
 
             current_target = nows[0];
             nows.shift();
