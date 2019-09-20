@@ -27,6 +27,9 @@ export class ReservationCardComponent implements OnInit, OnChanges {
   errors = {
     alreadyDeparted: false
   }
+
+  @Input()
+  isShowNorimasu: boolean = true;
   
   constructor(
     private db: AngularFirestore,
