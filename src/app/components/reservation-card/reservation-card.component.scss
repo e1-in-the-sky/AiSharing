@@ -100,56 +100,56 @@ ion-icon {
 // }
 
 
-// .balloon1-left {
-//   position: relative;
-//   margin: 2em 0 2em 40px;
-//   padding: 15px;
-//   background: #fff0c6;
-//   border-radius: 30px;
-// }
-
-// .balloon1-left:before {
-//   content: "";
-//   position: absolute;
-//   left: -38px;
-//   width: 13px;
-//   height: 12px;
-//   bottom: 0;
-//   background: #fff0c6;
-//   border-radius: 50%;
-// }
-// .balloon1-left:after {
-//   content: "";
-//   position: absolute;
-//   left: -24px;
-//   width: 20px;
-//   height: 18px;
-//   bottom: 3px;
-//   background: #fff0c6;
-//   border-radius: 50%;
-// }
 .balloon1-left {
   position: relative;
-  display: inline-block;
-  margin: 1.5em 0 1.5em 15px;
-  padding: 7px 10px;
-  min-width: 120px;
-  max-width: 100%;
-  color: #555;
-  font-size: 16px;
-  background: #e0edff;
-  //border-radius: 3px;
+  margin: 2em 0 2em 40px;
+  padding: 15px;
+  background: #fff0c6;
+  border-radius: 30px;
 }
 
 .balloon1-left:before {
   content: "";
   position: absolute;
-  top: 50%;
-  left: -30px;
-  margin-top: -15px;
-  border: 15px solid transparent;
-  border-right: 15px solid #e0edff;
+  left: -38px;
+  width: 13px;
+  height: 12px;
+  bottom: 0;
+  background: #fff0c6;
+  border-radius: 50%;
 }
+.balloon1-left:after {
+  content: "";
+  position: absolute;
+  left: -24px;
+  width: 20px;
+  height: 18px;
+  bottom: 3px;
+  background: #fff0c6;
+  border-radius: 50%;
+}
+// .balloon1-left {
+//   position: relative;
+//   display: inline-block;
+//   margin: 1.5em 0 1.5em 15px;
+//   padding: 7px 10px;
+//   min-width: 120px;
+//   max-width: 100%;
+//   color: #555;
+//   font-size: 16px;
+//   background: #e0edff;
+//   //border-radius: 3px;
+// }
+
+// .balloon1-left:before {
+//   content: "";
+//   position: absolute;
+//   // top: 50%;
+//   left: -15px;
+//   // margin-top: -15px;
+//   border: 15px solid transparent;
+//   border-right: 15px solid #e0edff;
+// }
 
 // ion-img{
 //   width:30px;

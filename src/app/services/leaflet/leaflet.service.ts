@@ -385,8 +385,9 @@ export class LeafletService {
     return new win.L.Icon({
       // http://pluspng.com/img-png/you-are-here-png-hd-you-are-here-icon-512.png
       // https://pictogram-free.com/highresolution/001-free-pictogram.png
-      iconUrl: 'https://pictogram-free.com/highresolution/001-free-pictogram.png',
-      iconSize: [30, 30],
+      // iconUrl: 'https://pictogram-free.com/highresolution/001-free-pictogram.png',
+      iconUrl: '../../../assets/img/mylocation.png',
+      iconSize: [20, 30],
       iconAnchor: [15, 30],
       popupAnchor: [0, -25]
     });

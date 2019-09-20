@@ -22,3 +22,13 @@ img.course-img{
     width: 300px;
     height: 200px;
 }
+
+.item.sc-ion-label-md-h, .item .sc-ion-label-md-h{
+    white-space: normal !important;
+}
+
+ion-select-option{
+    ion-label{
+      white-space: normal !important;
+    }
+ }

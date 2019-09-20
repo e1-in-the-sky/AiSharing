@@ -3,13 +3,14 @@
     <div style="display: flex; vertical-align: middle">
       <!-- アイコン部分 -->
       <ion-item lines="none">
-        <ion-avatar slot="start" (click)="goToAccountDetail($event)">
+        <ion-avatar  slot="start" (click)="goToAccountDetail($event)">
           <ion-img [src]="user.imageURL"></ion-img>
         </ion-avatar>
         <ion-label>
           <!-- <h2 (click)="goToAccountDetail()" style="display: inline-block;">{{user.name}}</h2> -->
           <p class="newline_text">{{reservation.comment}}</p>
         </ion-label>
+        
       </ion-item>
       <!-- ここまで -->
 
@@ -29,8 +30,8 @@
     </div>
 
     <div style = "padding-left: 5%;">
-      <ion-chip *ngIf="reservation?.onlywoman" color="primary"><ion-label>女性限定</ion-label></ion-chip>
-      <ion-chip *ngIf="reservation?.bigluggage" color="primary"><ion-label>大きい荷物有り</ion-label></ion-chip>
+      <ion-chip style="pointer-events: none" *ngIf="reservation?.onlywoman" color="primary"><ion-label>女性限定</ion-label></ion-chip>
+      <ion-chip style="pointer-events: none" *ngIf="reservation?.bigluggage" color="primary"><ion-label>大きい荷物有り</ion-label></ion-chip>
     </div>
     
     <!-- 出発時刻 -->
@@ -41,7 +42,7 @@
     <!-- ここまで -->
     
     <!-- 出発地，目的地部分 -->
-    <div style="padding-left: 5%; padding-top: 1%;">
+    <div style="padding-left: 5%; padding-top: 2%;">
       <div style="display: flex;">
         <div class="place_icon"><img src="../../../assets/img/place_start.png"></div>
         <div class="place_text">{{reservation.departure_name}}</div>
@@ -101,7 +102,8 @@
     
     
     <!-- </div> -->
-      
+    <ion-label style="padding-left: 5%; padding-top:1%;">最安値：{{reservation.fare/reservation.max_passenger_count}}円</ion-label>
+    
   </ion-card-content>
 </ion-card>
 
