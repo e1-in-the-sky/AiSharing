@@ -29,7 +29,7 @@ export class ReservationCardComponent implements OnInit, OnChanges {
   }
 
   @Input()
-  isShowNorimasu: boolean = true;
+  isShowNorimasu: boolean = false;
   
   constructor(
     private db: AngularFirestore,

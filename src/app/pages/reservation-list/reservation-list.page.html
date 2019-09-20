@@ -106,7 +106,7 @@
   <ng-container *ngIf="reservations.length !== 0; else nonReservations">
     <!-- <ng-container *ngFor="let reservation of reservations; trackBy: trackFn"> -->
     <ng-container *ngFor="let reservation of reservations;">
-      <reservation-card [reservation]='reservation' [isShowNorimasu]='false'></reservation-card>
+      <reservation-card [reservation]='reservation'></reservation-card>
     </ng-container>
   </ng-container>
 
