@@ -14,26 +14,34 @@
       <!-- ここまで -->
 
       <!-- 人数カウント -->
-      <div style="vertical-align: middle; min-width: 25%;">
-        <ion-icon style="vertical-align: middle" name="people"></ion-icon>
-        <ion-label>{{reservation.passenger_count}} / </ion-label>
-        <ion-label style="font-size: 30px; vertical-align: middle" color="danger">{{reservation.max_passenger_count}}</ion-label><br>    
+      <div style="vertical-align: middle; min-width: 25%;" *ngIf="reservation.passenger_count != reservation.max_passenger_count; else max_passenger">
+        <ion-icon style="vertical-align: middle;" name="people"></ion-icon>
+        <ion-label>{{reservation.passenger_count}}/</ion-label>
+        <ion-label style="vertical-align: middle; font-size: 30px;" color="danger">{{reservation.max_passenger_count}}</ion-label>
       </div>
+      <ng-template #max_passenger style="vertical-align: middle; min-width: 25%;">
+        <ion-icon name="people" style="vertical-align: middle"></ion-icon>
+        <ion-label style="font-size: 30px; vertical-align: miggle;" color="danger">
+          {{reservation.passenger_count}}/{{reservation.max_passenger_count}}
+        </ion-label> 
+      </ng-template>
       <!-- ここまで -->
     </div>
 
-    <ion-label *ngIf="reservation?.onlywoman">女性限定<br></ion-label>
-    <ion-label *ngIf="reservation?.bigluggage">大きい荷物有り<br></ion-label>
+    <div style = "padding-left: 5%;">
+      <ion-chip *ngIf="reservation?.onlywoman" color="primary"><ion-label>女性限定</ion-label></ion-chip>
+      <ion-chip *ngIf="reservation?.bigluggage" color="primary"><ion-label>大きい荷物有り</ion-label></ion-chip>
+    </div>
     
     <!-- 出発時刻 -->
-    <ion-icon style="padding-left: 10%; vertical-align: middle" name="time"></ion-icon>
-    {{reservation.departure_time | timestamp2string}}<br>
-    <ion-label *ngIf="errors?.alreadyDeparted" color="danger">すでに出発予定時刻を過ぎた投稿です!<br></ion-label>
+    <ion-icon style="padding-left: 4%; vertical-align: middle" name="time"></ion-icon>
+    <ion-label style="vertical-align: middle;">{{reservation.departure_time | timestamp2string}}</ion-label>
+    <div><ion-label style="padding-left: 5%;" *ngIf="errors?.alreadyDeparted" color="danger">すでに出発予定時刻を過ぎた投稿です!</ion-label></div>
   
     <!-- ここまで -->
     
     <!-- 出発地，目的地部分 -->
-    <div style="padding-left: 10%; padding-top: 3%;">
+    <div style="padding-left: 5%; padding-top: 1%;">
       <div style="display: flex;">
         <div class="place_icon"><img src="../../../assets/img/place_start.png"></div>
         <div class="place_text">{{reservation.departure_name}}</div>
