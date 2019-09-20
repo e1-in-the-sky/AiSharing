@@ -27,12 +27,19 @@ export class LoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    // this.menu.enable(false);
+    console.log('ngOnInit');
+  }
+
+  ionViewWillEnter() {
     this.menu.enable(false);
+    console.log('ionViewWillEnter');
   }
 
   ionViewDidLeave() {
     // enable the root left menu when leaving the page
-    this.menu.enable(true);
+    // this.menu.enable(true);
+    console.log('ionViewDidLeave');
   }
 
   async onLogin() {
@@ -44,6 +51,7 @@ export class LoginPage implements OnInit {
         .signInWithEmailAndPassword(this.data.email, this.data.password)
         .then(user => {
           this.events.publish('user:login');
+          this.menu.enable(true);
           this.router.navigateByUrl('/app/tabs/reservations');
         }, async error => {
           const alert = await this.alertController.create({
