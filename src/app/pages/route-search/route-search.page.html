@@ -1,9 +1,143 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>route-search</ion-title>
+    <!-- <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons> -->
+    
+    <!-- <ion-buttons slot="start">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="arrow-round-back"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons> 
+    
+
+    <ion-title>rootsearch</ion-title>
+    
+    <!-- <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">Close</ion-button>
+    </ion-buttons> -->
+  
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
+  <form>
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">出発地</ion-label>
+        <ion-input type="text" [(ngModel)]="data.departure_name" (ngModelChange)="inputDeparture($event)" name="departure_name" required></ion-input>
+      </ion-item>
 
+      <ng-container *ngIf="isLoadingDeparuteLocalInfo">
+        <ion-progress-bar type="indeterminate"></ion-progress-bar>
+      </ng-container>
+      
+      <!-- 出発地を選ぶためのセレクトボックス -->
+      <!-- {{departureLocalInfo.Feature?.length}} -->
+      <ng-container *ngIf="departureLocalInfo?.Feature; else nonDepartureLocalInfo">
+        <!-- サンプル -->
+        <!-- <ng-container *ngFor="let localInfo of departureLocalInfo?.Feature; index as i;">
+          <p>{{i+1}}: {{localInfo.Name}}</p>
+        </ng-container> -->
+
+        <!-- セレクトボックス -->
+        <ion-select [(ngModel)]="indexOfSelectedDepatureLocation" name="indexOfSelectedDepatureLocation" (ngModelChange)="selectDepartureLocation()">
+          <ion-select-option *ngFor="let localInfo of departureLocalInfo?.Feature; index as i;" [value]="i" [selected]="i === 0">
+            {{i+1}}: {{localInfo.Name}}
+          </ion-select-option>
+        </ion-select>
+        <!-- <p>indexOfSelectedDepatureLocation: {{indexOfSelectedDepatureLocation}}</p> -->
+        <p>住所: {{selectedDepartureAddress}}</p>
+        <!-- <img class="location-img" [src]="departureLocationMapImageUrl" *ngIf="departureLocationMapImageUrl !== ''"> -->
+      </ng-container>
+
+      <!-- もし候補地が空なら"表示する候補地がありません"と表示する -->
+      <ng-template #nonDepartureLocalInfo>
+        <p>表示する候補地がありません</p>
+        <!-- <ion-select>
+          <ion-select-option [selected]=true>
+            表示する候補地がありません
+          </ion-select-option>
+        </ion-select> -->
+      </ng-template>
+
+      <ion-item>
+        <ion-label position="floating">目的地</ion-label>
+        <ion-input type="text" [(ngModel)]="data.destination_name" (ngModelChange)="inputDestination($event)" name="destination_name" required></ion-input>
+      </ion-item>
+
+      <ng-container *ngIf="isLoadingDestinationLocalInfo">
+        <ion-progress-bar type="indeterminate"></ion-progress-bar>
+      </ng-container>
+
+      <!-- 目的地を選ぶためのセレクトボックス -->
+      <!-- {{destinationLocalInfo.Feature?.length}} -->
+      <ng-container *ngIf="destinationLocalInfo?.Feature; else nonDestinationLocalInfo">
+        <!-- サンプル -->
+        <!-- <ng-container *ngFor="let localInfo of destinationLocalInfo?.Feature; index as i;">
+          <p>{{i+1}}: {{localInfo.Name}}</p>
+        </ng-container> -->
+
+        <!-- セレクトボックス -->
+        <ion-select [(ngModel)]="indexOfSelectedDestinationLocation" name="indexOfSelectedDestinationLocation" (ngModelChange)="selectDestinationLocation()">
+          <ion-select-option *ngFor="let localInfo of destinationLocalInfo?.Feature; index as i;" [value]="i" [selected]="i === 0">
+            {{i+1}}: {{localInfo.Name}}
+          </ion-select-option>
+        </ion-select>
+        <!-- <p>indexOfSelectedDestinationLocation: {{indexOfSelectedDestinationLocation}}</p> -->
+        <p>住所: {{selectedDestinationAddress}}</p>
+        <!-- <img class="location-img" [src]="destinationLocationMapImageUrl" *ngIf="destinationLocationMapImageUrl !== ''"> -->
+      </ng-container>
+
+      <!-- もし候補地が空なら"表示する候補地がありません"と表示する -->
+      <ng-template #nonDestinationLocalInfo>
+        <p>表示する候補地がありません</p>
+        <!-- <ion-select>
+          <ion-select-option [selected]=true>
+            表示する候補地がありません
+          </ion-select-option>
+        </ion-select> -->
+      </ng-template>
+
+      <p *ngIf="totalDistance">距離: {{totalDistance / 1000 | number:'1.0-1'}}km</p>
+      <p *ngIf="totalTime">時間: {{totalTime / 60 | number:'1.0-0'}}分</p>
+      <p *ngIf="fare">参考料金: {{fare | number:'1.0-0'}}円</p>
+  
+      <!-- 経路画像のURLが存在する場合表示する -->
+      <!-- <ng-container *ngIf="courseMapImageUrl !== ''">
+        <p>経路サンプル: (出発地と目的地が20km以上離れている場合、経路は表示されません)</p>
+        <img class="course-img" [src]="courseMapImageUrl">
+      </ng-container> -->
+
+      <ion-item>
+        <ion-label position="floating">出発時刻</ion-label>
+        <!-- <ion-input type="text" [(ngModel)]="data.departure_time" name="departure_time" required></ion-input> -->
+        <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="data.departure_time"
+          name="departure_time" (ngModelChange)="on_date_changed()" [min]="min_date" [max]="max_date"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">最大乗り換え回数</ion-label>
+        <ion-input type="number" [(ngModel)]="max_transfer_time" name="max_transfer_time" requiered></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">最大歩行距離</ion-label>
+        <ion-input type="number" [(ngModel)]="walkable_distance" name="walkable_distance" requiered></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">最大待ち時間</ion-label>
+        <ion-input type="number" [(ngModel)]="stayable_time" name="stayable_time" requiered></ion-input>
+      </ion-item>
+    </ion-list>
+    
+    <p>
+      <ion-button expand="block" color="primary" type="button" (click)="onSearch()">検索</ion-button>
+    </p>
+    <!-- Yahoo API Map -->
+    <!-- <div id="yahoomap" style="width:300px; height:200px"></div> -->
+
+      <div id="course_map" style="width:300px; height:200px; margin: auto; border-radius: 10px;"></div>
+  </form>
 </ion-content>
