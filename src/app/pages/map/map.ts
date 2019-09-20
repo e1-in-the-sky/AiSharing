@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { ConferenceData } from '../../providers/conference-data';
-import { Platform, LoadingController, NavController, ModalController, AlertController } from '@ionic/angular';
+import { Platform, LoadingController, NavController, ModalController, AlertController, ToastController } from '@ionic/angular';
 import { LeafletService } from '../../services/leaflet/leaflet.service';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Reservation } from '../../models/reservation';
@@ -39,6 +39,9 @@ export class MapPage implements OnInit{
   destinationIcon: any;
 
   selectedReservation: Reservation;
+
+  currentPositionMarker: any;
+
   currentPosition = {
     // 東京駅
     lat: 35.681236,
@@ -62,12 +65,15 @@ export class MapPage implements OnInit{
     passenger_capacity: 1
   };
 
+  watchPositionId;
+
   constructor(
     public confData: ConferenceData,
     public platform: Platform,
     private alertCtrl: AlertController,
     private navController: NavController,
     private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController,
     private modalController: ModalController,
     private reservationService: ReservationService,
     private leafletService: LeafletService
@@ -183,7 +189,21 @@ export class MapPage implements OnInit{
       var position = await this.getCurrentPosition();
       this.currentPosition.lat = position.coords.latitude;
       this.currentPosition.lng = position.coords.longitude;
+    } catch (error) {
+      // if (error.toString() == '[object PositionError]') {
+      //   console.log('position error:', error.message);  
+      // }
+      // const toast = await this.toastCtrl.create({
+      //   message: '現在地が取得できません',
+      //   showCloseButton: true,
+      //   position: 'bottom',
+      //   closeButtonText: `Close`
+      // });
 
+      // await toast.present();
+    }
+
+    try {
       // leaflet Mapの初期設定
       if (!this.leafletIsAlredyPrepared) {
         await this.initLeafletMap();
@@ -208,7 +228,17 @@ export class MapPage implements OnInit{
       errAlert.present();
     }
 
+    this.getWatchCurrentPosition();
+    // this.map.setView([this.currentPosition.lat, this.currentPosition.lng], 12);
+
     console.log('end ionViewWillEnter');
+  }
+
+  ionViewDidLeave() {
+    // enable the root left menu when leaving the page
+    console.log('ionViewDidLeave');
+    navigator.geolocation.clearWatch(this.watchPositionId);
+    // this.menu.enable(true);
   }
 
   async createLoading() {
@@ -236,23 +266,48 @@ export class MapPage implements OnInit{
 
   async setCurrentPositionMarker() {
     var currentPositionIcon = await this.leafletService.getCurrentPositionIcon()
-    var currentPositionMarker = this.L.marker([this.currentPosition.lat, this.currentPosition.lng], {title: "Current Position", icon: currentPositionIcon});
-    currentPositionMarker.addTo(this.map);
+    if (this.currentPositionMarker) {
+      this.map.removeLayer(this.currentPositionMarker);
+    }
+    this.currentPositionMarker = this.L.marker([this.currentPosition.lat, this.currentPosition.lng], {title: "Current Position", icon: currentPositionIcon});
+    this.currentPositionMarker.addTo(this.map);
   }
 
   async getCurrentPosition(): Promise<Position> {
     return new Promise((resolve, reject) => {
+      setTimeout(() => reject('geolocation time out'), 30000);
       if (navigator.geolocation) {
         console.log('Geolocation API is enable.');
         navigator.geolocation.getCurrentPosition(position => {
           resolve(position);
+        }, (error) => {
+          reject(error);
         });
       } else {
         reject('Geolocation API is disable.');
         console.log('Geolocation API is disable.');
       }
     });
+  }
 
+  async getWatchCurrentPosition() {
+    var onChangePosition = (position) => {
+      // console.log('change position:', position);
+      this.currentPosition.lat = position.coords.latitude;
+      this.currentPosition.lng = position.coords.longitude;
+      this.setCurrentPositionMarker();  // 現在地のマーカー
+    };
+    var errorChangePosition = async (error) => {
+      const toast = await this.toastCtrl.create({
+        message: '現在地が取得できません',
+        showCloseButton: true,
+        position: 'bottom',
+        closeButtonText: `Close`
+      });
+
+      await toast.present();
+    }
+    this.watchPositionId = navigator.geolocation.watchPosition(onChangePosition, errorChangePosition);
   }
 
   // async includeLeaflet() {
