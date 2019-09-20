@@ -8,6 +8,9 @@ admin.initializeApp({
 
 var fireStore = admin.firestore();
 
+// Add CORS to your index.js
+const cors = require('cors')({origin: true});
+
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
@@ -550,8 +553,257 @@ exports.routeSearch2 = functions.https.onRequest(async (req, res) => {
  * departure_time: 出発予定時刻 (デフォルト)現在時刻 使用例: departure_time=2019-09-19T17:15:00
  * walk_speed: 歩くスピード。単位はm/m(メートル/分) (デフォルト) 80
  * car_speed: 車の速度。単位はm/m(メートル/分) (デフォルト) 1000
- * */ 
+ * */
 exports.routeSearch3 = functions.https.onRequest(async (req, res) => {
+
+    const query = req.query;
+    const error = (message) => {
+        return {Error: message}
+    };
+    if (!query.route) {
+        res.send(error('route does not exist in query'));
+    }
+    var route = query.route;
+    route = route.split(',');
+    if (route.length !== 4) {
+        res.send(error('Incorrect route coordinates'));
+    }
+    var departure_point = {
+        lat: Number(route[0]),
+        lng: Number(route[1])
+    };
+    var destination_point = {
+        lat: Number(route[2]),
+        lng: Number(route[3])
+    };
+
+    var departure_time;
+    if (query.departure_time) {
+        departure_time = new Date(query.departure_time);
+        departure_time.setHours(departure_time.getHours()-9);
+    } else {
+        departure_time = new Date();
+    }
+
+    var valid_distance = query.valid_distance ? Number(query.valid_distance) : 1000;
+    var valid_time = query.valid_time ? Number(query.valid_time) : 60;
+    var max_count = query.max_count ? Number(query.max_count) : 10;
+    var walk_speed = query.walk_speed ? Number(query.walk_speed) : 80;  // 80m/m
+    var car_speed = query.car_speed ? Number(query.car_speed) : 1000;  // 1000m/m
+
+    // console.log('route:', route);
+    // console.log('admin:', admin);
+
+    var reservationsRef = fireStore.collection('reservations');
+    // console.log(reservationsRef);
+    if (!reservationsRef) {
+        res.send(error('reservations collection does not exist in firestore'));
+    }
+
+    var reservations = [];
+    var querySnapshot = await reservationsRef.get();
+    querySnapshot.forEach(doc => {
+        var reservation = doc.data();
+        reservation = {
+            uid: reservation.uid,
+            condition: reservation.condition,
+            max_passenger_count: reservation.max_passenger_count,
+            passenger_count: reservation.passenger_count,
+            departure_time: reservation.departure_time.toDate(),
+            fare: reservation.fare,
+            total_distance: reservation.total_distance,
+            total_time: reservation.total_time / 60,  // reservation.total_timeは秒
+            destination_name: reservation.destination_name,
+            departure_name: reservation.departure_name,
+            departure_point: {
+                lat: reservation.departure_point.latitude,
+                lng: reservation.departure_point.longitude
+            },
+            destination_point: {
+                lat: reservation.destination_point.latitude,
+                lng: reservation.destination_point.longitude
+            }
+        }
+        reservations.push(reservation);
+    });
+    cal_distance = function(dep, des){
+        deg2rad = Math.PI / 180.0;
+        r = 6378137.0;
+
+        slat = dep.lat * deg2rad;
+        slng = dep.lng * deg2rad;
+        glat = des.lat * deg2rad;
+        glng = des.lng * deg2rad;
+
+        sx = Math.cos(slng) * Math.cos(slat);
+        sy = Math.sin(slng) * Math.cos(slat);
+        sz = Math.sin(slat);
+        gx = Math.cos(glng) * Math.cos(glat);
+        gy = Math.sin(glng) * Math.cos(glat);
+        gz = Math.sin(glat);
+
+        dot = sx * gx + sy * gy + sz * gz;
+        d = r * Math.acos(dot);
+        return d;
+    };
+
+    /*
+    * valid_distance: 歩きで許容する距離
+    * valid_time: 次の投稿まで許容する時間
+    * max_count: 乗り換え回数
+    * walk_speed: 徒歩で移動するときの速度
+    * car_speed:
+    * departure_time: 出発時刻
+    */
+    fastreservations = (valid_distance, valid_time, max_count, walk_speed, car_speed, departure_time) =>{
+        responses = [];
+        nows = [];
+
+        reservations.forEach(reserve => {
+            distance = cal_distance(departure_point,reserve.departure_point);
+            if(reserve.condition !== "募集中")return;  // 募集中の投稿のみ使用する
+            if(reserve.max_passenger_count === reserve.passenger_count) return;  // 満員なので使用できない
+            if (departure_time.getTime() / (1000*60) + distance / walk_speed > reserve.departure_time.getTime() / (1000*60)) return;  // すでに出発時刻を過ぎていた場合
+            if (departure_time.getTime() / (1000*60) + distance / walk_speed + valid_time < reserve.departure_time.getTime() / (1000*60)) return;  // 投稿の出発時間まで許容できる時間を過ぎていた場合
+            if(distance <= valid_distance){
+                add = {
+                    logs: [reserve],
+                    destination_point: reserve.destination_point,
+                    total_time: reserve.departure_time.getTime() / (1000*60) + reserve.total_time - departure_time.getTime() / (1000*60),
+                    // total_time: reserve.total_time + distance / walk_speed,   // 投稿の出発までの待ち時間が考慮されていない
+                    total_walk_time: distance / walk_speed
+                };
+                nows.push(add);
+            }
+        });
+
+        console.log("nows size is" + nows.length);
+
+        // 距離と時間が混ざっているので投稿の目的地とゴールまでの距離を車の速度で割って時間にした
+        nows.sort((a,b)=>{
+            // a_time = a.total_time + cal_distance(a.destination_point, destination_point);
+            // b_time = b.total_time + cal_distance(b.destination_point, destination_point);
+            a_time = a.total_time + cal_distance(a.destination_point, destination_point) / car_speed;
+            b_time = b.total_time + cal_distance(b.destination_point, destination_point) / car_speed;
+            return a_time - b_time;
+        });
+        
+        while(nows.length>=10)nows.pop();
+        new_nows = [];
+        nows.forEach(now_target => {
+            distance = cal_distance(now_target.destination_point, destination_point);
+            if(distance > valid_distance){
+                new_nows.push(now_target);  // ゴールまで徒歩で許容する範囲を切っていなかったら探索対象に含める
+                return;
+            }
+            responses.push(now_target);  // ゴールまで徒歩で許容する範囲を切っていたら探索終了でレスポンスに含める
+        });
+        nows = new_nows;
+
+        for(var i=0;i<max_count;i+=1){
+            // console.log('nows size:', nows.length);
+            // console.log('nows:', nows);
+            next_nows = [];
+            nows.forEach(now_target => {
+                reservations.forEach(reserve => {
+                    distance = cal_distance(now_target.destination_point,reserve.departure_point);
+                    if(reserve.condition !== "募集中")return;
+                    if(reserve.max_passenger_count === reserve.passenger_count) return;  // 満員なので使用できない
+                    if (departure_time.getTime() / (1000*60) + now_target.total_time + distance / walk_speed > reserve.departure_time.getTime() / (1000*60)) return;  // すでに出発していた場合
+                    if (departure_time.getTime() / (1000*60) + now_target.total_time + distance / walk_speed + valid_time < reserve.departure_time.getTime() / (1000*60)) return;  // 投稿の出発時間まで許容できる時間を過ぎていた場合
+                    if(distance <= valid_distance){  // 現在地から投稿の出発地まで歩いていける距離のとき
+                        new_logs = now_target.logs.slice();
+                        new_logs.push(reserve);
+                        add = {
+                            logs: new_logs,
+                            destination_point: reserve.destination_point,
+                            total_time: reserve.departure_time.getTime() / (1000*60) + reserve.total_time - departure_time.getTime() / (1000*60),
+                            // total_time: reserve.total_time + distance / walk_speed + now_target.total_time,  // 投稿の出発までの待ち時間が考慮されていない
+                            total_walk_time: now_target.total_walk_time + distance / walk_speed
+                        };
+                        next_nows.push(add);
+                    }
+                });
+            });
+            nows = next_nows;
+            nows.sort((a,b)=>{
+                a_time = a.total_time + cal_distance(a.destination_point, destination_point) / car_speed;
+                b_time = b.total_time + cal_distance(b.destination_point, destination_point) / car_speed;
+                return a_time - b_time;
+            });
+            while(nows.length>=10)nows.pop();
+            new_nows = [];
+            nows.forEach(now_target => {
+                distance = cal_distance(now_target.destination_point, destination_point);
+                if(distance > valid_distance){
+                    new_nows.push(now_target);
+                    return;
+                }
+                now_target.total_time += distance / walk_speed;  // 最後に降りたところからゴールまで徒歩でかかる時間を追加
+                now_target.total_walk_time += distance / walk_speed;  // 最後に降りたところからゴールまで徒歩でかかる時間を追加
+                responses.push(now_target);
+            });
+            nows = new_nows;
+        }
+        return responses;
+    }
+
+    var responses = fastreservations(valid_distance, valid_time, max_count, walk_speed, car_speed, departure_time);
+    console.log('responses:', responses);
+    // res.send({departure: departure_point, destination: destination_point, reservations: reservations, Number: distance, responses: responses});
+
+    // Put this line to your function
+    // Automatically allow cross-origin requests
+    cors(req, res, () => {
+        res.send({responses: responses});
+    });
+
+    res.send({responses: responses});
+    // res.json({responses: responses});
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+/**
+ * 出発地と目的地の緯度経度で最適な乗り合わせ投稿を提案します
+ * https://us-central1-aisharing-ac6cc.cloudfunctions.net/routeSearch3
+ * 使用例: https://us-central1-aisharing-ac6cc.cloudfunctions.net/routeSearch3?route=30,139,21,140&departure_time=2019-09-20T17:43:00
+ * リクエストパラメーター
+ * {String} route (必須) 出発地と目的地の緯度経度。「出発地の緯度、出発地の経度、目的地の緯度、目的地の経度」
+ * valid_distance: 歩きで許容する距離。単位はm (デフォルト)1000
+ * valid_time: 投稿間の許容する空き時間。単位は分 (default) 60
+ * max_count: 乗り換え回数 (デフォルト)10
+ * departure_time: 出発予定時刻 (デフォルト)現在時刻 使用例: departure_time=2019-09-19T17:15:00
+ * walk_speed: 歩くスピード。単位はm/m(メートル/分) (デフォルト) 80
+ * car_speed: 車の速度。単位はm/m(メートル/分) (デフォルト) 1000
+ * */
+exports.routeSearch3_onCall = functions.https.onCall(async (req, res) => {
     const query = req.query;
     const error = (message) => {
         return {Error: message}
@@ -748,5 +1000,5 @@ exports.routeSearch3 = functions.https.onRequest(async (req, res) => {
     console.log('responses:', responses);
     // res.send({departure: departure_point, destination: destination_point, reservations: reservations, Number: distance, responses: responses});
     res.send({responses: responses});
+    // res.json({responses: responses});
 });
-

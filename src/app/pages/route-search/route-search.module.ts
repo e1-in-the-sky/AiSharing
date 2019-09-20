@@ -6,6 +6,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { RouteSearchPage } from './route-search.page';
+// import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
+import { AppCommonModule } from '../../modules/app-common/app-common.module';
 
 const routes: Routes = [
   {
@@ -16,6 +18,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    AppCommonModule,
     CommonModule,
     FormsModule,
     IonicModule,
