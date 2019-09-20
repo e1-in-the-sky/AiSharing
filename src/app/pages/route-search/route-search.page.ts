@@ -27,16 +27,7 @@ export class RouteSearchPage implements OnInit {
       departure_time: "2019-09-25T10:40:00"
     }
     var res = await this.getRoute(param);
-    // console.log('res:', res);
-    // await this.getRoute2(param);
-    // res.subscribe((re) => {
-    //   console.log(re);
-    //   // return re;
-    // }, (err) => {
-    //   throw err;
-    // });
-    // console.log(res);
-
+    console.log('res:', res);
   }
 
   async getRoute2(param) {
@@ -46,26 +37,22 @@ export class RouteSearchPage implements OnInit {
     });
   }
 
-  async getRoute(param) {
+  async getRoute(param): Promise<any> {
     // https://us-central1-aisharing-ac6cc.cloudfunctions.net/routeSearch3?route=37.521469,139.940061,37.395645,139.932622&departure_time=2019-09-25T10:40:00
     if (!param.route) {
       throw Error("routeが必要");
     }
 
-    // param.callback = "JSONP_CALLBACK";
     var query = new URLSearchParams(param).toString();
-    // return this.http.jsonp( this.route_search_url + '?' + query, "callback");
-    console.log(this.route_search_url + '?' + query);
-    // this.http.jsonp(this.route_search_url + '?' + query, "callback")
-    // let headers = new HttpHeaders({'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
-    // this.http.get(this.route_search_url + '?' + query, {headers: headers})
-    this.http.get(this.route_search_url + '?' + query)
+
+    return new Promise((resolve, reject) => {
+      this.http.get(this.route_search_url + '?' + query)
       .subscribe((res) => {
-        console.log('res:', res);
-        return res;
+        resolve(res);
       }, (err) => {
-        throw err;
+        reject(err);
       });
+    });
   }
 
 }
