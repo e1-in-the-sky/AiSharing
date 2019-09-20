@@ -402,7 +402,7 @@ export class LeafletService {
       // iconUrl: 'https://unpkg.com/leaflet@1.3.0/dist/images/marker-icon-2x.png'
       // icon hadow = 'https://unpkg.com/leaflet@1.3.0/dist/images/marker-shadow.png'
       iconUrl: '../../../assets/img/place_start.png',
-      iconSize: [25, 30],
+      iconSize: [20, 30],
       iconAnchor: [12, 30],
       popupAnchor: [0, -25]
     });
@@ -417,7 +417,7 @@ export class LeafletService {
       // iconUrl: 'https://unpkg.com/leaflet@1.3.0/dist/images/marker-icon-2x.png'
       // icon hadow = 'https://unpkg.com/leaflet@1.3.0/dist/images/marker-shadow.png'
       iconUrl: '../../../assets/img/place_goal.png',
-      iconSize: [25, 30],
+      iconSize: [20, 30],
       iconAnchor: [12, 30],
       popupAnchor: [0, -25]
     });
