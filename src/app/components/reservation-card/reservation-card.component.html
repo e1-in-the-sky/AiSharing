@@ -69,7 +69,7 @@
       <a href="#" class="fancy-button bg-gradient2"><span><i class="fa fa-envelope"></i>Messages</span></a>
     </div> -->
     
-    <div class="norimasu_outfilter">
+    <div class="norimasu_outfilter" *ngIf="isShowNorimasu">
     <!-- ノリマスボタン -->
     <!-- <div class="norimasu"> -->
       <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">

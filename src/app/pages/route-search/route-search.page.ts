@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { YahooService } from '../../services/yahoo/yahoo.service';
+
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'route-search',
@@ -10,6 +13,7 @@ export class RouteSearchPage implements OnInit {
   route_search_url = "https://us-central1-aisharing-ac6cc.cloudfunctions.net/routeSearch3"
 
   constructor(
+    private yahooService: YahooService,
     private http: HttpClient
   ) { }
 
@@ -23,30 +27,32 @@ export class RouteSearchPage implements OnInit {
       departure_time: "2019-09-25T10:40:00"
     }
     var res = await this.getRoute(param);
-    res.subscribe((re) => {
-      console.log(re);
-      // return re;
-    }, (err) => {
-      throw err;
-    });
-    // console.log(res);
-
+    console.log('res:', res);
   }
 
-  async getRoute(param) {
+  async getRoute2(param) {
+    var routeSearch3 = firebase.functions().httpsCallable('routeSearch3');
+    routeSearch3(param).then(function(result) {
+      console.log('result:', result);
+    });
+  }
+
+  async getRoute(param): Promise<any> {
     // https://us-central1-aisharing-ac6cc.cloudfunctions.net/routeSearch3?route=37.521469,139.940061,37.395645,139.932622&departure_time=2019-09-25T10:40:00
     if (!param.route) {
       throw Error("routeが必要");
     }
+
     var query = new URLSearchParams(param).toString();
-    // return this.http.jsonp( this.route_search_url + '?' + query, "callback");
-    console.log(this.route_search_url + '?' + query);
-    return this.http.jsonp(this.route_search_url + '?' + query, "callback");
-      // .subscribe((res) => {
-      //   return res;
-      // }, (err) => {
-      //   throw err;
-      // });
+
+    return new Promise((resolve, reject) => {
+      this.http.get(this.route_search_url + '?' + query)
+      .subscribe((res) => {
+        resolve(res);
+      }, (err) => {
+        reject(err);
+      });
+    });
   }
 
 }
