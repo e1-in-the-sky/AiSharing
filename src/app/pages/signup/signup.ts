@@ -31,12 +31,23 @@ export class SignupPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log('ngOnInit');
+    // this.menu.enable(false);
+  }
+
+  ionViewWillEnter() {
     this.menu.enable(false);
+    console.log('ionViewWillEnter');
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter');
   }
 
   ionViewDidLeave() {
     // enable the root left menu when leaving the page
-    this.menu.enable(true);
+    console.log('ionViewDidLeave');
+    // this.menu.enable(true);
   }
 
   async onSignup() {
@@ -51,6 +62,7 @@ export class SignupPage implements OnInit {
         .then(uid => {
           console.log('uid:', uid);
           this.events.publish('user:signup');
+          this.menu.enable(true);
           this.router.navigateByUrl('app/tabs/reservations');
         });
     } catch (error) {

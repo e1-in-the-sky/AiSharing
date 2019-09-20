@@ -115,18 +115,18 @@ export class ReservationListPage implements OnInit {
     });
   }
 
-  async goToPost() {
-    // this.router.navigateByUrl('/app/tabs/reservations/post');
-    const modal = await this.modalController.create({
-      component: ReservationPostPage
-    });
-    await modal.present();
-    const { data } = await modal.onWillDismiss();
-    if (data.isUpdate) {
-      console.log(data);
-      this.getReservationsAndFilterWithLoading();
-    }
-  }
+  // async goToPost() {
+  //   // this.router.navigateByUrl('/app/tabs/reservations/post');
+  //   const modal = await this.modalController.create({
+  //     component: ReservationPostPage
+  //   });
+  //   await modal.present();
+  //   const { data } = await modal.onWillDismiss();
+  //   if (data.isUpdate) {
+  //     console.log(data);
+  //     this.getReservationsAndFilterWithLoading();
+  //   }
+  // }
 
   async createReservationFilterModal() {
     const modal = await this.modalController.create({

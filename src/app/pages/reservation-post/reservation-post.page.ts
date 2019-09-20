@@ -51,7 +51,8 @@ export class ReservationPostPage implements OnInit {
   //  1. 投稿情報のバリデーション
   //  2. 投稿に必要なデータをまとめる
   //  3. 投稿
-  //  4. 投稿詳細などほかの画面に遷移
+  //  4. 画面の情報を初期化
+  //  5. 投稿詳細などほかの画面に遷移
   //////////////////////////////////////////////////
 
   // 提案された場所を選んだ時  //////////////////////
@@ -438,8 +439,8 @@ export class ReservationPostPage implements OnInit {
         // newReservationRef.set(reservation.deserialize());
         this.reservationService.addReservation(reservation).then(() => {
           // this.navCtrl.back();
-          // this.navCtrl.navigateBack('/app/tabs/reservations');
-          this.dismissModal(true);
+          this.navCtrl.navigateBack('/app/tabs/reservations');
+          // this.dismissModal(true);
           // this.router.navigateByUrl('/app/tabs/reservations');
         });
       } else {
