@@ -61,6 +61,11 @@ export class AppComponent implements OnInit {
       title: '相乗り投稿',
       url: '/app/tabs/reservation-post',
       icon: 'logo-model-s'
+    },
+    {
+      title: '相乗り検索',
+      url: '/app/tabs/route-search',
+      icon: 'search'
     }
   ];
   loggedIn = false;

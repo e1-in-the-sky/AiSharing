@@ -75,6 +75,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'route-search',
+        children: [
+          {
+            path: '',
+            loadChildren: '../route-search/route-search.module#RouteSearchPageModule'
+          }
+        ]
+      },
+      {
         path: 'about',
         children: [
           {
