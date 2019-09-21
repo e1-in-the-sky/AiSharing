@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { Reservation } from '../../models/reservation';
@@ -28,6 +28,8 @@ export class ReservationCardComponent implements OnInit, OnChanges {
     alreadyDeparted: false
   }
 
+  unsubscribeReservation: any;
+
   @Input()
   isShowNorimasu: boolean = false;
   
@@ -43,15 +45,25 @@ export class ReservationCardComponent implements OnInit, OnChanges {
     private reservationUsersService: ReservationUsersService
   ) { }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     this.errors.alreadyDeparted = false;
     this.checkAlredyDeparted();
     if (this.reservation.owner){
       this.reservation.owner.get().then(doc => {this.user = new User(doc.data())});
     }
+    console.log('changes:', changes);
+    if (changes.reservation.currentValue.uid !== "") {
+      console.log('reservation ngOnChanges:', this.reservation);
+      this.onSnapshotReservation(changes.reservation.currentValue.uid);
+    }
   }
 
   ngOnInit() {
+  }
+
+  ionViewDidLeave() {
+    console.log('ionViewDidLeave');
+    // this.unsubscribeReservation();
   }
 
   getCurrentUser(): firebase.User | Promise<firebase.User> {
@@ -85,6 +97,29 @@ export class ReservationCardComponent implements OnInit, OnChanges {
     // this.router.navigateByUrl('/app/tabs/reservations/detail/' + this.reservation.uid);
     this.navController.navigateForward('/app/tabs/reservations/detail/' + this.reservation.uid);
   }
+
+  async onSnapshotReservation(uid) {
+    console.log('reservation:', this.reservation);
+    var reservationRef = await this.db.collection('reservations').doc(uid).ref;
+    // var reservation;
+    // await reservationRef.get().then(doc => {
+    //   if (!doc.exists) {
+    //     console.log('No such doc');
+    //   } else {
+    //     reservation = new Reservation(doc.data());
+    //     console.log('doc.data():', doc.data());
+    //     // console.log('reservation:', reservation);
+    //   }
+    // })
+    // .catch(err => {
+    //   console.log('error', err);
+    // });
+    // return reservation;
+    reservationRef.onSnapshot(doc => {
+      console.log('on change reservation document:', uid);
+      this.reservation = new Reservation(doc.data());
+    });
+  }  
 
   async goToAccountDetail(e: any) {
     e.stopPropagation();

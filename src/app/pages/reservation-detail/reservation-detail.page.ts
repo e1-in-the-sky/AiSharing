@@ -31,6 +31,8 @@ export class ReservationDetailPage implements OnInit {
   messages: Message[] = [];
   message: string = '';
   is_my_reservation: boolean = false;
+  unsubscribeMessages: any;
+  unsubscribeReservationUsers: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -66,6 +68,14 @@ export class ReservationDetailPage implements OnInit {
       const alert = await this.createError(err);
       await alert.present();
     }
+  }
+
+  ionViewDidLeave() {
+    console.log('ionViewDidLeave');
+    // console.log('unsubscribeMessages', this.unsubscribeMessages);
+    // console.log('unsubscribeReservationUsers', this.unsubscribeReservationUsers);
+    // this.unsubscribeMessages();
+    // this.unsubscribeReservationUsers();
   }
 
   getCurrentUser(): firebase.User | Promise<firebase.User> {
