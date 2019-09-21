@@ -643,6 +643,8 @@ exports.routeSearch3 = functions.https.onRequest(async (req, res) => {
         gz = Math.sin(glat);
 
         dot = sx * gx + sy * gy + sz * gz;
+        dot = Math.min(1.0,dot);
+        dot = Math.max(-1.0,dot);
         d = r * Math.acos(dot);
         return d;
     };
@@ -677,7 +679,7 @@ exports.routeSearch3 = functions.https.onRequest(async (req, res) => {
             }
         });
 
-        console.log("nows size is" + nows.length);
+        //console.log("nows size is" + nows.length);
 
         // 距離と時間が混ざっているので投稿の目的地とゴールまでの距離を車の速度で割って時間にした
         nows.sort((a,b)=>{
@@ -696,6 +698,8 @@ exports.routeSearch3 = functions.https.onRequest(async (req, res) => {
                 new_nows.push(now_target);  // ゴールまで徒歩で許容する範囲を切っていなかったら探索対象に含める
                 return;
             }
+            now_target.total_time += distance / walk_speed;
+            now_target.total_walk_time += distance / walk_speed;
             responses.push(now_target);  // ゴールまで徒歩で許容する範囲を切っていたら探索終了でレスポンスに含める
         });
         nows = new_nows;
