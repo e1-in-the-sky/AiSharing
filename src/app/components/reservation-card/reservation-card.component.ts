@@ -30,6 +30,8 @@ export class ReservationCardComponent implements OnInit, OnChanges {
 
   @Input()
   isShowNorimasu: boolean = false;
+  isShowDistance: boolean = false;
+  isShowTime: boolean = false;
   
   constructor(
     private db: AngularFirestore,
