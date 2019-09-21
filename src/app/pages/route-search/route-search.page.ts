@@ -7,8 +7,8 @@ import * as firebase from 'firebase';
 import { Reservation } from '../../models/reservation';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ReservationService } from '../../services/reservation/reservation.service';
-import { NavController, ModalController, LoadingController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { NavController, ModalController, LoadingController, NavParams } from '@ionic/angular';
+import { Router, NavigationExtras } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common'
@@ -91,6 +91,7 @@ export class RouteSearchPage implements OnInit {
   destinationMarker: any;
 
   constructor(
+    // private navParams: NavParams,
     private navCtrl: NavController,
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController,
@@ -122,7 +123,7 @@ export class RouteSearchPage implements OnInit {
   route_search_url = "https://us-central1-aisharing-ac6cc.cloudfunctions.net/routeSearch3"
 
   ngOnInit() {
-    this.sample();
+    // this.sample();
     // Yahoo javascript api  ////////////////////////////////////////////////////////////
     // const Y = await this.yahooService.getYahooMaps();
     // console.log('Y:', Y);
@@ -328,6 +329,7 @@ export class RouteSearchPage implements OnInit {
 
   async onSearch(){
 
+    // バリデーション
     if(this.data.destination_name == null || this.data.departure_name == null || this.walkable_distance == null
       || this.stayable_time == null || this.max_transfer_time == null)return;
 
@@ -359,24 +361,31 @@ export class RouteSearchPage implements OnInit {
 
     loading.dismiss();
     
+    // this.navCtrl.navigateForward('', {routes: routes})
+    let navigationExtras: NavigationExtras = {
+      state: {
+        routes: routes
+      }
+    };
+    this.router.navigate(['/app/tabs/route-search/list'], navigationExtras);
 
-    const modal = await this.modalCtrl.create({
-      component: RouteSearchListPage,
-      componentProps: {routes: routes},
-    });
+    // const modal = await this.modalCtrl.create({
+    //   component: RouteSearchListPage,
+    //   componentProps: {routes: routes},
+    // });
 
-    await modal.present();
+    // await modal.present();
+    // const { data } = await modal.onWillDismiss();
   }
 
-
-  async sample() {
-    var param = {
-      route: "37.521469,139.940061,37.395645,139.932622",
-      departure_time: "2019-09-25T10:40:00"
-    }
-    var res = await this.getRoute(param);
-    console.log('res:', res);
-  }
+  // async sample() {
+  //   var param = {
+  //     route: "37.521469,139.940061,37.395645,139.932622",
+  //     departure_time: "2019-09-25T10:40:00"
+  //   }
+  //   var res = await this.getRoute(param);
+  //   console.log('res:', res);
+  // }
 
   async getRoute(param): Promise<any> {
     // https://us-central1-aisharing-ac6cc.cloudfunctions.net/routeSearch3?route=37.521469,139.940061,37.395645,139.932622&departure_time=2019-09-25T10:40:00

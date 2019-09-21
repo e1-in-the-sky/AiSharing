@@ -1,12 +1,20 @@
-<ion-header>
+<ion-header text-center>
   <ion-toolbar>
-    <ion-title>route-search-list</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="arrow-round-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>検索結果</ion-title>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-select [(ngModel)]="indexOfSelectedLocation" name="indexOfSelectedLocation" (ngModelChange)="selectLocation()">
+  <!-- <ion-select [(ngModel)]="indexOfSelectedLocation" name="indexOfSelectedLocation" (ngModelChange)="selectLocation()">
     <ion-select-option *ngFor="let route_info of route_list; index as i;" [value]="i" [selected]="i === 0">
       必要時間{{route_info.total_time | number:'1.0-0'}}分 徒歩:{{route_info.total_walk_time | number:'1.0-0'}}分
     </ion-select-option>
@@ -14,6 +22,19 @@
 
   <ng-container *ngFor="let reservation of selected_reservations;">
     <reservation-card [reservation]='reservation'></reservation-card>
-  </ng-container>
+  </ng-container> -->
+
+  <ion-slides pager="true" [options]="slideOpts" *ngIf="reservations">
+    <ion-slide *ngFor="let route of route_list; index as i;">
+      <div>
+        <ion-label>候補{{i+1}}</ion-label>
+        <ion-label>必要時間: {{route.total_time | number: '1.0-0'}}分</ion-label>
+        <ion-label>徒歩: {{route.total_walk_time | number: '1.0-0'}}分</ion-label>
+        <ng-container *ngFor="let reservation of reservations[i];">
+          <reservation-card [reservation]='reservation'></reservation-card>
+        </ng-container>
+      </div>
+    </ion-slide>
+  </ion-slides>
 
 </ion-content>

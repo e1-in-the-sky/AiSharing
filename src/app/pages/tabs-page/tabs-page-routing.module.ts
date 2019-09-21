@@ -80,6 +80,10 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: '../route-search/route-search.module#RouteSearchPageModule'
+          },
+          {
+            path: 'list',
+            loadChildren: '../route-search-list/route-search-list.module#RouteSearchListPageModule'
           }
         ]
       },
