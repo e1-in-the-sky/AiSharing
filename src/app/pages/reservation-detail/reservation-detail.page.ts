@@ -11,6 +11,7 @@ import { UserService } from '../../services/user/user.service';
 import { ReservationUsers } from '../../models/reservation-users';
 import { NavController, LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { ReservationEditPage } from '../reservation-edit/reservation-edit.page';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'reservation-detail',
@@ -41,7 +42,8 @@ export class ReservationDetailPage implements OnInit {
     private reservationService: ReservationService,
     private messageService: MessageService,
     private userService: UserService,
-    private reservationUsersService: ReservationUsersService
+    private reservationUsersService: ReservationUsersService,
+    private db: AngularFirestore
   ) { }
 
   async ngOnInit() {
@@ -53,8 +55,10 @@ export class ReservationDetailPage implements OnInit {
       var current_user = await this.getCurrentUser();
       this.current_user = await this.userService.getUser(current_user.uid);
       this.getReservation();
-      this.getMessages();
-      this.getThisReservationUsers();
+      // this.getMessages();  // comment out
+      this.onSnapshotReservationMessage(this.reservationId);
+      // this.getThisReservationUsers();
+      this.onSnapshotReservationUsersByReservationUid(this.reservationId);
       loading.dismiss();
 
     } catch (err) {
@@ -108,6 +112,23 @@ export class ReservationDetailPage implements OnInit {
     });
   }
 
+  async onSnapshotReservationMessage(reservation_uid) {
+    console.log('getReservationMessages:\nreservation_uid:', reservation_uid);
+    var reservation_ref = this.db.collection('reservations').doc(reservation_uid).ref;
+    var messages_ref = this.db.collection('messages').ref;
+    return messages_ref
+      .where('reservation', '==', reservation_ref)
+      .onSnapshot((querySnapShot) => {
+        var messages: Message[] = [];
+        querySnapShot.forEach(doc => {
+          messages.push(new Message(doc.data()));
+        });
+        this.messages = messages.sort((a, b) => {
+          return a.created_at > b.created_at ? 1 : -1;
+        });
+      });
+  }  
+
   async sendMessage() {
     console.log('sendMessage:\nmessage:', this.message);
     var myuser_id: string;
@@ -143,7 +164,7 @@ export class ReservationDetailPage implements OnInit {
         this.message = '';
         // get new messages
 
-        this.getMessages();
+        // this.getMessages();  // comment out
       });
   }
 
@@ -175,11 +196,34 @@ export class ReservationDetailPage implements OnInit {
       });
   }
 
-  getReservationsUsers() {
-    this.reservationUsersService.getReservationsUsers().then(reservationsUsers => {
-      console.log('reservations users:', reservationsUsers);
+  async onSnapshotReservationUsersByReservationUid(reservation_uid) {
+    // Get ReservationUser list by reservation_uid
+    var reservationUsersRef = await this.db.collection('reservations_users').ref;
+    var reservationRef = await this.db.collection('reservations').doc(reservation_uid).ref;
+    // var users: User[] = [];
+    // await reservationUsersRef.where('reservation', '==', reservationRef).get()
+    //   .then(querySnapshot => {
+    //     querySnapshot.forEach(doc => {
+    //       reservationUsers.push(new ReservationUsers(doc.data()));
+    //       console.log(doc.id, "=>", doc.data());
+    //     });
+    //   });
+    // return reservationUsers;
+    reservationUsersRef.where('reservation', '==', reservationRef).onSnapshot(querySnapshot => {
+      var reservationUsers: ReservationUsers[] = [];
+      querySnapshot.forEach(doc => {
+        reservationUsers.push(new ReservationUsers(doc.data()));
+        // console.log(doc.id, "=>", doc.data());
+      });
+      this.reservationUsers = reservationUsers;
     });
   }
+
+  // getReservationsUsers() {
+  //   this.reservationUsersService.getReservationsUsers().then(reservationsUsers => {
+  //     console.log('reservations users:', reservationsUsers);
+  //   });
+  // }
 
   async goToEditPage() {
     console.log('go to edit page');
@@ -201,8 +245,8 @@ export class ReservationDetailPage implements OnInit {
         var current_user = await this.getCurrentUser();
         this.current_user = await this.userService.getUser(current_user.uid);
         this.getReservation();
-        this.getMessages();
-        this.getThisReservationUsers();  
+        // this.getMessages();  // comment out
+        // this.getThisReservationUsers(); comment out
         loading.dismiss();
       
       } catch (err) {

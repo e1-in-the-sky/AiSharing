@@ -68,7 +68,7 @@ export class ReservationUsersService {
 
   async getUsersByReservationUid(reservation_uid) {
     // Get user list by reservation_uid
-    console.log('getReservationUsersByReservationUid in reservation-users.service.ts\nreservation_uid:', reservation_uid);
+    console.log('getUsersByReservationUid in reservation-users.service.ts\nreservation_uid:', reservation_uid);
     var reservationUsersRef = await this.db.collection('reservations_users').ref;
     var reservationRef = await this.db.collection('reservations').doc(reservation_uid).ref;
     var users: User[] = [];
@@ -98,7 +98,7 @@ export class ReservationUsersService {
 
   async getUserRefsByReservationUid(reservation_uid) {
     // Get user list by reservation_uid
-    console.log('getReservationUsersByReservationUid in reservation-users.service.ts\nreservation_uid:', reservation_uid);
+    console.log('getUsersRefsByReservationUid in reservation-users.service.ts\nreservation_uid:', reservation_uid);
     var reservationUsersRef = await this.db.collection('reservations_users').ref;
     var reservationRef = await this.db.collection('reservations').doc(reservation_uid).ref;
     var users: firebase.firestore.DocumentReference[] = [];

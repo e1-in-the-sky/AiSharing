@@ -32,6 +32,23 @@ export class MessageService {
     return messages;
   }
 
+  async onSnapshotReservationMessage(reservation_uid) {
+    console.log('getReservationMessages:\nreservation_uid:', reservation_uid);
+    var reservation_ref = this.db.collection('reservations').doc(reservation_uid).ref;
+    var messages_ref = this.db.collection('messages').ref;
+    return messages_ref
+      .where('reservation', '==', reservation_ref)
+      .onSnapshot((querySnapShot) => {
+        var messages: Message[] = [];
+        querySnapShot.forEach(doc => {
+          messages.push(new Message(doc.data()));
+        });
+        messages = messages.sort((a, b) => {
+          return a.created_at > b.created_at ? 1 : -1;
+        });
+      });
+  }
+ 
   async addMessage(message: Message) {
     // add message to firestore.
     console.log('addMessage:\nmessage:', message);
