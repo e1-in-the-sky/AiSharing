@@ -101,25 +101,11 @@ export class ReservationCardComponent implements OnInit, OnChanges {
   async onSnapshotReservation(uid) {
     console.log('reservation:', this.reservation);
     var reservationRef = await this.db.collection('reservations').doc(uid).ref;
-    // var reservation;
-    // await reservationRef.get().then(doc => {
-    //   if (!doc.exists) {
-    //     console.log('No such doc');
-    //   } else {
-    //     reservation = new Reservation(doc.data());
-    //     console.log('doc.data():', doc.data());
-    //     // console.log('reservation:', reservation);
-    //   }
-    // })
-    // .catch(err => {
-    //   console.log('error', err);
-    // });
-    // return reservation;
     reservationRef.onSnapshot(doc => {
       console.log('on change reservation document:', uid);
       this.reservation = new Reservation(doc.data());
     });
-  }  
+  }
 
   async goToAccountDetail(e: any) {
     e.stopPropagation();

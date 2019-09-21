@@ -110,6 +110,10 @@ export class ReservationDetailPage implements OnInit {
           this.checkMyReservation();
         });
       this.departure_name = reservation.departure_name;
+    }, async error => {
+      var error_ = await this.createError(error, "投稿情報が取得できません");
+      error_.present();
+      this.navCtrl.navigateBack('/app/tabs/reservations');
     });
   }
 
@@ -275,9 +279,9 @@ export class ReservationDetailPage implements OnInit {
     return loading;
   }
 
-  async createError(err) {
+  async createError(err, message: string = "") {
     const alert = await this.alertCtrl.create({
-      header: 'エラー',
+      header: message ? message : 'エラー',
       // subHeader: 'Subtitle',
       // message: err,
       buttons: ['OK']
