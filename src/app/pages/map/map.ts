@@ -551,6 +551,7 @@ export class MapPage implements OnInit{
 
     this.map.setView([e.latlng.lat, e.latlng.lng], this.map.getZoom());
     
+    
     // アニメーションがない場合
     // this.selectedReservation = await this.reservationService.getReservation(e.target.options.title);
     // this.map.setView([e.latlng.lat, e.latlng.lng], this.map.getZoom());
@@ -687,5 +688,9 @@ export class MapPage implements OnInit{
       this.selectedReservation = reservation;
       this.slideInReservationCard();
     }
+  }
+
+  rmResponse(e: any){
+    e.stopPropagation();
   }
 }
