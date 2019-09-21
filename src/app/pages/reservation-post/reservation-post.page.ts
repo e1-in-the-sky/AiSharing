@@ -251,14 +251,14 @@ export class ReservationPostPage implements OnInit {
     var gsi = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
     {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
     //地理院地図の淡色地図タイル
-    var gsipale = this.L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-      {attribution: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
+    var gsipale = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+      {attribution: "<a href='https://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
     //地理院地図の航空地図タイル
     var gsiphoto = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
       {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
     //オープンストリートマップのタイル
-    var osm = this.L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
-      {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
+    var osm = this.L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+      {  attribution: "<a href='https://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
     //baseMapsオブジェクトのプロパティに3つのタイルを設定
     var baseMaps = {
       "地理院地図" : gsi,
