@@ -5,7 +5,13 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     
-    <ion-title>Map</ion-title>
+    <ion-title>      
+      {{filter.departure_time_start | date: 'M月d日'}}
+      <!-- <p class="header_logo">
+          <img src="../../../assets/img/car_sharing.png"  height=40px; style="float:right" >
+      </p> -->
+    </ion-title>
+    
     <!-- 日付をタイトルに入れるサンプル -->
     <!-- <ion-title>{{displayDate | date: "yyyy/MM/dd"}}</ion-title> -->
     <!-- <ion-title><label><input type="date" color="primary" class="header-date"></label></ion-title> -->

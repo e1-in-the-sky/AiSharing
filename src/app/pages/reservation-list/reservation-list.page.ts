@@ -320,4 +320,40 @@ export class ReservationListPage implements OnInit {
   //     = this.reservations.filter(reservation =>
   //       (reservation.departure_time > start_time_timestamp) && (reservation.departure_time < end_time_timestamp));
   // }
+  // nextDay(){
+  //   // this.filter.departure_time_start = new Date(this.filter.departure_time_start.getFullYear(), this.filter.departure_time_start.getMonth(), this.filter.departure_time_start.getDate()+1, this.filter.departure_time_start.getHours(), this.filter.departure_time_start.getMinutes(), this.filter.departure_time_start.getSeconds());
+  //   // this.filter.departure_time_end = new Date(this.filter.departure_time_end.getFullYear(), this.filter.departure_time_end.getMonth(), this.filter.departure_time_end.getDate()+1, this.filter.departure_time_end.getHours(), this.filter.departure_time_end.getMinutes(), this.filter.departure_time_end.getSeconds());
+  //   // console.log("filter", this.filter)
+  //   this.departure_time_start.setDate(this.departure_time_start.getDate() + 1);
+  //   this.departure_time_end.setDate(this.departure_time_end.getDate() + 1);  
+  //   this.filter.departure_time_start = this.departure_time_start;
+  //   this.filter.departure_time_end = this.departure_time_end;
+  //   console.log("nextDay", this.departure_time_start)
+  //   console.log("nextDay", this.departure_time_end)
+
+  //   // this.filter.departure_time_start.setDate(this.filter.departure_time_start.getDate() + 1);
+  //   // this.filter.departure_time_end.setDate(this.filter.departure_time_end.getDate() + 1);  
+
+  //   // this.filter = JSON.parse(JSON.stringify(this.filter));
+  //   // console.log("filter", this.filter)    
+  //   // this.filter = Object.create(this.filter);
+  // }
+  // beforeDay(){
+  //   // this.filter.departure_time_start = new Date(this.filter.departure_time_start.getFullYear(), this.filter.departure_time_start.getMonth(), this.filter.departure_time_start.getDate()-1, this.filter.departure_time_start.getHours(), this.filter.departure_time_start.getMinutes(), this.filter.departure_time_start.getSeconds());
+  //   // this.filter.departure_time_end = new Date(this.filter.departure_time_end.getFullYear(), this.filter.departure_time_end.getMonth(), this.filter.departure_time_end.getDate()-1, this.filter.departure_time_end.getHours(), this.filter.departure_time_end.getMinutes(), this.filter.departure_time_end.getSeconds());
+  //   this.departure_time_start.setDate(this.departure_time_start.getDate() - 1);
+  //   this.departure_time_end.setDate(this.departure_time_end.getDate() - 1);
+  //   this.filter.departure_time_start = this.departure_time_start;
+  //   this.filter.departure_time_end = this.departure_time_end;
+
+  //   console.log("beforeDay", this.filter.departure_time_start)
+  //   console.log("before Day", this.filter.departure_time_end)
+
+  //   // this.filter.departure_time_start.setDate(this.filter.departure_time_start.getDate() - 1);
+  //   // this.filter.departure_time_end.setDate(this.filter.departure_time_end.getDate() - 1);
+
+  //   // this.filter = JSON.parse(this.filter);
+  //   // this.filter = Object.create(this.filter);
+
+  // }
 }
