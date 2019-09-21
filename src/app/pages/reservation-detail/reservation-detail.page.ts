@@ -31,6 +31,8 @@ export class ReservationDetailPage implements OnInit {
   messages: Message[] = [];
   message: string = '';
   is_my_reservation: boolean = false;
+  unsubscribeMessages: any;
+  unsubscribeReservationUsers: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,6 +70,14 @@ export class ReservationDetailPage implements OnInit {
     }
   }
 
+  ionViewDidLeave() {
+    console.log('ionViewDidLeave');
+    // console.log('unsubscribeMessages', this.unsubscribeMessages);
+    // console.log('unsubscribeReservationUsers', this.unsubscribeReservationUsers);
+    // this.unsubscribeMessages();
+    // this.unsubscribeReservationUsers();
+  }
+
   getCurrentUser(): firebase.User | Promise<firebase.User> {
     return new Promise((resolve, reject) => {
       firebase.auth().onAuthStateChanged((user: firebase.User) => {
@@ -100,6 +110,10 @@ export class ReservationDetailPage implements OnInit {
           this.checkMyReservation();
         });
       this.departure_name = reservation.departure_name;
+    }, async error => {
+      var error_ = await this.createError(error, "投稿情報が取得できません");
+      error_.present();
+      this.navCtrl.navigateBack('/app/tabs/reservations');
     });
   }
 
@@ -265,9 +279,9 @@ export class ReservationDetailPage implements OnInit {
     return loading;
   }
 
-  async createError(err) {
+  async createError(err, message: string = "") {
     const alert = await this.alertCtrl.create({
-      header: 'エラー',
+      header: message ? message : 'エラー',
       // subHeader: 'Subtitle',
       // message: err,
       buttons: ['OK']
