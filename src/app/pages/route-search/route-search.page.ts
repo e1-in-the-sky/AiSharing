@@ -121,7 +121,6 @@ export class RouteSearchPage implements OnInit {
 
   ngOnInit() {
     this.sample();
-    this.prepareLeafletMap();
     // Yahoo javascript api  ////////////////////////////////////////////////////////////
     // const Y = await this.yahooService.getYahooMaps();
     // console.log('Y:', Y);
@@ -160,172 +159,9 @@ export class RouteSearchPage implements OnInit {
     // });
   }
 
-
-  async prepareLeafletMap() {
-    const win = window as any;
-    if (!win.L) {
-      console.log("win.Lが存在しません");
-      // this.L = await this.leafletService.getLeafletMaps();
-      this.L = await this.leafletService.includeAllLeaflet();
-    } else {
-      console.log("win.Lが存在します");
-      this.L = win.L;
-    }
-
-    //地図を表示するdiv要素のidを設定
-    this.map = this.L.map('course_map');
-    //地図の中心とズームレベルを指定
-    this.map.setView([37.52378812, 139.938139], 11);  // 東京駅 35.681236 139.767125  会津大学: 37.52378812, 139.938139
-    //表示するタイルレイヤのURLとAttributionコントロールの記述を設定して、地図に追加する
-    // L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-    //     attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
-    // }).addTo(map);
-
-    //スケールコントロールを最大幅200px、右下、m単位で地図に追加
-    this.L.control.scale({ maxWidth: 100, position: 'bottomright', imperial: false }).addTo(this.map);
-
-    // ピンの追加
-    // this.moveDepartureMarker(35.40, 136, "ここはどこ？", true);
-    
-    //地理院地図の標準地図タイル
-    var gsi = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
-    {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-    //地理院地図の淡色地図タイル
-    var gsipale = this.L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-      {attribution: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
-    //地理院地図の航空地図タイル
-    var gsiphoto = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
-      {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-    //オープンストリートマップのタイル
-    var osm = this.L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
-      {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
-    //baseMapsオブジェクトのプロパティに3つのタイルを設定
-    var baseMaps = {
-      "地理院地図" : gsi,
-      "淡色地図" : gsipale,
-      "航空地図" : gsiphoto,
-      "オープンストリートマップ"  : osm
-    };
-    //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
-    //コントロール内にプロパティ名が表示される
-    this.L.control.layers(baseMaps).addTo(this.map);
-    osm.addTo(this.map);
-    // gsi.addTo(this.map);
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // ルート
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // leaflet-routing-machine.js:17932 You are using OSRM's demo server. Please note that it is **NOT SUITABLE FOR PRODUCTION USE**.
-    // Refer to the demo server's usage policy: https://github.com/Project-OSRM/osrm-backend/wiki/Api-usage-policy
-    //
-    // To change, set the serviceUrl option.
-    //
-    // Please do not report issues with this server to neither Leaflet Routing Machine or OSRM - it's for
-    // demo only, and will sometimes not be available, or work in unexpected ways.
-    //
-    // Please set up your own OSRM server, or use a paid service provider for production.
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    var routing = await this.leafletService.getLeafletRouting();
-    this.routeControl = routing.control({
-      waypoints: [
-        null
-        // this.L.latLng(37.506801, 139.930428),   // 37.506801 139.930428
-        // this.L.latLng(37.47972, 139.96083)   // 東山温泉 37.47972 139.96083
-      ],
-      createMarker: (i, waypoints, n) => {
-        return win.L.marker(waypoints.latLng, {draggable: false})},
-      router: win.L.Routing.graphHopper('0dc4f299-a491-452f-97e0-515c296c9453')  // graph hopperを使っている
-    }).addTo(this.map);
-
-    this.routeControl.hide();
- 
-    this.routeControl.on('routesfound', (e) => {
-      // If you're interested in every time the user selects a route, the routeselected event is more approriate.
-      // console.log('e:', e);
-      // console.log('e.routes:', e.routes);
-      this.totalDistance = e.routes[0].summary.totalDistance;
-      this.totalTime = e.routes[0].summary.totalTime;
-      this.fare = this.getFare(this.totalDistance);
-      console.log('Total Distance (unit: m):', this.totalDistance);
-      console.log('Total Time (unit: s):', this.totalTime);
-      console.log('Fare:', this.fare);
-      // var routes = e.routes;
-    });
-
-    // add new waypoints
-    // L.routing.control.setWaypoints([
-    //   L.latLng(lat1, lon1),
-    //   L.latLng(lat2, lon2)
-    // ]);
-
-    // var totalDistance = routeControl._routes[0].summary.totalDistance;
-    // var totalTime = routeControl._routes[0].summary.totalTime;
-    console.log('routeControl:', this.routeControl);
-    console.log('routeControl.e:', this.routeControl.e);
-    console.log('routeControl.routes:', this.routeControl.routes);
-    // console.log('Total Distance (unit: m):', totalDistance);
-    // console.log('Total Time (unit: s):', totalTime);
-    // this.L.Routing.control({
-    //   waypoints: [
-    //     this.L.latLng(57.74, 11.94),
-    //     this.L.latLng(57.6792, 11.949)
-    //   ]
-    // }).addTo(this.map);
-  }
-
-  moveDepartureMarker(lat, lon, name: string, openPopup: boolean = true) {
-    if (this.departureMarker) {
-      this.map.removeLayer(this.departureMarker);
-    }
-    this.departureMarker = this.L.marker([lat, lon], {title: name});
-    this.departureMarker.addTo(this.map);
-
-    if (name) {
-      // this.departureMarker.bindTooltip(name);
-      if (openPopup) {
-        this.departureMarker.bindPopup(name).openPopup();
-      } else {
-        this.departureMarker.bindPopup(name);
-      }
-    }
-
-    //地図の中心とズームレベルを指定
-    this.map.setView([lat, lon], 11);
-  }
-
-  moveDestinationMarker(lat, lon, name: string, openPopup: boolean = true) {
-    if (this.destinationMarker) {
-      this.map.removeLayer(this.destinationMarker);
-    }
-    this.destinationMarker = this.L.marker([lat, lon], {title: name});
-    this.destinationMarker.addTo(this.map);
-
-    if (name) {
-      // this.destinationMarker.bindTooltip(name);
-      if (openPopup) {
-        this.destinationMarker.bindPopup(name).openPopup();
-      } else {
-        this.destinationMarker.bindPopup(name);
-      }
-    }
-
-    //地図の中心とズームレベルを指定
-    this.map.setView([lat, lon], 11);
-  }
-
   // distance の単位はメートル
   getFare(distance) {
     return 510 + 90 * Math.floor((distance < 1000 ? 0 : distance - 1000) / 282);
-  }
-
-  async on_date_changed(){
-    if(new Date(this.data.departure_time) < new Date()){
-      const alert = await this.alertController.create({
-        header:"現在時刻より前を出発時間にはできません",
-        buttons:["OK"],
-      });
-      await alert.present();
-    }
   }
 
   clamp(x, min, max) {
@@ -334,16 +170,6 @@ export class RouteSearchPage implements OnInit {
     return x;
   }
 
-  on_click_max_passenger(amount) {
-    this.data.max_passenger_count = this.clamp(this.data.max_passenger_count + amount, 2, 100);
-    this.data.passenger_count = this.clamp(this.data.passenger_count, 1, this.data.max_passenger_count - 1);
-  }
-
-  on_click_passenger(amount) {
-    this.data.passenger_count = this.clamp(this.data.passenger_count + amount, 1, this.data.max_passenger_count - 1);
-  }
-
-  
   async alert_no_information() {
     const alert = await this.alertController.create({
       message: '出発地と目的地を入力してください',
@@ -360,74 +186,12 @@ export class RouteSearchPage implements OnInit {
     await alert.present();
   }
 
-  async alert_invalid_time(){
-    const alert = await this.alertController.create({
-      message: "適切な出発時刻を入力してください",
-      buttons: ["OK"],
-    });
-    await alert.present();
-  }
-
-  async alert_complete_send() {
-    const alert = await this.alertController.create({
-      message: '投稿が完了しました',
-      buttons: ['OK']
-    });
-    await alert.present();
-  }
-
   dismissModal(isUpdate: boolean = false) {
     this.modalCtrl.dismiss({
       "isUpdate": isUpdate
     });
   }
 
-  // getMapImageUrl(coordinate, location_name, z=17, width=300, height=200) {
-  getMapImageUrl(localInfo, selectedIndex, z=17, width=300, height=200) {
-    var coordinate = localInfo.Feature[selectedIndex].Geometry.Coordinates.split(',');
-    return this.yahooService.get_mapimg_url({
-      lat: Number(coordinate[1]),
-      lon: Number(coordinate[0]),
-      z: z,
-      width: width,
-      height: height,
-      // pointer: 'on',
-      pin: [Number(coordinate[1]), Number(coordinate[0]), localInfo.Feature[selectedIndex].Name]
-      // pin1: [Number(coordinate[1]), Number(coordinate[0]), this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name]
-    });
-  }
-
-  getCourseMapImageUrl(width=300, height=200) {
-    // var route = this.data.departure_point.latitude.toString() + ','
-    //             + this.data.departure_point.longitude.toString() + ','
-    //             + this.data.destination_point.latitude.toString() + ','
-    //             + this.data.destination_point.longitude.toString();
-    
-    var param = {
-      // route: route,
-      width: width,
-      height: height,
-    }
-    var departure_name = this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name;
-    var destination_name = this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Name;
-    this.courseMapImageUrl = this.yahooService.getCourse(this.data.departure_point, this.data.destination_point, param, departure_name, destination_name);
-  }
-
-  setCourseMapImageUrl() {
-    // 出発地と目的地の位置情報が設定されているか確認
-    var empty_geopoint = new firebase.firestore.GeoPoint(0, 0);
-    var is_exist_geopoint = (!this.data.departure_point.isEqual(empty_geopoint))
-                              && (!this.data.destination_point.isEqual(empty_geopoint));
-
-    if (is_exist_geopoint) { // 設定されている場合
-      // YahooAPIを使い経路図の画像URLを取得
-      this.getCourseMapImageUrl();
-
-    } else {  // 設定されていない場合 
-      // 何もしない
-      return;
-    }
-  }
 
   ///////////////////////////////////////////////////////////////
   // 入力が変更されるたびにをリアルタイムでサーバーから取得する
@@ -500,34 +264,8 @@ export class RouteSearchPage implements OnInit {
       var coordinate = this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Geometry.Coordinates.split(',');
       // 位置情報を登録
       this.data.departure_point = new firebase.firestore.GeoPoint(Number(coordinate[1]), Number(coordinate[0]));
-
-      // 選択されているロケーションのマップ画像を取得
-      this.departureLocationMapImageUrl
-        = this.getMapImageUrl(
-          this.departureLocalInfo,
-          this.indexOfSelectedDepatureLocation
-          )
-      
       // 選択されているロケーションの住所を取得
       this.selectedDepartureAddress = this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Property.Address;
-      
-      // 経路画像のURLを設置する
-      this.setCourseMapImageUrl();
-
-      // 選択されているロケーションに出発地のピンを移動する(LeafletAPI)
-      // this.moveDepartureMarker(Number(coordinate[1]), Number(coordinate[0]), this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Name, true);
-
-      // 経路(LeafletAPI)
-      var container = this.L.DomUtil.create('div');
-      var latlng = new this.L.LatLng( coordinate[1], coordinate[0] );
-      this.L.popup()
-        .setContent(container)
-        .setLatLng(latlng)
-        .openOn(this.map);
-      this.routeControl.spliceWaypoints(0, 1, latlng);
-      this.map.closePopup();
-      console.log('total distance:', this.totalDistance);
-      console.log('total time:', this.totalTime);
     }
   }
   
@@ -579,31 +317,8 @@ export class RouteSearchPage implements OnInit {
       var coordinate = this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Geometry.Coordinates.split(',');
       // 位置情報を登録
       this.data.destination_point = new firebase.firestore.GeoPoint(Number(coordinate[1]), Number(coordinate[0]));
-      
-      // 選択されているロケーションのマップ画像を取得
-      this.destinationLocationMapImageUrl
-        = this.getMapImageUrl(
-          this.destinationLocalInfo,
-          this.indexOfSelectedDestinationLocation
-          )
-      
       // 選択されているロケーションの住所を取得
       this.selectedDestinationAddress = this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Property.Address;
-      // 経路画像のURLを設置する
-      this.setCourseMapImageUrl();
-
-      // 選択されているロケーションに目的地のピンを移動する(LeafletAPI)
-      // this.moveDestinationMarker(Number(coordinate[1]), Number(coordinate[0]), this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Name, true);
-
-      // 経路(LeafletAPI)
-      var container = this.L.DomUtil.create('div');
-      var latlng = new this.L.LatLng( coordinate[1], coordinate[0] );
-      this.L.popup()
-        .setContent(container)
-        .setLatLng(latlng)
-        .openOn(this.map);
-      this.routeControl.spliceWaypoints(this.routeControl.getWaypoints().length - 1, 1, latlng);
-      this.map.closePopup();
     }
   }
 

@@ -102,10 +102,6 @@
         </ion-select> -->
       </ng-template>
 
-      <p *ngIf="totalDistance">距離: {{totalDistance / 1000 | number:'1.0-1'}}km</p>
-      <p *ngIf="totalTime">時間: {{totalTime / 60 | number:'1.0-0'}}分</p>
-      <p *ngIf="fare">参考料金: {{fare | number:'1.0-0'}}円</p>
-  
       <!-- 経路画像のURLが存在する場合表示する -->
       <!-- <ng-container *ngIf="courseMapImageUrl !== ''">
         <p>経路サンプル: (出発地と目的地が20km以上離れている場合、経路は表示されません)</p>
@@ -116,7 +112,7 @@
         <ion-label position="floating">出発時刻</ion-label>
         <!-- <ion-input type="text" [(ngModel)]="data.departure_time" name="departure_time" required></ion-input> -->
         <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="data.departure_time"
-          name="departure_time" (ngModelChange)="on_date_changed()" [min]="min_date" [max]="max_date"></ion-datetime>
+          name="departure_time" [min]="min_date" [max]="max_date"></ion-datetime>
       </ion-item>
       <ion-item>
         <ion-label position="floating">最大乗り換え回数</ion-label>
@@ -135,9 +131,6 @@
     <p>
       <ion-button expand="block" color="primary" type="button" (click)="onSearch()">検索</ion-button>
     </p>
-    <!-- Yahoo API Map -->
-    <!-- <div id="yahoomap" style="width:300px; height:200px"></div> -->
 
-      <div id="course_map" style="width:300px; height:200px; margin: auto; border-radius: 10px;"></div>
   </form>
 </ion-content>
