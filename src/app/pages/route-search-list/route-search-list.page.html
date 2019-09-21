@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>route-search-list</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-select [(ngModel)]="indexOfSelectedLocation" name="indexOfSelectedLocation" (ngModelChange)="selectLocation()">
+    <ion-select-option *ngFor="let route_info of route_list; index as i;" [value]="i" [selected]="i === 0">
+      必要時間{{route_info.total_time | number:'1.0-0'}}分 徒歩:{{route_info.total_walk_time | number:'1.0-0'}}分
+    </ion-select-option>
+  </ion-select>
+
+  <ng-container *ngFor="let reservation of selected_reservations;">
+    <reservation-card [reservation]='reservation'></reservation-card>
+  </ng-container>
+
+</ion-content>

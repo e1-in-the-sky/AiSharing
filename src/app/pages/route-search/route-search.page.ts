@@ -7,13 +7,14 @@ import * as firebase from 'firebase';
 import { Reservation } from '../../models/reservation';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ReservationService } from '../../services/reservation/reservation.service';
-import { NavController, ModalController } from '@ionic/angular';
+import { NavController, ModalController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common'
 import { YahooService } from '../../services/yahoo/yahoo.service';
 import { LeafletService } from '../../services/leaflet/leaflet.service';
+import { RouteSearchListPage } from'../route-search-list/route-search-list.page';
 
 @Component({
   selector: 'route-search',
@@ -92,6 +93,7 @@ export class RouteSearchPage implements OnInit {
   constructor(
     private navCtrl: NavController,
     private modalCtrl: ModalController,
+    private loadingCtrl: LoadingController,
     private router: Router,
     private db: AngularFirestore,
     private reservationService: ReservationService,
@@ -329,6 +331,11 @@ export class RouteSearchPage implements OnInit {
     if(this.data.destination_name == null || this.data.departure_name == null || this.walkable_distance == null
       || this.stayable_time == null || this.max_transfer_time == null)return;
 
+    let loading = await this.loadingCtrl.create({
+      spinner: 'circles',
+      message: '経路を検索中...'
+    });
+    loading.present();
     var route = this.data.departure_point.latitude.toString()   + ",";
     route    += this.data.departure_point.longitude.toString()  + ",";
     route    += this.data.destination_point.latitude.toString() + ",";
@@ -349,6 +356,16 @@ export class RouteSearchPage implements OnInit {
 
     var routes = await this.getRoute(param);
     console.log(routes);
+
+    loading.dismiss();
+    
+
+    const modal = await this.modalCtrl.create({
+      component: RouteSearchListPage,
+      componentProps: {routes: routes},
+    });
+
+    await modal.present();
   }
 
 

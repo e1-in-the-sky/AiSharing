@@ -13,6 +13,7 @@ import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import { YahooService } from '../../services/yahoo/yahoo.service';
 import { MapFilterPage } from '../../pages/map-filter/map-filter.page';
 import { MapReservationsPage } from '../../pages/map-reservations/map-reservations.page';
+import { RouteSearchListPage } from '../../pages/route-search-list/route-search-list.page';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { MapReservationsPage } from '../../pages/map-reservations/map-reservatio
     ReservationFilterPage,
     MypageEditPage,
     MapFilterPage,
-    MapReservationsPage
+    MapReservationsPage,
+    RouteSearchListPage,
   ],
   imports: [
     CommonModule,
@@ -43,7 +45,8 @@ import { MapReservationsPage } from '../../pages/map-reservations/map-reservatio
     ReservationEditPage,
     ReservationFilterPage,
     MapFilterPage,
-    MapReservationsPage
+    MapReservationsPage,
+    RouteSearchListPage,
   ],
   entryComponents: [
     ReservationPostPage,
@@ -51,7 +54,8 @@ import { MapReservationsPage } from '../../pages/map-reservations/map-reservatio
     ReservationFilterPage,
     MypageEditPage,
     MapFilterPage,
-    MapReservationsPage
+    MapReservationsPage,
+    RouteSearchListPage,
   ],
   providers: [
     YahooService
