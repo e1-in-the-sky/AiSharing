@@ -102,7 +102,7 @@
     
     
     <!-- </div> -->
-    <ion-label style="padding-left: 5%; padding-top:1%;">最安値：{{reservation.fare/reservation.max_passenger_count}}円</ion-label>
+    <ion-label style="padding-left: 5%; padding-top:1%;">最安値：{{reservation.fare/reservation.max_passenger_count | number: '1.0-0'}}円</ion-label>
     
   </ion-card-content>
 </ion-card>

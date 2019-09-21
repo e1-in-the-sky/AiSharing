@@ -29,13 +29,18 @@
 
   <!-- 選択された投稿について -->
   <ng-container *ngIf="selectedReservation">
-    <div class="reservation-card" style="padding: 8px; margin: 0 5%; height: auto; bottom: 5%;" [attr.data-order]="reservationCardAnim">
-      <p style="font-size: 12px; margin: 0; display: inline-block;" class="clickable" (click)="map.setView([selectedReservation.departure_point.latitude, selectedReservation.departure_point.longitude], map.getZoom())">出発地: {{selectedReservation.departure_name}}</p><br>
-      <p style="font-size: 12px; margin: 0; display: inline-block;" class="clickable" (click)="map.setView([selectedReservation.destination_point.latitude, selectedReservation.destination_point.longitude], map.getZoom())">目的地: {{selectedReservation.destination_name}}</p><br>
-      <p style="font-size: 12px; margin: 0; display: inline-block;" class="clickable" (click)="goToReservationDetail(selectedReservation.uid)">詳細</p>
+    <div (click)="goToReservationDetail(selectedReservation.uid)" class="reservation-card" style="padding: 8px; margin: 0 5%; height: auto; bottom: 5%;" [attr.data-order]="reservationCardAnim">
+      <!-- <p style="font-size: 12px; margin: 0;" class="clickable" (click)="map.setView([selectedReservation.departure_point.latitude, selectedReservation.departure_point.longitude], map.getZoom())"> -->
+      <p style="font-size: 12px; margin: 0; display: inline-block;" class="clickable" (click)="rmResponse($event); map.setView([selectedReservation.departure_point.latitude, selectedReservation.departure_point.longitude], map.getZoom());">
+        <img src="../../../assets/img/place_start.png">  {{selectedReservation.departure_name}}<br>
+      </p><br>
+      <p style="font-size: 12px; margin: 0; display: inline-block;" class="clickable" (click)="rmResponse($event); map.setView([selectedReservation.destination_point.latitude, selectedReservation.destination_point.longitude], map.getZoom())">
+        <img src="../../../assets/img/place_goal.png">  {{selectedReservation.destination_name}}
+      </p>
+      <!-- <ion-icon style="width: 30px; height: 30px" name="information-circle" color="primary" class="clickable" (click)="goToReservationDetail(selectedReservation.uid)"></ion-icon> -->
+    </div>  
       <!-- <ion-button (click)="goToReservationDetail(selectedReservation.uid)">詳細</ion-button> -->
       <!-- <span style="font-size: 12px; margin: 0;" (click)="slideOutReservationCard()">左へ</span> -->
-    </div>
   </ng-container>
   
   <!-- スライドについて -->
