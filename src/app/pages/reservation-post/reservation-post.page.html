@@ -14,7 +14,7 @@
     </ion-buttons> 
     
 
-    <ion-title>乗り合い情報の投稿</ion-title>
+    <ion-title>相乗り投稿</ion-title>
     
     <!-- <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">Close</ion-button>
@@ -27,7 +27,9 @@
   <form>
     <ion-list>
       <ion-item>
-        <ion-label position="floating">出発時刻</ion-label>
+        <ion-label position="floating">
+          出発時刻
+        </ion-label>
         <!-- <ion-label position="floating" color="danger">*出発時刻を入力してください</ion-label> -->
         <!-- <ion-input type="text" [(ngModel)]="data.departure_time" name="departure_time" required></ion-input> -->
         <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="data.departure_time"
@@ -35,7 +37,10 @@
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">出発地</ion-label>
+        <ion-label position="floating">
+          <!-- <img src="../../../assets/img/place_start.png" style="height: 32px; width: 20px;"> -->
+          出発地
+        </ion-label>
         <ion-input type="text" [(ngModel)]="data.departure_name" (ngModelChange)="inputDeparture($event)" name="departure_name" required></ion-input>
       </ion-item>
 
@@ -58,13 +63,15 @@
           </ion-select-option>
         </ion-select>
         <!-- <p>indexOfSelectedDepatureLocation: {{indexOfSelectedDepatureLocation}}</p> -->
-        <p>住所: {{selectedDepartureAddress}}</p>
+        <p style="font-size: 14px; color: grey; padding-left: 16px; margin: 4px 0;">
+          <img src="../../../assets/img/icon_post.jpg" style="height: 14px; width: 14px;"> {{selectedDepartureAddress}}
+        </p>
         <!-- <img class="location-img" [src]="departureLocationMapImageUrl" *ngIf="departureLocationMapImageUrl !== ''"> -->
       </ng-container>
 
       <!-- もし候補地が空なら"表示する候補地がありません"と表示する -->
       <ng-template #nonDepartureLocalInfo>
-        <p>表示する候補地がありません</p>
+        <p style="padding-left: 16px; font-size: 13px;">表示する候補地がありません</p>
         <!-- <ion-select>
           <ion-select-option [selected]=true>
             表示する候補地がありません
@@ -96,13 +103,15 @@
           </ion-select-option>
         </ion-select>
         <!-- <p>indexOfSelectedDestinationLocation: {{indexOfSelectedDestinationLocation}}</p> -->
-        <p>住所: {{selectedDestinationAddress}}</p>
+        <p style="font-size: 14px; color: grey; padding-left: 16px; margin: 4px 0;">
+          <img src="../../../assets/img/icon_post.jpg" style="height: 14px; width: 14px;"> {{selectedDestinationAddress}}
+        </p>
         <!-- <img class="location-img" [src]="destinationLocationMapImageUrl" *ngIf="destinationLocationMapImageUrl !== ''"> -->
       </ng-container>
 
       <!-- もし候補地が空なら"表示する候補地がありません"と表示する -->
       <ng-template #nonDestinationLocalInfo>
-        <p>表示する候補地がありません</p>
+        <p style="padding-left: 16px; font-size: 13px;">表示する候補地がありません</p>
         <!-- <ion-select>
           <ion-select-option [selected]=true>
             表示する候補地がありません
@@ -110,11 +119,12 @@
         </ion-select> -->
       </ng-template>
 
-      <p *ngIf="totalDistance">距離: {{totalDistance / 1000 | number:'1.0-1'}}km</p>
-      <p *ngIf="totalTime">時間: {{totalTime / 60 | number:'1.0-0'}}分</p>
-      <p *ngIf="fare">参考料金: {{fare | number:'1.0-0'}}円</p>
-
       <div id="course_map" style="width: 100%; max-width: 400px; height:200px; margin: auto; border-radius: 10px;"></div>
+
+      <p *ngIf="totalDistance" style="margin: 8px 0;">距離: {{totalDistance / 1000 | number:'1.0-1'}}km</p>
+      <p *ngIf="totalTime" style="margin: 8px 0;">時間: {{totalTime / 60 | number:'1.0-0'}}分</p>
+      <p *ngIf="fare" style="margin: 8px 0 0 0;">参考料金: {{fare | number:'1.0-0'}}円</p>
+      <p *ngIf="fare" style="margin: 0 0 8px 0; font-size: 12px;">({{data.max_passenger_count}}人の場合1人あたリ{{fare / data.max_passenger_count | number: '1.0-0'}}円)</p>
   
       <!-- 経路画像のURLが存在する場合表示する -->
       <!-- <ng-container *ngIf="courseMapImageUrl !== ''">
@@ -137,11 +147,11 @@
       </ion-item>
       <ion-item>
         <ion-checkbox (click)="data.onlywoman = !data.onlywoman"></ion-checkbox>
-        女性限定
+         <div style="padding-left: 4px;">女性限定</div>
       </ion-item>
       <ion-item>
         <ion-checkbox (click)="data.bigluggage = !data.bigluggage"></ion-checkbox>        
-        大きい荷物あり
+         <div style="padding-left: 4px;">大きい荷物あり</div>
       </ion-item>
       
       <ion-item>
