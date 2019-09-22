@@ -365,10 +365,8 @@ a {
   transform: translate3d(0, 3px, 0);
 }
 
-
-.cardclick:hover, button:hover{
+ion-card:hover {
   background-color: #f5f5f5;
-  transform: translate3d(0, 3px, 0);
 }
 
 
