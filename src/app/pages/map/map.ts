@@ -360,7 +360,14 @@ export class MapPage implements OnInit{
             console.log('e:', e);
             console.log('e.latlng:', e.latlng);
           }
-	      }]
+        },
+        {
+          text: 'ここを中心に移動',
+          callback: (e) => {
+            this.map.panTo(e.latlng);
+          }
+        }
+      ]
     });
     this.L.control.layers(baseMaps).addTo(this.map);
     osm.addTo(this.map);

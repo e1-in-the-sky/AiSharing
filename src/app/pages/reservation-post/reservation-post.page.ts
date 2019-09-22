@@ -269,7 +269,19 @@ export class ReservationPostPage implements OnInit {
     
 
     //地図を表示するdiv要素のidを設定
-    this.map = this.L.map('course_map');
+    this.map = this.L.map('course_map', {
+      contextmenu: true,
+      contextmenuWidth: 140,
+	      contextmenuItems: [{
+		      text: 'ここを出発地にする',
+		      callback: this.setDepartureInContextMenu
+        },
+        {
+          text: 'ここを目的地にする',
+          callback: this.setDestinationInContextMenu
+        }
+      ]
+    });
     this.L.control.layers(baseMaps).addTo(this.map);
     osm.addTo(this.map);
     //地図の中心とズームレベルを指定
@@ -371,12 +383,52 @@ export class ReservationPostPage implements OnInit {
     // }).addTo(this.map);
 
     // map長押しの処理
-    this.map.on('contextmenu', function(e){  // (e) => {} も function(e){}も座標が変わらない
-      console.log('MouseEvent (contextmenu):', e);
-      console.log('e.latlng:', e.latlng);
-    });
+    // this.map.on('contextmenu', function(e){  // (e) => {} も function(e){}も座標が変わらない
+    //   console.log('MouseEvent (contextmenu):', e);
+    //   console.log('e.latlng:', e.latlng);
+    // });
 
     this.leafletIsAlredyPrepared = true;
+  }
+
+  setDepartureInContextMenu(e) {
+    // 入力文字を空にする
+    // LocalInfoを空にする
+    // selectedIndexを初期化する
+    // selectboxに住所を一つだけ入れる
+
+    console.log('setDepartureInContextMenu');
+    console.log('this.routeControl:', this.routeControl);
+
+    // var container = this.L.DomUtil.create('div');
+    // var latlng = e.latlng;
+    // this.L.popup()
+    //   .setContent(container)
+    //   .setLatLng(latlng)
+    //   .openOn(this.map);
+    // this.routeControl.spliceWaypoints(0, 1, latlng);
+    // this.map.closePopup();
+    // console.log('total distance:', this.totalDistance);
+    // console.log('total time:', this.totalTime);
+  }
+
+  setDestinationInContextMenu(e) {
+    // 入力文字を空にする
+    // LocalInfoを空にする
+    // selectedIndexを初期化する
+    // selectboxに住所を一つだけ入れる
+
+    console.log('setDestinationInContextMenu');
+    console.log('this.routeControl:', this.routeControl);
+
+    // var container = this.L.DomUtil.create('div');
+    // var latlng = e.latlng;
+    // this.L.popup()
+    //   .setContent(container)
+    //   .setLatLng(latlng)
+    //   .openOn(this.map);
+    // this.routeControl.spliceWaypoints(this.routeControl.getWaypoints().length - 1, 1, latlng);
+    // this.map.closePopup();
   }
 
   moveDepartureMarker(lat, lon, name: string, openPopup: boolean = true) {
