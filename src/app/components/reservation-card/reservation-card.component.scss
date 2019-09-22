@@ -65,7 +65,15 @@ ion-icon {
 
 .taxi_move_logo img{
   height: 30px;
-  width: auto;
+  width: 71px;
+  // transition: margin-left 0.1s ease 0s;
+  transition: 1s;
+  -webkit-transition: 1s;
+}
+
+.taxi_move_logo img:hover{
+  // margin-left: 100%;
+  transform: translateX(100%);
 }
 
 .place_icon img{
@@ -365,14 +373,14 @@ a {
   transform: translate3d(0, 3px, 0);
 }
 
-
-.cardclick:hover, button:hover{
-  background-color: #f5f5f5;
-  transform: translate3d(0, 3px, 0);
+ion-card.cardclick{
+  transition: background 0.3s ease 0s;
 }
 
-
-
+ion-card.cardclick:hover, button:hover{
+  background: #fafafa;
+  // transform: translate3d(0, 3px, 0);
+}
 
 .buruburu {
   // margin-left

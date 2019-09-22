@@ -47,11 +47,11 @@
         <div class="place_icon"><img src="../../../assets/img/place_start.png"></div>
         <div class="place_text">{{reservation.departure_name}}</div>
       </div>
-      <div class="center-loc"><p class="taxi_move_logo"><img src="../../../assets/img/taxi_move_logo.png" ></p></div>
+      <div><p class="taxi_move_logo"><img src="../../../assets/img/taxi_move_logo.png" ></p></div>
       <div style="display: flex;">
         <div class="place_icon"><img src="../../../assets/img/place_goal.png"></div>
         <div class="place_text">{{reservation.destination_name}}</div>
-      </div>  
+      </div>
     </div>
 
     <ion-label style="padding-left: 5%; padding-top:1%;">最安値：{{reservation.fare/reservation.max_passenger_count | number: '1.0-0'}}円</ion-label><br>
