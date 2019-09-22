@@ -181,8 +181,11 @@ export class ReservationPostPage implements OnInit {
   map: any; // Leaflet APIのmap
   routeControl: any; // Leaflet APIのroute control
 
+  leafletIsAlredyPrepared: boolean = false;
+
   async ngOnInit() {
-    this.prepareLeafletMap();
+    console.log('ngOninit');
+    // this.prepareLeafletMap();
     // Yahoo javascript api  ////////////////////////////////////////////////////////////
     // const Y = await this.yahooService.getYahooMaps();
     // console.log('Y:', Y);
@@ -221,6 +224,12 @@ export class ReservationPostPage implements OnInit {
     // });
   }
 
+  async ionViewWillEnter() {
+    if (!this.leafletIsAlredyPrepared) {
+      await this.prepareLeafletMap();
+    }
+  }
+
   async prepareLeafletMap() {
     const win = window as any;
     if (!win.L) {
@@ -232,21 +241,7 @@ export class ReservationPostPage implements OnInit {
       this.L = win.L;
     }
 
-    //地図を表示するdiv要素のidを設定
-    this.map = this.L.map('course_map');
-    //地図の中心とズームレベルを指定
-    this.map.setView([37.52378812, 139.938139], 11);  // 東京駅 35.681236 139.767125  会津大学: 37.52378812, 139.938139
-    //表示するタイルレイヤのURLとAttributionコントロールの記述を設定して、地図に追加する
-    // L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-    //     attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
-    // }).addTo(map);
-
-    //スケールコントロールを最大幅200px、右下、m単位で地図に追加
-    this.L.control.scale({ maxWidth: 100, position: 'bottomright', imperial: false }).addTo(this.map);
-
-    // ピンの追加
-    // this.moveDepartureMarker(35.40, 136, "ここはどこ？", true);
-    
+    // new
     //地理院地図の標準地図タイル
     var gsi = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
     {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
@@ -261,16 +256,59 @@ export class ReservationPostPage implements OnInit {
       {  attribution: "<a href='https://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
     //baseMapsオブジェクトのプロパティに3つのタイルを設定
     var baseMaps = {
+      "オープンストリートマップ"  : osm,
       "地理院地図" : gsi,
       "淡色地図" : gsipale,
-      "航空地図" : gsiphoto,
-      "オープンストリートマップ"  : osm
+      "航空地図" : gsiphoto
     };
     //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
     //コントロール内にプロパティ名が表示される
+    // this.L.control.layers(baseMaps).addTo(this.map);
+    // osm.addTo(this.map);
+    // gsi.addTo(this.map);
+    
+
+    //地図を表示するdiv要素のidを設定
+    this.map = this.L.map('course_map');
     this.L.control.layers(baseMaps).addTo(this.map);
     osm.addTo(this.map);
-    // gsi.addTo(this.map);
+    //地図の中心とズームレベルを指定
+    this.map.setView([37.52378812, 139.938139], 11);  // 東京駅 35.681236 139.767125  会津大学: 37.52378812, 139.938139
+    //表示するタイルレイヤのURLとAttributionコントロールの記述を設定して、地図に追加する
+    // L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+    //     attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+    // }).addTo(map);
+
+    //スケールコントロールを最大幅200px、右下、m単位で地図に追加
+    this.L.control.scale({ maxWidth: 100, position: 'bottomright', imperial: false }).addTo(this.map);
+
+    // ピンの追加
+    // this.moveDepartureMarker(35.40, 136, "ここはどこ？", true);
+    
+    // //地理院地図の標準地図タイル
+    // var gsi = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
+    // {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+    // //地理院地図の淡色地図タイル
+    // var gsipale = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+    //   {attribution: "<a href='https://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
+    // //地理院地図の航空地図タイル
+    // var gsiphoto = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
+    //   {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+    // //オープンストリートマップのタイル
+    // var osm = this.L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+    //   {  attribution: "<a href='https://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
+    // //baseMapsオブジェクトのプロパティに3つのタイルを設定
+    // var baseMaps = {
+    //   "地理院地図" : gsi,
+    //   "淡色地図" : gsipale,
+    //   "航空地図" : gsiphoto,
+    //   "オープンストリートマップ"  : osm
+    // };
+    // //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
+    // //コントロール内にプロパティ名が表示される
+    // this.L.control.layers(baseMaps).addTo(this.map);
+    // osm.addTo(this.map);
+    // // gsi.addTo(this.map);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ルート
@@ -331,6 +369,8 @@ export class ReservationPostPage implements OnInit {
     //     this.L.latLng(57.6792, 11.949)
     //   ]
     // }).addTo(this.map);
+
+    this.leafletIsAlredyPrepared = true;
   }
 
   moveDepartureMarker(lat, lon, name: string, openPopup: boolean = true) {
