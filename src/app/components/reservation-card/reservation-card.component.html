@@ -1,4 +1,4 @@
-<ion-card class="cardclick" (click)="goToReservationDetail()">
+<ion-card (click)="goToReservationDetail()" class="cardclick">
   <ion-card-content>
     <div style="display: flex; vertical-align: middle">
       <!-- アイコン部分 -->
@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <ion-label style="padding-left: 5%; padding-top:1%;">最安値：{{reservation.fare/reservation.max_passenger_count | number: '1.0-0'}}円</ion-label><br>
+    <ion-label style="padding-left: 5%; padding-top:1%;">{{reservation.max_passenger_count}}人乗った場合：{{reservation.fare/reservation.max_passenger_count | number: '1.0-0'}}円</ion-label><br>
     <ion-label *ngIf="isShowTime" style="padding-left: 5%; padding-top:1%">移動時間:{{reservation.total_time}}</ion-label>
     <ion-label *ngIf="isShowDistance" style="padding-left: 5%; padding-top:1%">移動距離:{{reservation.total_distance}}</ion-label>
     <!-- ここまで -->
@@ -76,7 +76,7 @@
     <!-- ノリマスボタン -->
     <!-- <div class="norimasu"> -->
       <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">
-        <ion-button color=danger shape="round" fill="outline" expand="full" style="pointer-events: none">
+        <ion-button float-right color=danger shape="round" fill="outline" style="pointer-events: none;">
           <p style="color:red; font-size: 12px;">満員御礼</p>
         </ion-button>
         
@@ -88,7 +88,7 @@
 
       <ng-template #conditionIsNotFull>
         <div *ngIf="reservation?.condition === '募集終了'; else conditionIsRecruiting">
-        <ion-button color=danger shape="round" fill="outline" expand="full" style="pointer-events: none">
+        <ion-button float-right color=danger shape="round" fill="outline" style="pointer-events: none">
           <p style="color:red; font-size: 12px;">募集終了</p>
         </ion-button>
           <!-- <p class="norimasu_button">
@@ -102,7 +102,7 @@
       <ng-template #conditionIsRecruiting>
         <!-- <p float-right class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint"> -->
         <!-- <p class="norimasu_button" (click)="displayNorimasuAlert()"> -->
-        <ion-button color=primary shape="round" fill="outline" expand="full" (click)="displayNorimasuAlert()">
+        <ion-button float-right color=primary shape="round" fill="outline" (click)="displayNorimasuAlert()">
           <!--  fill="outline" class="norimasu_button" -->
           <p style="color:black; font-size: 12px;">ノリマス</p>
           <img class="buruburu" src="../../../assets/img/norimasu_2.png">
