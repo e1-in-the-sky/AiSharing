@@ -1,17 +1,17 @@
-<ion-card (click)="goToReservationDetail()">
+<ion-card class="cardclick" (click)="goToReservationDetail()">
   <ion-card-content>
     <div style="display: flex; vertical-align: middle">
       <!-- アイコン部分 -->
-      <ion-item lines="none">
-        <ion-avatar  slot="start" (click)="goToAccountDetail($event)">
-          <ion-img [src]="user.imageURL"></ion-img>
-        </ion-avatar>
-        <ion-label>
-          <!-- <h2 (click)="goToAccountDetail()" style="display: inline-block;">{{user.name}}</h2> -->
-          <p class="newline_text">{{reservation.comment}}</p>
-        </ion-label>
-        
-      </ion-item>
+        <ion-item lines="none" style="--ion-background-color: transparent;">
+          <ion-avatar  slot="start" (click)="goToAccountDetail($event)">
+            <ion-img [src]="user.imageURL"></ion-img>
+          </ion-avatar>
+          <ion-label>
+            <!-- <h2 (click)="goToAccountDetail()" style="display: inline-block;">{{user.name}}</h2> -->
+            <p class="newline_text">{{reservation.comment}}</p>
+          </ion-label>
+        </ion-item>
+      
       <!-- ここまで -->
 
       <!-- 人数カウント -->
@@ -54,7 +54,7 @@
       </div>  
     </div>
 
-    <ion-label style="padding-left: 5%; padding-top:1%;">最安値：{{reservation.fare/reservation.max_passenger_count | number: '1.0-0'}}円</ion-label>
+    <ion-label style="padding-left: 5%; padding-top:1%;">最安値：{{reservation.fare/reservation.max_passenger_count | number: '1.0-0'}}円</ion-label><br>
     <ion-label *ngIf="isShowTime" style="padding-left: 5%; padding-top:1%">移動時間:{{reservation.total_time}}</ion-label>
     <ion-label *ngIf="isShowDistance" style="padding-left: 5%; padding-top:1%">移動距離:{{reservation.total_distance}}</ion-label>
     <!-- ここまで -->
@@ -72,21 +72,28 @@
       <a href="#" class="fancy-button bg-gradient2"><span><i class="fa fa-envelope"></i>Messages</span></a>
     </div> -->
     
-    <div *ngIf="isShowNorimasu" style="display: flex;">
+    <div *ngIf="isShowNorimasu">
     <!-- ノリマスボタン -->
     <!-- <div class="norimasu"> -->
       <div *ngIf="reservation?.passenger_count === reservation?.max_passenger_count; else conditionIsNotFull">
-        <!-- <div class="norimasu_padding"><ion-img src="../../../assets/img/full.png"></ion-img></div> -->
-        <!-- <p class="norimasu_button"> -->
+        <ion-button color=danger shape="round" fill="outline" expand="full" style="pointer-events: none">
+          <p style="color:red; font-size: 12px;">満員御礼</p>
+        </ion-button>
+        
+        <!-- <div class="norimasu_padding"><ion-img src="../../../assets/img/full.png"></ion-img></div>
+        <p class="norimasu_button">
         <img src="../../../assets/img/full.png">
-        <!-- </p> -->
+        </p> -->
       </div>
 
       <ng-template #conditionIsNotFull>
         <div *ngIf="reservation?.condition === '募集終了'; else conditionIsRecruiting">
-          <!-- <p class="norimasu_button"> -->
-            <img src="../../../assets/img/reserve_finish.png">
-          <!-- </p> -->
+        <ion-button color=danger shape="round" fill="outline" expand="full" style="pointer-events: none">
+          <p style="color:red; font-size: 12px;">募集終了</p>
+        </ion-button>
+          <!-- <p class="norimasu_button">
+          <img src="../../../assets/img/reserve_finish.png">
+          </p> -->
         </div>
       </ng-template>
 
@@ -95,7 +102,12 @@
       <ng-template #conditionIsRecruiting>
         <!-- <p float-right class="norimasu_button" (click)="displayNorimasuAlert()" color="ion-color-light-tint"> -->
         <!-- <p class="norimasu_button" (click)="displayNorimasuAlert()"> -->
-        <img style="width: 80px; height:80px; margin-left: auto; margin-right: auto;" (click)="displayNorimasuAlert()" src="../../../assets/img/norimasu_2.png">
+        <ion-button color=primary shape="round" fill="outline" expand="full" (click)="displayNorimasuAlert()">
+          <!--  fill="outline" class="norimasu_button" -->
+          <p style="color:black; font-size: 12px;">ノリマス</p>
+          <img class="buruburu" src="../../../assets/img/norimasu_2.png">
+        </ion-button>
+        <!-- <img class="norimasu_button buruburu" (click)="displayNorimasuAlert()" src="../../../assets/img/norimasu_2.png"> -->
         <!-- <p style="font-size:30px; line-height: 80px;">ノリマス</p> -->        
         <!-- </p> -->
         <!-- <button type="submit"><img src="../../../assets/img/norimasu.png"></button> -->
