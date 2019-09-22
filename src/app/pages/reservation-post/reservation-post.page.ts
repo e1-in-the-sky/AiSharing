@@ -391,44 +391,79 @@ export class ReservationPostPage implements OnInit {
     this.leafletIsAlredyPrepared = true;
   }
 
-  setDepartureInContextMenu(e) {
-    // 入力文字を空にする
-    // LocalInfoを空にする
-    // selectedIndexを初期化する
-    // selectboxに住所を一つだけ入れる
+  setDepartureInContextMenu = async (e) => {
+    var result = await this.yahooService.getAddress({
+      lat: e.latlng.lat,
+      lon: e.latlng.lng
+    });
 
-    console.log('setDepartureInContextMenu');
-    console.log('this.routeControl:', this.routeControl);
+    result.subscribe((geocode) => {
+      // 入力文字を空にする
+      this.data.departure_name = "";
+      // 位置に関する初期化設定
+      this.data.departure_point = new firebase.firestore.GeoPoint(0, 0);
+      // 選択されているインデックスを初期化
+      this.indexOfSelectedDepatureLocation=0;
 
-    // var container = this.L.DomUtil.create('div');
-    // var latlng = e.latlng;
-    // this.L.popup()
-    //   .setContent(container)
-    //   .setLatLng(latlng)
-    //   .openOn(this.map);
-    // this.routeControl.spliceWaypoints(0, 1, latlng);
-    // this.map.closePopup();
-    // console.log('total distance:', this.totalDistance);
-    // console.log('total time:', this.totalTime);
+      var geoInfo = geocode as any;
+      console.log('geocode:', geocode);
+      var address = geoInfo.Feature[0].Property.Address;
+
+      // 出発地のロケーションの候補を設定する
+      this.departureLocalInfo = {
+        Feature: [
+          {
+            Name: address,
+            Property: {
+              Address: address
+            },
+            Geometry: {
+              Coordinates: e.latlng.lng.toString() + ',' + e.latlng.lat.toString()
+            }
+          }
+        ]
+      };
+      console.log('this.departureLocalInfo:', this.departureLocalInfo);
+      // 出発地を選択する
+      this.selectDepartureLocation()
+    });
   }
 
-  setDestinationInContextMenu(e) {
-    // 入力文字を空にする
-    // LocalInfoを空にする
-    // selectedIndexを初期化する
-    // selectboxに住所を一つだけ入れる
+  setDestinationInContextMenu = async (e) => {
+    var result = await this.yahooService.getAddress({
+      lat: e.latlng.lat,
+      lon: e.latlng.lng
+    });
 
-    console.log('setDestinationInContextMenu');
-    console.log('this.routeControl:', this.routeControl);
+    result.subscribe((geocode) => {
+      // 入力文字を空にする
+      this.data.destination_name = "";
+      // 位置に関する初期化設定
+      this.data.destination_point = new firebase.firestore.GeoPoint(0, 0);
+      // 選択されているインデックスを初期化
+      this.indexOfSelectedDestinationLocation=0;
 
-    // var container = this.L.DomUtil.create('div');
-    // var latlng = e.latlng;
-    // this.L.popup()
-    //   .setContent(container)
-    //   .setLatLng(latlng)
-    //   .openOn(this.map);
-    // this.routeControl.spliceWaypoints(this.routeControl.getWaypoints().length - 1, 1, latlng);
-    // this.map.closePopup();
+      var geoInfo = geocode as any;
+      console.log('geocode:', geocode);
+      var address = geoInfo.Feature[0].Property.Address;
+
+      // 目的地のロケーションの候補を設定する
+      this.destinationLocalInfo = {
+        Feature: [
+          {
+            Name: address,
+            Property: {
+              Address: address
+            },
+            Geometry: {
+              Coordinates: e.latlng.lng.toString() + ',' + e.latlng.lat.toString()
+            }
+          }
+        ]
+      };
+      // 目的地を選択する
+      this.selectDestinationLocation()
+    });
   }
 
   moveDepartureMarker(lat, lon, name: string, openPopup: boolean = true) {

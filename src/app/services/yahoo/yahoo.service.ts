@@ -9,6 +9,7 @@ export class YahooService {
   static_map_request_url: string = 'https://map.yahooapis.jp/map/V1/static';
   course_map_request_url: string = 'https://map.yahooapis.jp/course/V1/routeMap';
   local_serch_url: string = 'https://map.yahooapis.jp/search/local/V1/localSearch';
+  reverse_geo_coder_url: string = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder';
   map_js_url: string = 'https://map.yahooapis.jp/js/V1/jsapi';
 
   constructor(
@@ -94,8 +95,16 @@ export class YahooService {
   async getLocalInfo(param) {
     // https://map.yahooapis.jp/search/local/V1/localSearch?appid=＜あなたのアプリケーションID＞&query=%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3
     param.appid = this.appid;
-    param.output = "json"
+    param.output = "json";
     var query = new URLSearchParams(param).toString();
     return this.http.jsonp(this.local_serch_url + '?' + query, "callback");
+  }
+
+  async getAddress(param) {
+    // https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?lat=35.68381981&lon=139.77456498&appid=<あなたのアプリケーションID>
+    param.appid = this.appid;
+    param.output = "json";
+    var query = new URLSearchParams(param).toString();
+    return this.http.jsonp(this.reverse_geo_coder_url + '?' + query, "callback");
   }
 }
