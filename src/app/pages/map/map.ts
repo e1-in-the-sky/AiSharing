@@ -351,7 +351,17 @@ export class MapPage implements OnInit{
     // gsi.addTo(this.map);
 
     //地図を表示するdiv要素のidを設定
-    this.map = this.L.map('covered_map');
+    this.map = this.L.map('covered_map', {
+      contextmenu: true,
+      contextmenuWidth: 140,
+	      contextmenuItems: [{
+		      text: 'Show coordinates',
+		      callback: (e) => {
+            console.log('e:', e);
+            console.log('e.latlng:', e.latlng);
+          }
+	      }]
+    });
     this.L.control.layers(baseMaps).addTo(this.map);
     osm.addTo(this.map);
 
@@ -415,7 +425,18 @@ export class MapPage implements OnInit{
     // 現在地ボタン
     var currentPositionButton = this.createCurrentPositionButton();
     currentPositionButton.addTo(this.map);
-    
+
+    // map長押しの処理
+    // this.map.on('contextmenu', function(e){  // (e) => {} も function(e){}も座標が変わらない
+    //   console.log('MouseEvent (contextmenu):', e);
+    //   console.log('e.latlng:', e.latlng);
+    // });
+
+    this.map.on('click', function(e){
+      console.log('e:', e);
+      console.log('e.latlng:', e.latlng);
+    });
+
     console.log('end initLeafletMap');
   }
 

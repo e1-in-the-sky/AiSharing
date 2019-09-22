@@ -60,7 +60,9 @@ export class LeafletService {
         // leaflet marker cluster
         this.includeLeafletMarkerCluster(),
         // leaflet easy button
-        this.includeLeafletEasyButton()
+        this.includeLeafletEasyButton(),
+        // leaflet contextmenu
+        this.includeLeafletContextMenu()
       ]);
       await this.includeGraphHopper();  // graph Hopperの読み込み
       if (win.L) {
@@ -372,6 +374,28 @@ export class LeafletService {
       document.body.appendChild(leaflet_easy_button_script);
       leaflet_easy_button_script.onload = () => {
         resolve(win.L.easyButton);
+      };
+    });
+  }
+
+  includeLeafletContextMenu() {
+    const win = window as any;
+    // if (win.L.easyButton) {
+    //   return new Promise((resolve, reject) => {
+    //     resolve(win.L.easyButton);
+    //   });
+    // }
+
+    return new Promise((resolve, reject) => {
+      const leaflet_contextmenu_link = document.createElement('link');
+      leaflet_contextmenu_link.rel = "stylesheet";
+      leaflet_contextmenu_link.href = "https://rawgit.com/aratcliffe/Leaflet.contextmenu/master/dist/leaflet.contextmenu.css";
+      document.body.appendChild(leaflet_contextmenu_link);
+      const leaflet_contextmenu_script = document.createElement('script');
+      leaflet_contextmenu_script.src = "https://rawgit.com/aratcliffe/Leaflet.contextmenu/master/dist/leaflet.contextmenu.js";
+      document.body.appendChild(leaflet_contextmenu_script);
+      leaflet_contextmenu_script.onload = () => {
+        resolve();
       };
     });
   }

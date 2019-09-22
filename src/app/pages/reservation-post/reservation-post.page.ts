@@ -370,6 +370,12 @@ export class ReservationPostPage implements OnInit {
     //   ]
     // }).addTo(this.map);
 
+    // map長押しの処理
+    this.map.on('contextmenu', function(e){  // (e) => {} も function(e){}も座標が変わらない
+      console.log('MouseEvent (contextmenu):', e);
+      console.log('e.latlng:', e.latlng);
+    });
+
     this.leafletIsAlredyPrepared = true;
   }
 
