@@ -523,7 +523,28 @@ export class ReservationPostPage implements OnInit {
 
   onPost() {
     //if destination or departure name is empty then don't work
-    if (!this.data.destination_name || !this.data.departure_name) {
+    // if (!this.data.destination_name || !this.data.departure_name) {
+    //   this.alert_no_information();
+    //   return;
+    // }
+
+    // if departure or destination name is empty then don't work
+    console.log('this.departureLocalInfo:', this.departureLocalInfo);  // => {}
+    console.log('!this.departureLocalInfo:', !this.departureLocalInfo);  // => false
+    console.log('this.departureLocalInfo === {}:', this.departureLocalInfo === {});  // => false
+    console.log('!Object.keys(this.departureLocalInfo).length:', !Object.keys(this.departureLocalInfo).length);  // => true
+    // if ( !Object.keys(this.departureLocalInfo).length || !Object.keys(this.destinationLocalInfo).length ) {
+    //   this.alert_no_information();
+    //   return;
+    // }
+    if ( !this.departureLocalInfo.Feature || !this.departureLocalInfo.Feature ) {
+      console.log('1');
+      this.alert_no_information();
+      return;
+    }
+    // if displayed no departure or destination information then don't work
+    else if ( this.departureLocalInfo.Feature.length === 0  || this.destinationLocalInfo.Feature.length === 0 ) {
+      console.log('2');
       this.alert_no_information();
       return;
     }
@@ -531,8 +552,8 @@ export class ReservationPostPage implements OnInit {
       this.alert_no_time();
       return;
     }
-      // else if(new Date(this.data.departure_time) <= new Date(this.data.departure_time)){
-      else if(new Date(this.data.departure_time) <= new Date()){
+    // else if(new Date(this.data.departure_time) <= new Date(this.data.departure_time)){
+    else if(new Date(this.data.departure_time) <= new Date()){
       this.alert_invalid_time();
       return;
     }
