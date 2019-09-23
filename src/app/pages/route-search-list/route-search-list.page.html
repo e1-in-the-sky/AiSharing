@@ -24,7 +24,7 @@
     <reservation-card [reservation]='reservation'></reservation-card>
   </ng-container> -->
 
-  <ion-slides pager="true" [options]="slideOpts" *ngIf="reservations">
+  <ion-slides pager="true" [options]="slidesOpts" *ngIf="reservations">
     <ion-slide *ngFor="let route of route_list; index as i;">
       <div>
         <ion-label>候補{{i+1}}</ion-label>
