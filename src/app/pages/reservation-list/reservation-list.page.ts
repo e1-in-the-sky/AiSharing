@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation/reservation.service';
@@ -29,7 +29,12 @@ export class ReservationListPage implements OnInit {
   today = new Date();
   filter;
 
+  header_date_str = (this.today.getMonth() + 1).toString() + '月' + this.today.getDate().toString() + '日';
+  // header_date_str = this.today.toDateString();
+
   constructor(
+    // private zone: NgZone,
+    private changeDetectorRef: ChangeDetectorRef,
     private reservationService: ReservationService,
     public router: Router,
     // private navCtrl: NavController,
@@ -129,6 +134,7 @@ export class ReservationListPage implements OnInit {
   // }
 
   async createReservationFilterModal() {
+    console.log('this.filter:', this.filter);
     const modal = await this.modalController.create({
       component: ReservationFilterPage,
       componentProps: {
@@ -138,7 +144,9 @@ export class ReservationListPage implements OnInit {
     await modal.present();
     const { data } = await modal.onWillDismiss();
     if (data) {
+      console.log('data.filter:', data.filter);
       this.filter = data.filter;
+      this.header_date_str = (this.filter.departure_time_start.getMonth() + 1).toString() + '月' + this.filter.departure_time_start.getDate().toString() + '日';
       this.getReservationsAndFilterWithLoading();
     }
   }
@@ -320,40 +328,60 @@ export class ReservationListPage implements OnInit {
   //     = this.reservations.filter(reservation =>
   //       (reservation.departure_time > start_time_timestamp) && (reservation.departure_time < end_time_timestamp));
   // }
-  // nextDay(){
-  //   // this.filter.departure_time_start = new Date(this.filter.departure_time_start.getFullYear(), this.filter.departure_time_start.getMonth(), this.filter.departure_time_start.getDate()+1, this.filter.departure_time_start.getHours(), this.filter.departure_time_start.getMinutes(), this.filter.departure_time_start.getSeconds());
-  //   // this.filter.departure_time_end = new Date(this.filter.departure_time_end.getFullYear(), this.filter.departure_time_end.getMonth(), this.filter.departure_time_end.getDate()+1, this.filter.departure_time_end.getHours(), this.filter.departure_time_end.getMinutes(), this.filter.departure_time_end.getSeconds());
-  //   // console.log("filter", this.filter)
-  //   this.departure_time_start.setDate(this.departure_time_start.getDate() + 1);
-  //   this.departure_time_end.setDate(this.departure_time_end.getDate() + 1);  
-  //   this.filter.departure_time_start = this.departure_time_start;
-  //   this.filter.departure_time_end = this.departure_time_end;
-  //   console.log("nextDay", this.departure_time_start)
-  //   console.log("nextDay", this.departure_time_end)
+  nextDay(){
+    // this.filter.departure_time_start = new Date(this.filter.departure_time_start.getFullYear(), this.filter.departure_time_start.getMonth(), this.filter.departure_time_start.getDate()+1, this.filter.departure_time_start.getHours(), this.filter.departure_time_start.getMinutes(), this.filter.departure_time_start.getSeconds());
+    // this.filter.departure_time_end = new Date(this.filter.departure_time_end.getFullYear(), this.filter.departure_time_end.getMonth(), this.filter.departure_time_end.getDate()+1, this.filter.departure_time_end.getHours(), this.filter.departure_time_end.getMinutes(), this.filter.departure_time_end.getSeconds());
+    // console.log("filter", this.filter)
+    // this.departure_time_start.setDate(this.departure_time_start.getDate() + 1);
+    // this.departure_time_end.setDate(this.departure_time_end.getDate() + 1);  
+    // this.filter.departure_time_start = this.departure_time_start;
+    // this.filter.departure_time_end = this.departure_time_end;
+    // console.log("nextDay", this.departure_time_start)
+    // console.log("nextDay", this.departure_time_end)
+    
+    this.filter.departure_time_start.setDate(this.filter.departure_time_start.getDate() + 1);
+    this.filter.departure_time_end.setDate(this.filter.departure_time_end.getDate() + 1);
 
-  //   // this.filter.departure_time_start.setDate(this.filter.departure_time_start.getDate() + 1);
-  //   // this.filter.departure_time_end.setDate(this.filter.departure_time_end.getDate() + 1);  
+    this.header_date_str = (this.filter.departure_time_start.getMonth() + 1).toString() + '月' + this.filter.departure_time_start.getDate().toString() + '日';
+    // this.header_date_str = this.filter.departure_time_start.toDateString();
+    // this.changeDetectorRef.detectChanges();
 
-  //   // this.filter = JSON.parse(JSON.stringify(this.filter));
-  //   // console.log("filter", this.filter)    
-  //   // this.filter = Object.create(this.filter);
-  // }
-  // beforeDay(){
-  //   // this.filter.departure_time_start = new Date(this.filter.departure_time_start.getFullYear(), this.filter.departure_time_start.getMonth(), this.filter.departure_time_start.getDate()-1, this.filter.departure_time_start.getHours(), this.filter.departure_time_start.getMinutes(), this.filter.departure_time_start.getSeconds());
-  //   // this.filter.departure_time_end = new Date(this.filter.departure_time_end.getFullYear(), this.filter.departure_time_end.getMonth(), this.filter.departure_time_end.getDate()-1, this.filter.departure_time_end.getHours(), this.filter.departure_time_end.getMinutes(), this.filter.departure_time_end.getSeconds());
-  //   this.departure_time_start.setDate(this.departure_time_start.getDate() - 1);
-  //   this.departure_time_end.setDate(this.departure_time_end.getDate() - 1);
-  //   this.filter.departure_time_start = this.departure_time_start;
-  //   this.filter.departure_time_end = this.departure_time_end;
 
-  //   console.log("beforeDay", this.filter.departure_time_start)
-  //   console.log("before Day", this.filter.departure_time_end)
+    // this.filter = JSON.parse(JSON.stringify(this.filter));
+    // console.log("filter", this.filter)    
+    // this.filter = Object.create(this.filter);
 
-  //   // this.filter.departure_time_start.setDate(this.filter.departure_time_start.getDate() - 1);
-  //   // this.filter.departure_time_end.setDate(this.filter.departure_time_end.getDate() - 1);
+    // use NgZone  =>  not working
+    // this.zone.run(() => {
+    //   this.filter.departure_time_start.setDate(this.filter.departure_time_start.getDate() + 1);
+    //   this.filter.departure_time_end.setDate(this.filter.departure_time_end.getDate() + 1);    
+    // });
+  };
+  beforeDay(){
+    // this.filter.departure_time_start = new Date(this.filter.departure_time_start.getFullYear(), this.filter.departure_time_start.getMonth(), this.filter.departure_time_start.getDate()-1, this.filter.departure_time_start.getHours(), this.filter.departure_time_start.getMinutes(), this.filter.departure_time_start.getSeconds());
+    // this.filter.departure_time_end = new Date(this.filter.departure_time_end.getFullYear(), this.filter.departure_time_end.getMonth(), this.filter.departure_time_end.getDate()-1, this.filter.departure_time_end.getHours(), this.filter.departure_time_end.getMinutes(), this.filter.departure_time_end.getSeconds());
+    // this.departure_time_start.setDate(this.departure_time_start.getDate() - 1);
+    // this.departure_time_end.setDate(this.departure_time_end.getDate() - 1);
+    // this.filter.departure_time_start = this.departure_time_start;
+    // this.filter.departure_time_end = this.departure_time_end;
 
-  //   // this.filter = JSON.parse(this.filter);
-  //   // this.filter = Object.create(this.filter);
+    // console.log("beforeDay", this.filter.departure_time_start)
+    // console.log("before Day", this.filter.departure_time_end)
 
-  // }
+    this.filter.departure_time_start.setDate(this.filter.departure_time_start.getDate() - 1);
+    this.filter.departure_time_end.setDate(this.filter.departure_time_end.getDate() - 1);
+
+    this.header_date_str = (this.filter.departure_time_start.getMonth() + 1).toString() + '月' + this.filter.departure_time_start.getDate().toString() + '日';
+    // this.changeDetectorRef.detectChanges();
+
+    // this.filter = JSON.parse(this.filter);
+    // this.filter = Object.create(this.filter);
+
+    // use NgZone  =>  not working
+    // this.zone.run(() => {
+    //   this.filter.departure_time_start.setDate(this.filter.departure_time_start.getDate() - 1);
+    //   this.filter.departure_time_end.setDate(this.filter.departure_time_end.getDate() - 1);  
+    // });
+
+  };
 }

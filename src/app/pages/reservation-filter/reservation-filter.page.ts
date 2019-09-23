@@ -21,6 +21,8 @@ export class ReservationFilterPage implements OnInit {
 
   ngOnInit() {
     this.filter = this.navParams.get('filter');
+    console.log('this.filter:', this.filter);
+    this.departure_time_day = this.filter.departure_time_start;
   }
 
   onCancel() {
@@ -38,10 +40,12 @@ export class ReservationFilterPage implements OnInit {
   }
 
   addTime(ev){
-    var daytime = this.departure_time_day;
+    // console.log('filter start:', this.filter);
+    var daytime = new Date(this.departure_time_day.toISOString());
     daytime.setHours(ev.slice(0,2));
     daytime.setMinutes(ev.slice(-2));
-    console.log('daytime:', daytime);
+    // console.log('daytime:', daytime);
+    // console.log('filter end:', this.filter);
     return daytime;
   }
 
