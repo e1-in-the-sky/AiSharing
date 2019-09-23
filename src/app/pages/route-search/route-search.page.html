@@ -50,13 +50,15 @@
           </ion-select-option>
         </ion-select>
         <!-- <p>indexOfSelectedDepatureLocation: {{indexOfSelectedDepatureLocation}}</p> -->
-        <p>住所: {{selectedDepartureAddress}}</p>
+        <p style="font-size: 14px; color: grey; padding-left: 16px; margin: 4px 0;">
+          <img src="../../../assets/img/icon_post.jpg" style="height: 14px; width: 14px;"> {{selectedDepartureAddress}}
+        </p>
         <!-- <img class="location-img" [src]="departureLocationMapImageUrl" *ngIf="departureLocationMapImageUrl !== ''"> -->
       </ng-container>
 
       <!-- もし候補地が空なら"表示する候補地がありません"と表示する -->
       <ng-template #nonDepartureLocalInfo>
-        <p>表示する候補地がありません</p>
+        <p style="padding-left: 16px; font-size: 13px;">表示する候補地がありません</p>
         <!-- <ion-select>
           <ion-select-option [selected]=true>
             表示する候補地がありません
@@ -88,13 +90,15 @@
           </ion-select-option>
         </ion-select>
         <!-- <p>indexOfSelectedDestinationLocation: {{indexOfSelectedDestinationLocation}}</p> -->
-        <p>住所: {{selectedDestinationAddress}}</p>
+        <p style="font-size: 14px; color: grey; padding-left: 16px; margin: 4px 0;">
+          <img src="../../../assets/img/icon_post.jpg" style="height: 14px; width: 14px;"> {{selectedDestinationAddress}}
+        </p>
         <!-- <img class="location-img" [src]="destinationLocationMapImageUrl" *ngIf="destinationLocationMapImageUrl !== ''"> -->
       </ng-container>
 
       <!-- もし候補地が空なら"表示する候補地がありません"と表示する -->
       <ng-template #nonDestinationLocalInfo>
-        <p>表示する候補地がありません</p>
+        <p style="padding-left: 16px; font-size: 13px;">表示する候補地がありません</p>
         <!-- <ion-select>
           <ion-select-option [selected]=true>
             表示する候補地がありません
