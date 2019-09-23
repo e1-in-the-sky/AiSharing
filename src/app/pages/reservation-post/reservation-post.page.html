@@ -35,6 +35,7 @@
         <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="data.departure_time"
           name="departure_time" (ngModelChange)="on_date_changed()" [min]="min_date" [max]="max_date"></ion-datetime>
       </ion-item>
+      <div style="text-align: right;"><ion-button size="small" style="font-size: 8px;" fill="outline" (click)="setCurrentTime()">現在時刻をセット</ion-button></div>
 
       <ion-item>
         <ion-label position="floating">
@@ -48,6 +49,8 @@
         <ion-progress-bar type="indeterminate"></ion-progress-bar>
       </ng-container>
       
+      <div style="text-align: right;"><ion-button size="small" style="font-size: 8px;" fill="outline" (click)="setCurrentPositionToDeparture()">現在地をセット</ion-button></div>
+
       <!-- 出発地を選ぶためのセレクトボックス -->
       <!-- {{departureLocalInfo.Feature?.length}} -->
       <ng-container *ngIf="departureLocalInfo?.Feature; else nonDepartureLocalInfo">
@@ -87,6 +90,8 @@
       <ng-container *ngIf="isLoadingDestinationLocalInfo">
         <ion-progress-bar type="indeterminate"></ion-progress-bar>
       </ng-container>
+
+      <div style="text-align: right;"><ion-button size="small" style="font-size: 8px;" fill="outline" (click)="setCurrentPositionToDestination()">現在地をセット</ion-button></div>
 
       <!-- 目的地を選ぶためのセレクトボックス -->
       <!-- {{destinationLocalInfo.Feature?.length}} -->
