@@ -66,7 +66,7 @@ export class MapPage implements OnInit{
     sort: '出発予定時刻が早い順',
     passenger_capacity: 1
   };
-
+  header_date_str = (this.today.getMonth() + 1).toString() + '月' + this.today.getDate().toString() + '日';
   watchPositionId;
 
   constructor(
@@ -514,6 +514,7 @@ export class MapPage implements OnInit{
     if (data) {
       this.selectedReservation = null;
       this.filter = data.filter;
+      this.header_date_str = (this.filter.departure_time_start.getMonth() + 1).toString() + '月' + this.filter.departure_time_start.getDate().toString() + '日';
       this.reservations = await this.reservationService.getReservations();
       await this.applyFilterToReservations();
       this.setMarkers();
@@ -753,4 +754,49 @@ export class MapPage implements OnInit{
   rmResponse(e: any){
     e.stopPropagation();
   }
+
+  async nextDay(){
+    var loading = await this.createLoading();
+    loading.present();
+    try{
+    this.filter.departure_time_start.setDate(this.filter.departure_time_start.getDate() + 1);
+    this.filter.departure_time_end.setDate(this.filter.departure_time_end.getDate() + 1);
+    this.header_date_str = (this.filter.departure_time_start.getMonth() + 1).toString() + '月' + this.filter.departure_time_start.getDate().toString() + '日';
+
+    this.selectedReservation = null;
+    this.reservations = await this.reservationService.getReservations();
+    await this.applyFilterToReservations();
+    this.setMarkers();
+    loading.dismiss();
+    }catch(error){
+      loading.dismiss();
+      var err = await this.createError(error);
+      err.present();
+    }
+    
+
+  };
+
+  async beforeDay(){    
+    var loading = await this.createLoading();
+    loading.present();
+    try{
+    this.filter.departure_time_start.setDate(this.filter.departure_time_start.getDate() - 1);
+    this.filter.departure_time_end.setDate(this.filter.departure_time_end.getDate() - 1);
+    this.header_date_str = (this.filter.departure_time_start.getMonth() + 1).toString() + '月' + this.filter.departure_time_start.getDate().toString() + '日';
+
+    this.selectedReservation = null;
+    this.reservations = await this.reservationService.getReservations();
+    await this.applyFilterToReservations();
+    this.setMarkers();
+    loading.dismiss();
+    }catch(error){
+      loading.dismiss();
+      var err = await this.createError(error);
+      err.present();
+    }
+    
+  };
+
+
 }

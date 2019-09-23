@@ -21,6 +21,8 @@ export class MapFilterPage implements OnInit {
 
   ngOnInit() {
     this.filter = this.navParams.get('filter');
+    console.log('this.filter:', this.filter);
+    this.departure_time_day = this.filter.departure_time_start;
   }
 
   onCancel() {
@@ -38,7 +40,7 @@ export class MapFilterPage implements OnInit {
   }
 
   addTime(ev){
-    var daytime = this.departure_time_day;
+    var daytime = new Date(this.departure_time_day.toISOString());
     daytime.setHours(ev.slice(0,2));
     daytime.setMinutes(ev.slice(-2));
     console.log('daytime:', daytime);
