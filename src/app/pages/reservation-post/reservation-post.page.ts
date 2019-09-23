@@ -883,5 +883,150 @@ export class ReservationPostPage implements OnInit {
     }
   }
 
+  async createError(header = 'エラー', message = '') {
+    let alert = await this.alertController.create({
+      header: header,
+      // subHeader: 'Subtitle',
+      message: message,
+      buttons: ['OK']
+    });
+    return alert;
+  }
+
+  setCurrentTime() {
+    // YYYY-MM-DD HH:mm
+    var today = new Date();
+    this.data.departure_time = today.getFullYear().toString()
+                              + '-' + (today.getMonth() + 1).toString() 
+                              + '-' + today.getDate().toString() 
+                              + ' ' + today.getHours().toString()
+                              + ':' + today.getMinutes().toString();
+  }
+
+  isSupportedGeolocation() {
+    // check for Geolocation support
+    if (navigator.geolocation) {
+      console.log('Geolocation is supported!');
+      return true;
+    }
+    else {
+      console.log('Geolocation is not supported for this Browser/OS.');
+      return false;
+    }
+  }
+
+  async getCurrentPosition(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        resolve(position);
+      }, (error) => {
+        reject(error);
+      })
+    });
+  }
+
+  async setCurrentPositionToDeparture() {
+    if (!this.isSupportedGeolocation) {
+      var error = await this.createError('Geolocation Error!', 'Geolocationがサポートされていません');
+      error.present();
+      return;
+    }
+    try {
+      var currentPosition = await this.getCurrentPosition();
+      console.log('currentPosition:', currentPosition);
+
+      var result = await this.yahooService.getAddress({
+        lat: currentPosition.coords.latitude,
+        lon: currentPosition.coords.longitude
+      });
+  
+      result.subscribe((geocode) => {
+        // 入力文字を空にする
+        this.data.departure_name = "";
+        // 位置に関する初期化設定
+        this.data.departure_point = new firebase.firestore.GeoPoint(0, 0);
+        // 選択されているインデックスを初期化
+        this.indexOfSelectedDepatureLocation=0;
+  
+        var geoInfo = geocode as any;
+        console.log('geocode:', geocode);
+        var address = geoInfo.Feature[0].Property.Address;
+  
+        // 出発地のロケーションの候補を設定する
+        this.departureLocalInfo = {
+          Feature: [
+            {
+              Name: address,
+              Property: {
+                Address: address
+              },
+              Geometry: {
+                Coordinates: currentPosition.coords.longitude.toString() + ',' + currentPosition.coords.latitude.toString()
+              }
+            }
+          ]
+        };
+        console.log('this.departureLocalInfo:', this.departureLocalInfo);
+        // 出発地を選択する
+        this.selectDepartureLocation()
+      });
+    } catch (error) {
+      var error = await this.createError('エラー', error.toString());
+      error.present();
+      return;
+    }
+  }
+
+  async setCurrentPositionToDestination() {
+    if (!this.isSupportedGeolocation) {
+      var error = await this.createError('Geolocation Error!', 'Geolocationがサポートされていません');
+      error.present();
+      return;
+    }
+    try {
+      var currentPosition = await this.getCurrentPosition();
+      console.log('currentPosition:', currentPosition);
+
+      var result = await this.yahooService.getAddress({
+        lat: currentPosition.coords.latitude,
+        lon: currentPosition.coords.longitude
+      });
+  
+      result.subscribe((geocode) => {
+        // 入力文字を空にする
+        this.data.destination_name = "";
+        // 位置に関する初期化設定
+        this.data.destination_point = new firebase.firestore.GeoPoint(0, 0);
+        // 選択されているインデックスを初期化
+        this.indexOfSelectedDestinationLocation=0;
+  
+        var geoInfo = geocode as any;
+        console.log('geocode:', geocode);
+        var address = geoInfo.Feature[0].Property.Address;
+  
+        // 出発地のロケーションの候補を設定する
+        this.destinationLocalInfo = {
+          Feature: [
+            {
+              Name: address,
+              Property: {
+                Address: address
+              },
+              Geometry: {
+                Coordinates: currentPosition.coords.longitude.toString() + ',' + currentPosition.coords.latitude.toString()
+              }
+            }
+          ]
+        };
+        console.log('this.destinationLocalInfo:', this.destinationLocalInfo);
+        // 出発地を選択する
+        this.selectDestinationLocation()
+      });
+    } catch (error) {
+      var error = await this.createError('エラー', error.toString());
+      error.present();
+      return;
+    }
+  }
 
 }
