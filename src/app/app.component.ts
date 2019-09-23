@@ -43,6 +43,11 @@ export class AppComponent implements OnInit {
     //   icon: 'information-circle'
     // },
     {
+      title: '相乗り投稿',
+      url: '/app/tabs/reservation-post',
+      icon: 'paper-plane'
+    },
+    {
       title: '投稿一覧',
       url: '/app/tabs/reservations',
       icon: 'chatbubbles'
@@ -53,20 +58,16 @@ export class AppComponent implements OnInit {
       icon: 'map'
     },
     {
-      title: 'タクシー予約',
-      url: '/app/tabs/taxi-reservation',
-      icon: 'paper-plane'
-    },
-    {
-      title: '相乗り投稿',
-      url: '/app/tabs/reservation-post',
-      icon: 'logo-model-s'
-    },
-    {
       title: '相乗り検索',
       url: '/app/tabs/route-search',
       icon: 'search'
+    },
+    {
+      title: 'タクシー予約',
+      url: '/app/tabs/taxi-reservation',
+      icon: 'logo-model-s'
     }
+    
   ];
   loggedIn = false;
 

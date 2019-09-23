@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar color="header">
+    <ion-toolbar color="header" text-center>
   
       <ion-buttons slot="start">
         <ion-button (click)="onCancel()">
@@ -46,14 +46,28 @@
             [ngModel]="filter.departure_time_end | date: 'y-MM-dd HH:mm'" (ngModelChange)="filter.departure_time_end = toDate($event)" name="departure_time_end"></ion-datetime>
         </ion-item> -->
   
-        <ion-item>
+        <!-- <ion-item>
           <ion-label position="floating">出発時刻</ion-label>
           <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm"
             [ngModel]="filter.departure_time_start | date: 'y-MM-dd HH:mm'" (ngModelChange)="filter.departure_time_start = toDate($event)" name="departure_time_start"></ion-datetime>
           から
           <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm"
           [ngModel]="filter.departure_time_end | date: 'y-MM-dd HH:mm'" (ngModelChange)="filter.departure_time_end = toDate($event)" name="departure_time_end"></ion-datetime>
+        </ion-item> -->
+
+        <ion-item>
+          <ion-label position="floating">出発日</ion-label>
+          <ion-datetime displayFormat="YYYY-MM-DD" pickerFormat="YYYY-MM-DD"
+            [ngModel]="departure_time_day | date: 'y-MM-dd'" (ngModelChange)="departure_time_day = toDate($event)" name="departure_time_day"></ion-datetime>
+          
+          <ion-label position="floating">出発時刻</ion-label>
+          <ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm"
+          [ngModel]="filter.departure_time_start | date: 'HH:mm'" (ngModelChange)="filter.departure_time_start = addTime($event)" name="departure_time_start"></ion-datetime>
+          から
+          <ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm"
+          [ngModel]="filter.departure_time_end | date: 'HH:mm'" (ngModelChange)="filter.departure_time_end = addTime($event)" name="departure_time_end"></ion-datetime>
         </ion-item>
+
   
         <!-- 並び替え -->
         <!-- <ion-item>

@@ -11,6 +11,7 @@ export class MapFilterPage implements OnInit {
   // dataForDismiss = {};
   departute_time_start_str = '';
   departure_time_end_str = '';
+  departure_time_day: Date = new Date();
   @Input() filter;
 
   constructor(
@@ -36,8 +37,23 @@ export class MapFilterPage implements OnInit {
     return new Date(ev);
   }
 
+  addTime(ev){
+    var daytime = this.departure_time_day;
+    daytime.setHours(ev.slice(0,2));
+    daytime.setMinutes(ev.slice(-2));
+    console.log('daytime:', daytime);
+    return daytime;
+  }
+
+
   onSearch() {
-    // console.log(this.filter);
+    this.filter.departure_time_start.setFullYear(this.departure_time_day.getFullYear());
+    this.filter.departure_time_start.setMonth(this.departure_time_day.getMonth());
+    this.filter.departure_time_start.setDate(this.departure_time_day.getDate());
+    this.filter.departure_time_end.setFullYear(this.departure_time_day.getFullYear());
+    this.filter.departure_time_end.setMonth(this.departure_time_day.getMonth());
+    this.filter.departure_time_end.setDate(this.departure_time_day.getDate());
+    console.log(this.filter);
     this.dismissModal({
       filter: this.filter
     });
