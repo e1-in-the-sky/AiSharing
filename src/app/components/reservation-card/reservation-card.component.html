@@ -35,14 +35,16 @@
     </div>
     
     <!-- 出発時刻 -->
-    <ion-icon style="padding-left: 4%; vertical-align: middle" name="time"></ion-icon>
-    <ion-label style="vertical-align: middle;">{{reservation.departure_time | timestamp2string}}</ion-label>
+    <div>
+      <ion-icon style="padding-left: 4%; vertical-align: middle" name="clock"></ion-icon>
+      <ion-label style="vertical-align: middle;">{{reservation.departure_time | timestamp2string}}</ion-label>
+    </div>
     <div><ion-label style="padding-left: 5%;" *ngIf="errors?.alreadyDeparted" color="danger">すでに出発予定時刻を過ぎた投稿です!</ion-label></div>
   
     <!-- ここまで -->
     
     <!-- 出発地，目的地部分 -->
-    <div style="padding-left: 5%; padding-top: 2%;">
+    <div style="padding-left: 5%; padding-top: 2%; padding-bottom: 2%;">
       <div style="display: flex;">
         <div class="place_icon"><img src="../../../assets/img/place_start.png"></div>
         <div class="place_text">{{reservation.departure_name}}</div>
@@ -54,7 +56,8 @@
       </div>
     </div>
 
-    <ion-label style="padding-left: 5%; padding-top:1%;">{{reservation.max_passenger_count}}人乗車時：{{reservation.fare/reservation.max_passenger_count | number: '1.0-0'}}円</ion-label><br>
+    <ion-label style="padding-left: 5%;">{{reservation.max_passenger_count}}人乗車時：{{reservation.fare/reservation.max_passenger_count | number: '1.0-0'}}円</ion-label>
+    <br>
     <ion-label *ngIf="isShowTime" style="padding-left: 5%; padding-top:1%">移動時間:{{reservation.total_time}}</ion-label>
     <ion-label *ngIf="isShowDistance" style="padding-left: 5%; padding-top:1%">移動距離:{{reservation.total_distance}}</ion-label>
     <!-- ここまで -->

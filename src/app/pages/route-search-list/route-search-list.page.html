@@ -24,12 +24,16 @@
     <reservation-card [reservation]='reservation'></reservation-card>
   </ng-container> -->
 
-  <ion-slides pager="true" [options]="slideOpts" *ngIf="reservations">
+  <ion-slides pager="true" *ngIf="reservations">
     <ion-slide *ngFor="let route of route_list; index as i;">
-      <div>
-        <ion-label>候補{{i+1}}</ion-label>
-        <ion-label>必要時間: {{route.total_time | number: '1.0-0'}}分</ion-label>
-        <ion-label>徒歩: {{route.total_walk_time | number: '1.0-0'}}分</ion-label>
+      <div style="padding-top: 2%">
+        <ion-label text-center>おすすめルート{{i+1}}</ion-label><br>
+        <ion-label text-center>
+          <ion-icon name="clock" style="vertical-align: middle;"></ion-icon>
+          <ion-label style="vertical-align: middle;">{{route.total_time | number: '1.0-0'}}分    </ion-label>
+          <ion-icon name="walk" style="vertical-align: middle;"></ion-icon>
+          <ion-label style="vertical-align: middle;">{{route.total_walk_time | number: '1.0-0'}}分</ion-label>
+        </ion-label>
         <ng-container *ngFor="let reservation of reservations[i];">
           <reservation-card [reservation]='reservation'></reservation-card>
         </ng-container>
