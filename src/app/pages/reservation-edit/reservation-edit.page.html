@@ -42,14 +42,16 @@
         </ion-segment-button>
       </ion-segment> -->
 
-      <ion-item>
+      <!-- 出発地について -->
+      <!-- <ion-item>
         <ion-label position="floating">出発地</ion-label>
         <ion-input type="text" [(ngModel)]="reservation.departure_name" name="departure_name" required></ion-input>
-      </ion-item>
-      <ion-item>
+      </ion-item> -->
+      <!-- 目的地について -->
+      <!-- <ion-item>
         <ion-label position="floating">目的地</ion-label>
         <ion-input type="text" [(ngModel)]="reservation.destination_name" name="destination_name" required></ion-input>
-      </ion-item>
+      </ion-item> -->
       <ion-item>
         <ion-label position="floating">出発時刻</ion-label>
         <!-- <ion-input type="text" [(ngModel)]="data.departure_time" name="departure_time" required></ion-input> -->
@@ -61,12 +63,12 @@
         <h3>{{reservation.max_passenger_count}}</h3>
         <img src="../../../assets/img/plus.png" style="height:40px; width:40px;"(click)="on_change_max_passenger_count(1)">
       </ion-item>
-      <p>現在乗車人数</p>
+      <!-- <p>現在乗車人数</p>
       <ion-item>
         <img src="../../../assets/img/minus.png" style="height:40px; width:40px;"(click)="on_change_passenger_count(-1)">
         <h3>{{reservation.passenger_count}}</h3>
         <img src="../../../assets/img/plus.png" style="height:40px; width:40px;"(click)="on_change_passenger_count(1)">
-      </ion-item>
+      </ion-item> -->
       <ion-item>
         <ion-label position="floating">コメント</ion-label>
         <ion-input type="text" [(ngModel)]="reservation.comment" name="comment"></ion-input>

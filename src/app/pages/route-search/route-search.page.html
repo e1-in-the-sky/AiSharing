@@ -26,6 +26,14 @@
 <ion-content padding>
   <form>
     <ion-list>
+
+      <ion-item>
+        <ion-label position="floating">出発時刻</ion-label>
+        <!-- <ion-input type="text" [(ngModel)]="data.departure_time" name="departure_time" required></ion-input> -->
+        <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="data.departure_time"
+          name="departure_time" [min]="min_date" [max]="max_date"></ion-datetime>
+      </ion-item>
+
       <ion-item>
         <ion-label position="floating">出発地</ion-label>
         <ion-input type="text" [(ngModel)]="data.departure_name" (ngModelChange)="inputDeparture($event)" name="departure_name" required></ion-input>
@@ -112,22 +120,19 @@
         <img class="course-img" [src]="courseMapImageUrl">
       </ng-container> -->
 
-      <ion-item>
-        <ion-label position="floating">出発時刻</ion-label>
-        <!-- <ion-input type="text" [(ngModel)]="data.departure_time" name="departure_time" required></ion-input> -->
-        <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="data.departure_time"
-          name="departure_time" [min]="min_date" [max]="max_date"></ion-datetime>
-      </ion-item>
+      <!-- Leaflet 地図 -->
+      <div id="route_search_map" style="width: 100%; max-width: 400px; height:200px; margin: auto; border-radius: 10px;"></div>
+
       <ion-item>
         <ion-label position="floating">最大乗り換え回数</ion-label>
         <ion-input type="number" [(ngModel)]="max_transfer_time" name="max_transfer_time" requiered></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">最大歩行距離</ion-label>
+        <ion-label position="floating">歩きを許容する距離(m)</ion-label>
         <ion-input type="number" [(ngModel)]="walkable_distance" name="walkable_distance" requiered></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">最大待ち時間</ion-label>
+        <ion-label position="floating">許容する待ち時間(分)</ion-label>
         <ion-input type="number" [(ngModel)]="stayable_time" name="stayable_time" requiered></ion-input>
       </ion-item>
     </ion-list>

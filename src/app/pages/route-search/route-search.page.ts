@@ -119,47 +119,219 @@ export class RouteSearchPage implements OnInit {
   map: any; // Leaflet APIのmap
   routeControl: any; // Leaflet APIのroute control
 
+  leafletIsAlredyPrepared: boolean = false;
+
 
   route_search_url = "https://us-central1-aisharing-ac6cc.cloudfunctions.net/routeSearch3"
 
   ngOnInit() {
-    // this.sample();
-    // Yahoo javascript api  ////////////////////////////////////////////////////////////
-    // const Y = await this.yahooService.getYahooMaps();
-    // console.log('Y:', Y);
-    // var ymap = new Y.Map("yahoomap");
-    // console.log('ymap:', ymap);
-    // console.log('Y.LayerSetId.NORMAL:', Y.LayerSetId.NORMAL);
-    // // ymap.drawMap(new Y.LatLng(35.66572, 139.73100), 17, Y.LayerSetId.NORMAL);
-    // ymap.drawMap(new Y.LatLng(35.66572, 139.73100));
-    //////////////////////////////////////////////////////////////////////////////////////
-
-    // Yahoo javascript api 2019/09/14 ///////////////////////////////////////////////////
-    // this.yahooService.getYahooMaps().then( Y => {
-    //   console.log('Y:', Y);
-    //   var ymap = new Y.Map("yahoomap");
-    //   console.log('ymap:', ymap);
-    //   console.log('Y.LayerSetId.NORMAL:', Y.LayerSetId.NORMAL);
-    //   // ymap.drawMap(new Y.LatLng(35.66572, 139.73100), 17, Y.LayerSetId.NORMAL);
-    //   ymap.drawMap(new Y.LatLng(35.66572, 139.73100));  
-    // });
-    //////////////////////////////////////////////////////////////////////////////////////
-
     this.min_date = this.datepipe.transform(this.today, "yyyy-MM-dd");
     this.next_year.setFullYear(this.next_year.getFullYear() + 1); 
     this.max_date = this.datepipe.transform(this.next_year, "yyyy-MM-dd");
-    // this.departureLocationMapImageUrl = this.yahooService.get_mapimg_url({
-    //   lat: 37.508048055556,
-    //   lon: 139.932011666667,
-    //   z: 17,
-    //   width: 300,
-    //   height: 200,
-    //   // pointer: 'on',
-    //   pin1: [37.508048055556, 139.932011666667, '会津若松']
+  }
+
+  async ionViewWillEnter() {
+    if (!this.leafletIsAlredyPrepared) {
+      await this.prepareLeafletMap();
+    }
+  }
+
+  async prepareLeafletMap() {
+    const win = window as any;
+    if (!win.L) {
+      console.log("win.Lが存在しません");
+      // this.L = await this.leafletService.getLeafletMaps();
+      this.L = await this.leafletService.includeAllLeaflet();
+    } else {
+      console.log("win.Lが存在します");
+      this.L = win.L;
+    }
+
+    // new
+    //地理院地図の標準地図タイル
+    var gsi = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
+    {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+    //地理院地図の淡色地図タイル
+    var gsipale = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+      {attribution: "<a href='https://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
+    //地理院地図の航空地図タイル
+    var gsiphoto = this.L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
+      {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+    //オープンストリートマップのタイル
+    var osm = this.L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+      {  attribution: "<a href='https://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
+    //baseMapsオブジェクトのプロパティに3つのタイルを設定
+    var baseMaps = {
+      "オープンストリートマップ"  : osm,
+      "地理院地図" : gsi,
+      "淡色地図" : gsipale,
+      "航空地図" : gsiphoto
+    };
+    //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
+    //コントロール内にプロパティ名が表示される
+    // this.L.control.layers(baseMaps).addTo(this.map);
+    // osm.addTo(this.map);
+    // gsi.addTo(this.map);
+    
+
+    //地図を表示するdiv要素のidを設定
+    this.map = this.L.map('route_search_map', {
+      contextmenu: true,
+      contextmenuWidth: 140,
+	      contextmenuItems: [{
+		      text: 'ここを出発地にする',
+		      callback: this.setDepartureInContextMenu
+        },
+        {
+          text: 'ここを目的地にする',
+          callback: this.setDestinationInContextMenu
+        }
+      ]
+    });
+    this.L.control.layers(baseMaps).addTo(this.map);
+    osm.addTo(this.map);
+    //地図の中心とズームレベルを指定
+    this.map.setView([37.52378812, 139.938139], 11);  // 東京駅 35.681236 139.767125  会津大学: 37.52378812, 139.938139
+    //表示するタイルレイヤのURLとAttributionコントロールの記述を設定して、地図に追加する
+    // L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+    //     attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+    // }).addTo(map);
+
+    //スケールコントロールを最大幅200px、右下、m単位で地図に追加
+    this.L.control.scale({ maxWidth: 100, position: 'bottomright', imperial: false }).addTo(this.map);
+
+    // ピンの追加
+    // this.moveDepartureMarker(35.40, 136, "ここはどこ？", true);
+
+    var routing = await this.leafletService.getLeafletRouting();
+    this.routeControl = routing.control({
+      waypoints: [
+        null
+        // this.L.latLng(37.506801, 139.930428),   // 37.506801 139.930428
+        // this.L.latLng(37.47972, 139.96083)   // 東山温泉 37.47972 139.96083
+      ],
+      createMarker: (i, waypoints, n) => {
+        return win.L.marker(waypoints.latLng, {draggable: false})},
+      router: win.L.Routing.graphHopper('0dc4f299-a491-452f-97e0-515c296c9453')  // graph hopperを使っている
+    }).addTo(this.map);
+
+    this.routeControl.hide();
+ 
+    this.routeControl.on('routesfound', (e) => {
+      // If you're interested in every time the user selects a route, the routeselected event is more approriate.
+      // console.log('e:', e);
+      // console.log('e.routes:', e.routes);
+      this.totalDistance = e.routes[0].summary.totalDistance;
+      this.totalTime = e.routes[0].summary.totalTime;
+      this.fare = this.getFare(this.totalDistance);
+      console.log('Total Distance (unit: m):', this.totalDistance);
+      console.log('Total Time (unit: s):', this.totalTime);
+      console.log('Fare:', this.fare);
+      // var routes = e.routes;
+    });
+
+    // add new waypoints
+    // L.routing.control.setWaypoints([
+    //   L.latLng(lat1, lon1),
+    //   L.latLng(lat2, lon2)
+    // ]);
+
+    // var totalDistance = routeControl._routes[0].summary.totalDistance;
+    // var totalTime = routeControl._routes[0].summary.totalTime;
+    console.log('routeControl:', this.routeControl);
+    console.log('routeControl.e:', this.routeControl.e);
+    console.log('routeControl.routes:', this.routeControl.routes);
+    // console.log('Total Distance (unit: m):', totalDistance);
+    // console.log('Total Time (unit: s):', totalTime);
+    // this.L.Routing.control({
+    //   waypoints: [
+    //     this.L.latLng(57.74, 11.94),
+    //     this.L.latLng(57.6792, 11.949)
+    //   ]
+    // }).addTo(this.map);
+
+    // map長押しの処理
+    // this.map.on('contextmenu', function(e){  // (e) => {} も function(e){}も座標が変わらない
+    //   console.log('MouseEvent (contextmenu):', e);
+    //   console.log('e.latlng:', e.latlng);
     // });
-    // this.yahooService.getLocalInfo({
-    //   query: '会津若松駅'
-    // });
+
+    this.leafletIsAlredyPrepared = true;
+  }
+
+  setDepartureInContextMenu = async (e) => {
+    var result = await this.yahooService.getAddress({
+      lat: e.latlng.lat,
+      lon: e.latlng.lng
+    });
+
+    result.subscribe((geocode) => {
+      // 入力文字を空にする
+      this.data.departure_name = "";
+      // 位置に関する初期化設定
+      this.data.departure_point = new firebase.firestore.GeoPoint(0, 0);
+      // 選択されているインデックスを初期化
+      this.indexOfSelectedDepatureLocation=0;
+
+      var geoInfo = geocode as any;
+      console.log('geocode:', geocode);
+      var address = geoInfo.Feature[0].Property.Address;
+
+      // 出発地のロケーションの候補を設定する
+      this.departureLocalInfo = {
+        Feature: [
+          {
+            Name: address,
+            Property: {
+              Address: address
+            },
+            Geometry: {
+              Coordinates: e.latlng.lng.toString() + ',' + e.latlng.lat.toString()
+            }
+          }
+        ]
+      };
+      console.log('this.departureLocalInfo:', this.departureLocalInfo);
+      // 出発地を選択する
+      this.selectDepartureLocation()
+    });
+  }
+
+  setDestinationInContextMenu = async (e) => {
+    var result = await this.yahooService.getAddress({
+      lat: e.latlng.lat,
+      lon: e.latlng.lng
+    });
+
+    result.subscribe((geocode) => {
+      // 入力文字を空にする
+      this.data.destination_name = "";
+      // 位置に関する初期化設定
+      this.data.destination_point = new firebase.firestore.GeoPoint(0, 0);
+      // 選択されているインデックスを初期化
+      this.indexOfSelectedDestinationLocation=0;
+
+      var geoInfo = geocode as any;
+      console.log('geocode:', geocode);
+      var address = geoInfo.Feature[0].Property.Address;
+
+      // 目的地のロケーションの候補を設定する
+      this.destinationLocalInfo = {
+        Feature: [
+          {
+            Name: address,
+            Property: {
+              Address: address
+            },
+            Geometry: {
+              Coordinates: e.latlng.lng.toString() + ',' + e.latlng.lat.toString()
+            }
+          }
+        ]
+      };
+      // 目的地を選択する
+      this.selectDestinationLocation()
+    });
   }
 
   // distance の単位はメートル
@@ -194,30 +366,6 @@ export class RouteSearchPage implements OnInit {
       "isUpdate": isUpdate
     });
   }
-
-
-  ///////////////////////////////////////////////////////////////
-  // 入力が変更されるたびにをリアルタイムでサーバーから取得する
-  // 入力が変更されるたびに毎回取得するとサーバーとの通信が増えるため
-  // setTimeoutで1500ms入力の変更がない場合サーバーと通信する
-  ///////////////////////////////////////////////////////////////
-  // serverCheck(val: string): void {
-  //   // すでにチェック待ちの場合は停止させる。
-  //   if (this.checkInterval) {
-  //     clearTimeout(this.checkInterval);
-  //     this.checkInterval = undefined;
-  //   }
-  //   // ローカルでできるチェックを行う。
-  //   if (!val.match(/^[a-zA-Z]+$/)) {
-  //     return;
-  //   }
-  //
-  //   this.checkInterval = setTimeout(() => {
-  //     this.checkInterval = undefined;
-  //     // サーバーチェックリクエスト処理
-  //   }, 1500);
-  // }
-  ////////////////////////////////////////////////////////////////
   
   inputDeparture(ev) {
     // console.log('ev:', ev);
@@ -269,6 +417,15 @@ export class RouteSearchPage implements OnInit {
       this.data.departure_point = new firebase.firestore.GeoPoint(Number(coordinate[1]), Number(coordinate[0]));
       // 選択されているロケーションの住所を取得
       this.selectedDepartureAddress = this.departureLocalInfo.Feature[this.indexOfSelectedDepatureLocation].Property.Address;
+      // 経路(LeafletAPI)
+      var container = this.L.DomUtil.create('div');
+      var latlng = new this.L.LatLng( coordinate[1], coordinate[0] );
+      this.L.popup()
+        .setContent(container)
+        .setLatLng(latlng)
+        .openOn(this.map);
+      this.routeControl.spliceWaypoints(0, 1, latlng);
+      this.map.closePopup();
     }
   }
   
@@ -322,6 +479,15 @@ export class RouteSearchPage implements OnInit {
       this.data.destination_point = new firebase.firestore.GeoPoint(Number(coordinate[1]), Number(coordinate[0]));
       // 選択されているロケーションの住所を取得
       this.selectedDestinationAddress = this.destinationLocalInfo.Feature[this.indexOfSelectedDestinationLocation].Property.Address;
+      // 経路(LeafletAPI)
+      var container = this.L.DomUtil.create('div');
+      var latlng = new this.L.LatLng( coordinate[1], coordinate[0] );
+      this.L.popup()
+        .setContent(container)
+        .setLatLng(latlng)
+        .openOn(this.map);
+      this.routeControl.spliceWaypoints(this.routeControl.getWaypoints().length - 1, 1, latlng);
+      this.map.closePopup();
     }
   }
 
@@ -356,10 +522,23 @@ export class RouteSearchPage implements OnInit {
 
     console.log(param);
 
-    var routes = await this.getRoute(param);
-    console.log(routes);
-
-    loading.dismiss();
+    // this.getRouteが失敗した時の処理
+    try {
+      var routes = await this.getRoute(param);
+      console.log(routes);
+      if (routes.responses.length === 0) {
+        loading.dismiss();
+        var error = await this.createError('', "最適な投稿を見つけることができませんでした")
+        error.present();
+        return;
+      }
+      loading.dismiss();
+    } catch (err) {
+      loading.dismiss();
+      var error = await this.createError("エラー", err.toString());
+      error.present();
+      return;
+    }
     
     // this.navCtrl.navigateForward('', {routes: routes})
     let navigationExtras: NavigationExtras = {
@@ -403,6 +582,16 @@ export class RouteSearchPage implements OnInit {
         reject(err);
       });
     });
+  }
+
+  async createError(header = 'エラー', message = '') {
+    let alert = await this.alertController.create({
+      header: header,
+      // subHeader: 'Subtitle',
+      message: message,
+      buttons: ['OK']
+    });
+    return alert;
   }
 
 }
