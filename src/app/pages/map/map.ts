@@ -58,7 +58,8 @@ export class MapPage implements OnInit{
   filter = {
     departure_name: '',
     destination_name: '',
-    departure_time_start: this.today, // 現在
+    // departure_time_start: this.today, // 現在
+    departure_time_start: new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 0, 0),
     // departure_time_end: new Date(this.today.getFullYear(), this.today.getMonth()+1, this.today.getDate(), this.today.getHours(), this.today.getMinutes()), // 一か月後
     // departure_time_start: new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 0, 0),
     departure_time_end: new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 23, 59),  
