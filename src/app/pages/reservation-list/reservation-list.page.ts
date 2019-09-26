@@ -3,13 +3,14 @@ import { Reservation } from '../../models/reservation';
 import { User } from '../../models/user';
 import { ReservationService } from '../../services/reservation/reservation.service';
 import { Router } from '@angular/router';
-import { NavController, LoadingController, AlertController, ModalController } from '@ionic/angular'
+import { NavController, LoadingController, AlertController, ModalController, ToastController } from '@ionic/angular'
 
 
 import * as firebase from 'firebase';
 
 import { ReservationPostPage } from '../reservation-post/reservation-post.page';
 import { ReservationFilterPage } from '../reservation-filter/reservation-filter.page';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'reservation-list',
@@ -34,10 +35,12 @@ export class ReservationListPage implements OnInit {
 
   constructor(
     // private zone: NgZone,
+    private userService: UserService,
     private changeDetectorRef: ChangeDetectorRef,
     private reservationService: ReservationService,
     public router: Router,
     // private navCtrl: NavController,
+    private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     public modalController: ModalController
@@ -64,6 +67,7 @@ export class ReservationListPage implements OnInit {
     console.log("ngoninit")
     this.getLoginStatus();
     this.getReservationsAndFilterWithLoading();
+    this.pushPermission();
   }
 
   async doRefresh(event) {
@@ -384,4 +388,66 @@ export class ReservationListPage implements OnInit {
     // });
 
   };
+
+  token: string = "";
+
+  pushPermission() {
+    //console.log("clickBtnPushPermission");
+    const _self = this;
+    firebase.messaging().requestPermission()
+      .then(function () {
+        //ユーザー毎のトークンを取得して画面に表示する
+        firebase.messaging().getToken()
+          .then(function (token) {
+            console.log('token:', token);
+            _self.token = token;
+            firebase.auth().onAuthStateChanged(async user => {
+              if (user) {
+                var currentUser = await _self.userService.getUser(user.uid);
+                currentUser.token = token;
+                _self.userService.updateUser(user.uid, currentUser);
+              }
+            });
+          })
+          .catch(async function (err) {
+            console.error('Unable to retrieve refreshed token ', err);
+            const toast = await _self.toastCtrl.create({
+              message: 'プッシュ通知が利用できません',
+              showCloseButton: true,
+              position: 'bottom',
+              closeButtonText: `閉じる`
+            });
+      
+            await toast.present();
+          });
+      })
+      .catch(async function (err) {
+        console.error('Unable to get permission to notify.', err);
+        const toast = await _self.toastCtrl.create({
+          message: 'プッシュ通知が利用できません',
+          showCloseButton: true,
+          position: 'bottom',
+          closeButtonText: `閉じる`
+        });
+  
+        await toast.present();
+      });
+  }
+
+  clickBtnPush(){   // 通知を送る側
+    //functions に 定義した関数にパラメータを送って実行する
+    //TODO token は Realtime Database or Cloud Firestore に保存して
+    //     他に漏れないように処理する必要がある / プッシュなりすまし等の対策
+    const value = {
+      title:"たいとる",
+      body:"ほんぶん",
+      icon:"star",
+      token:this.token,
+      // url: '/app/tabs/mypage'
+    };
+    const sendNotification = firebase.functions().httpsCallable("send_notification");
+    sendNotification(value).then(result => {
+      console.log("sendNotification","result",result);
+    });
+  }
 }

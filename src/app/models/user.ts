@@ -5,6 +5,7 @@ export class User {
     public introduction: string = '';
     public readonly createdAt: Date = new Date();
     public updatedAt: Date = new Date();
+    public token: string = '';
 
     constructor(
         init?: Partial<User>

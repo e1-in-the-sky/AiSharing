@@ -262,14 +262,14 @@ export class ReservationCardComponent implements OnInit, OnChanges {
       header: '相乗り予約',
       message:'1',
       cssClass: 'alert_norimasu',
-      inputs: [
-        {
-          name: 'comment',
-          type: 'text',
-          placeholder: 'コメント',
-          value: 'よろしくお願いします。',
-        }
-      ],
+      // inputs: [
+      //   {
+      //     name: 'comment',
+      //     type: 'text',
+      //     placeholder: 'コメント',
+      //     value: 'よろしくお願いします。',
+      //   }
+      // ],
       buttons: [
         {
           text: "+",
@@ -297,22 +297,6 @@ export class ReservationCardComponent implements OnInit, OnChanges {
           var userRef = await this.db.collection('users').doc(currentUserUid).ref;
           var reservationRef = await this.db.collection('reservations').doc(this.reservation.uid).ref 
           
-          if (data.comment){
-            console.log('data.comment in if(data.comment):', data.comment);
-            // メッセージの作成
-            var message: Message
-              = new Message({
-                created_at: new Date(),
-                updated_at: new Date(),
-                uid: '',
-                user: userRef,
-                reservation: reservationRef,
-                message: data.comment
-              });
-            // メッセージの送信
-            this.messageService.addMessage(message);
-          }
-
           // reservationUserの作成
           var reservationUsers: ReservationUsers
             = new ReservationUsers({
@@ -322,6 +306,23 @@ export class ReservationCardComponent implements OnInit, OnChanges {
             });
           // reservationUserのチェックと送信
           this.onNorimasu(reservationUsers).then(() => {}, error => {console.log(error)});
+
+          // if (data.comment){
+          //   console.log('data.comment in if(data.comment):', data.comment);
+          //   // メッセージの作成
+          //   var message: Message
+          //     = new Message({
+          //       created_at: new Date(),
+          //       updated_at: new Date(),
+          //       uid: '',
+          //       user: userRef,
+          //       reservation: reservationRef,
+          //       message: data.comment
+          //     });
+          //   // メッセージの送信
+          //   this.messageService.addMessage(message);
+          // }
+
         }
         },
         {
@@ -342,14 +343,14 @@ export class ReservationCardComponent implements OnInit, OnChanges {
       header: '相乗り予約',
       message: reservationUser.passenger_count.toString(),
       cssClass: 'alert_norimasu',
-      inputs: [
-        {
-          name: 'comment',
-          type: 'text',
-          placeholder: 'メッセージ',
-          // value: '',
-        }
-      ],
+      // inputs: [
+      //   {
+      //     name: 'comment',
+      //     type: 'text',
+      //     placeholder: 'メッセージ',
+      //     // value: '',
+      //   }
+      // ],
       buttons: [
         {
           text: "+",
@@ -380,21 +381,21 @@ export class ReservationCardComponent implements OnInit, OnChanges {
           var userRef = await this.db.collection('users').doc(currentUserUid).ref;
           var reservationRef = await this.db.collection('reservations').doc(this.reservation.uid).ref 
           
-          if (data.comment){
-            console.log('data.comment in if(data.comment):', data.comment);
-            // メッセージの作成
-            var message: Message
-              = new Message({
-                created_at: new Date(),
-                updated_at: new Date(),
-                uid: '',
-                user: userRef,
-                reservation: reservationRef,
-                message: data.comment
-              });
-            // メッセージの送信
-            this.messageService.addMessage(message);
-          }
+          // if (data.comment){
+          //   console.log('data.comment in if(data.comment):', data.comment);
+          //   // メッセージの作成
+          //   var message: Message
+          //     = new Message({
+          //       created_at: new Date(),
+          //       updated_at: new Date(),
+          //       uid: '',
+          //       user: userRef,
+          //       reservation: reservationRef,
+          //       message: data.comment
+          //     });
+          //   // メッセージの送信
+          //   this.messageService.addMessage(message);
+          // }
           this.onUpdateNorimasu(reservationUser, parseInt(alert.message));
         }
         },
@@ -442,6 +443,30 @@ export class ReservationCardComponent implements OnInit, OnChanges {
             this.router.navigateByUrl('/app/tabs/reservations/detail/' + this.reservation.uid);
           })
       });
+
+    // オーナーor乗車予定のアカウントにpush通知
+    // this.user => このreservationのオーナー
+    if (this.user.token) {
+      // this.user.tokenに通知
+      console.log('オーナーに通知を送信します');
+      this.sendWebPushNorimasuToOwner(this.user.token);
+    }
+  }
+
+  async sendWebPushNorimasuToOwner(token){
+    var firebaseUser = await this.getCurrentUser();
+    var currentUser = await this.userService.getUser(firebaseUser.uid);
+    const value = {
+      title:currentUser.name,
+      body:"相乗りに参加しました",
+      icon:"contact",
+      // url:"/app/tabs/reservations/detail/" + this.reservation.uid,
+      token:token
+    };
+    const sendNotification = firebase.functions().httpsCallable("send_notification");
+    sendNotification(value).then(result => {
+      console.log("sendNotification","result",result);
+    });
   }
 
   async onUpdateNorimasu(reservationUser: ReservationUsers, newPassengerCount: number) {

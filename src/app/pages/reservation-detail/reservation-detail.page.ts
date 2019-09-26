@@ -180,6 +180,29 @@ export class ReservationDetailPage implements OnInit {
 
         // this.getMessages();  // comment out
       });
+    // オーナーor乗車予定のアカウントにpush通知
+    // this.user => このreservationのオーナー
+    if (this.reservation_owner.token) {
+      // this.user.tokenに通知
+      console.log('オーナーにメッセージを送信します');
+      this.sendWebPushMessageToOwner(this.reservation_owner.token, message);
+    }
+  }
+
+  async sendWebPushMessageToOwner(token, message) {
+    // var firebaseUser = await this.getCurrentUser();
+    // var currentUser = await this.userService.getUser(firebaseUser.uid);
+    const value = {
+      title:this.current_user.name,
+      body:message.message,
+      icon:"contact",
+      // url:"/app/tabs/reservations/detail/" + this.reservation.uid,
+      token:token
+    };
+    const sendNotification = firebase.functions().httpsCallable("send_notification");
+    sendNotification(value).then(result => {
+      console.log("sendNotification","result",result);
+    });
   }
 
   async checkMyReservation() {

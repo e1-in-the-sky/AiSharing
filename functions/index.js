@@ -1006,3 +1006,41 @@ exports.routeSearch3_onCall = functions.https.onCall(async (req, res) => {
     res.send({responses: responses});
     // res.json({responses: responses});
 });
+
+
+
+
+
+
+//プッシュ通知するAPI
+exports.send_notification = functions.https.onCall((data, context) => {
+    console.log("data",data);
+    //プッシュ送信
+    const value = {
+        notification: {
+            title: data.title,
+            body: data.body,
+        },
+        webpush: {
+            headers: {
+                TTL: "60"
+            },
+            notification: {
+                icon: data.icon,
+                click_action: data.click_action
+            }
+        },
+        token: data.token,
+        // url: data.url ? data.url : ''
+    };
+
+    return admin.messaging().send(value)
+                        .then((response) => {
+                            console.log('Successfully sent message:', response);
+                            return Promise.resolve(response);
+                        })
+                        .catch((error) => {
+                            console.log('Error sending message:', error);
+                            return Promise.reject(error);
+                        });
+});

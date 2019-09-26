@@ -29,7 +29,8 @@ export class UserService {
           imageURL: default_img_url,
           introduction: 'よろしくお願いします。',
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
+          token:  ''
         });
         usercredential.user.updateProfile({
           displayName: user.name,
